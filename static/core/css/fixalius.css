@@ -126,7 +126,7 @@ main{
   padding:70px clamp(24px,10vw,150px);
 }
 .hero-copy{position:relative;z-index:2;max-width:690px}
-.eyebrow,.section-kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.eyebrow,.section-kicker{font-size:14px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
 .eyebrow{color:var(--orange-on-dark)}
 .eyebrow span{color:rgba(255,255,255,.45);margin:0 8px}
 .section-kicker{color:var(--orange-text)}
@@ -242,7 +242,7 @@ main{
 .service-card{position:relative;border-right:1px solid var(--line);padding:28px 30px 15px 0;min-height:220px}
 .service-card+.service-card{padding-left:30px}
 .service-card:last-child{border:0}
-.card-number,.principle-index{font-size:11px;color:var(--orange-text);font-weight:700}
+.card-number,.principle-index{font-size:14px;color:var(--orange-text);font-weight:700}
 .service-card h3,.principle-grid h3{font-size:27px;letter-spacing:-.04em;margin:48px 0 13px}
 .service-card p,.principle-grid p{color:var(--muted);line-height:1.5;max-width:250px;margin:0;font-size:14px}
 .card-arrow{position:absolute;right:20px;bottom:14px;color:var(--orange-text);font-size:22px}
@@ -257,7 +257,7 @@ main{
   border-top:1px solid rgba(255,255,255,.2);
 }
 .sector-item{border-bottom:1px solid rgba(255,255,255,.2);padding:22px 5px;font-size:20px;letter-spacing:-.03em;display:flex;gap:22px;align-items:center}
-.sector-item span{color:var(--orange-on-dark);font-size:10px}
+.sector-item span{color:var(--orange-on-dark);font-size:14px}
 .sector-item b{margin-left:auto;font-weight:400;color:var(--orange-on-dark);opacity:0;transition:opacity .2s}
 .sector-item:hover b,
 .sector-item:focus-within b{opacity:1}
