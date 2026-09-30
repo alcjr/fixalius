@@ -1,0 +1,604 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Fixalius 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-30 16:47+0200\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ⁨.\core\settings - copia.py⁩:102 .\core\settings.py:77
+msgid "English"
+msgstr ""
+
+#: ⁨.\core\settings - copia.py⁩:103 .\core\settings.py:76
+msgid "Español"
+msgstr ""
+
+#: .\core\views.py:7
+msgid "Salud"
+msgstr ""
+
+#: .\core\views.py:8
+msgid "Banca y seguros"
+msgstr ""
+
+#: .\core\views.py:9
+#, fuzzy
+#| msgid "Industry"
+msgid "Industria"
+msgstr "Industria"
+
+#: .\core\views.py:10 .\templates\core\index_00.html:66
+msgid "Retail"
+msgstr "Retail"
+
+#: .\core\views.py:11
+#, fuzzy
+#| msgid "Energy"
+msgid "Energía"
+msgstr "Energía"
+
+#: .\core\views.py:12
+msgid "Sector público"
+msgstr ""
+
+#: .\core\views.py:13
+#, fuzzy
+#| msgid "Logistics"
+msgid "Logística"
+msgstr "Logística"
+
+#: .\core\views.py:14
+#, fuzzy
+#| msgid "Education"
+msgid "Educación"
+msgstr "Educación"
+
+#: .\core\views.py:15
+#, fuzzy
+#| msgid "Telecommunications"
+msgid "Telecomunicaciones"
+msgstr "Telecomunicaciones"
+
+#: .\core\views.py:16
+#, fuzzy
+#| msgid "Tourism"
+msgid "Turismo"
+msgstr "Turismo"
+
+#: .\core\views.py:17
+msgid "Agroalimentario"
+msgstr ""
+
+#: .\core\views.py:18 .\templates\core\index_00.html:74
+#: .\templates\core\index_00.html:122
+msgid "Legal"
+msgstr "Legal"
+
+#: .\templates\core\index.html:6
+msgid ""
+"Fixalius: análisis, diseño y desarrollo de aplicaciones impulsadas por IA."
+msgstr ""
+
+#: .\templates\core\index.html:7 .\templates\core\index.html:10
+msgid "Fixalius — Inteligencia aplicada"
+msgstr ""
+
+#: .\templates\core\index.html:11
+msgid "Análisis, diseño y desarrollo de aplicaciones impulsadas por IA."
+msgstr ""
+
+#: .\templates\core\index.html:21
+msgid "Navegación principal"
+msgstr ""
+
+#: .\templates\core\index.html:22
+msgid "Enfoque"
+msgstr ""
+
+#: .\templates\core\index.html:23
+msgid "Sectores"
+msgstr ""
+
+#: .\templates\core\index.html:24
+msgid "Principios"
+msgstr ""
+
+#: .\templates\core\index.html:25 .\templates\core\index.html:71
+msgid "Hablemos"
+msgstr ""
+
+#: .\templates\core\index.html:55 .\templates\core\index.html:58
+msgid "Abrir menú"
+msgstr ""
+
+#: .\templates\core\index.html:59
+msgid "Cerrar menú"
+msgstr ""
+
+#: .\templates\core\index.html:68
+msgid "Inteligencia aplicada"
+msgstr ""
+
+#: .\templates\core\index.html:68
+msgid "Madrid / Europa"
+msgstr ""
+
+#: .\templates\core\index.html:69
+msgid "Another way"
+msgstr ""
+
+#: .\templates\core\index.html:69
+msgid "of"
+msgstr ""
+
+#: .\templates\core\index.html:69
+msgid "fixing"
+msgstr ""
+
+#: .\templates\core\index.html:69
+msgid "things"
+msgstr ""
+
+#: .\templates\core\index.html:70
+msgid ""
+"Análisis, diseño y desarrollo de aplicaciones impulsadas por IA, para "
+"cualquier sector."
+msgstr ""
+
+#: .\templates\core\index.html:78
+msgid "Desplázate para explorar"
+msgstr ""
+
+#: .\templates\core\index.html:82
+msgid "Qué hacemos"
+msgstr ""
+
+#: .\templates\core\index.html:84
+msgid "La IA no es el destino."
+msgstr ""
+
+#: .\templates\core\index.html:84
+msgid "Es la pieza que encaja."
+msgstr ""
+
+#: .\templates\core\index.html:85
+msgid ""
+"Convertimos retos complejos en productos digitales claros, útiles y "
+"responsables. Desde la primera pregunta hasta el último despliegue, hacemos "
+"que la tecnología parezca estar en su sitio."
+msgstr ""
+
+#: .\templates\core\index.html:90
+msgid "Análisis"
+msgstr ""
+
+#: .\templates\core\index.html:91
+msgid ""
+"Entendemos el problema antes de proponer nada: procesos, datos y dónde la IA "
+"aporta valor real."
+msgstr ""
+
+#: .\templates\core\index.html:96
+msgid "Diseño"
+msgstr ""
+
+#: .\templates\core\index.html:97
+msgid ""
+"Diseñamos la solución y su experiencia de uso, integrando IA donde ayuda, no "
+"como decoración."
+msgstr ""
+
+#: .\templates\core\index.html:102
+msgid "Desarrollo"
+msgstr ""
+
+#: .\templates\core\index.html:103
+msgid ""
+"Construimos, probamos y desplegamos aplicaciones mantenibles, seguras y "
+"medibles."
+msgstr ""
+
+#: .\templates\core\index.html:110
+#, fuzzy
+#| msgid "Public sector"
+msgid "Para cualquier sector"
+msgstr "Administración pública"
+
+#: .\templates\core\index.html:112
+msgid "Contextos distintos."
+msgstr ""
+
+#: .\templates\core\index.html:112
+msgid "La misma curiosidad."
+msgstr ""
+
+#: .\templates\core\index.html:113
+msgid ""
+"Llevamos una mentalidad de producto a los lugares donde la tecnología tiene "
+"más que desbloquear."
+msgstr ""
+
+#: .\templates\core\index.html:123
+msgid "Cómo aplicamos la IA"
+msgstr ""
+
+#: .\templates\core\index.html:125
+msgid "Útil por diseño."
+msgstr ""
+
+#: .\templates\core\index.html:125
+msgid "Responsable por defecto."
+msgstr ""
+
+#: .\templates\core\index.html:126
+msgid ""
+"La buena tecnología no solo es inteligente. Es comprensible, responsable y "
+"está hecha para durar."
+msgstr ""
+
+#: .\templates\core\index.html:129
+msgid "Datos del cliente"
+msgstr ""
+
+#: .\templates\core\index.html:129
+msgid ""
+"Los datos pertenecen al cliente. Cada solución se diseña conforme al RGPD."
+msgstr ""
+
+#: .\templates\core\index.html:130
+msgid "AI Act europeo"
+msgstr ""
+
+#: .\templates\core\index.html:130
+#, fuzzy
+#| msgid "We classify the risk of each system and document its compliance."
+msgid "Clasificamos el riesgo de cada sistema y documentamos su cumplimiento."
+msgstr "Clasificamos el riesgo de cada sistema y documentamos su cumplimiento."
+
+#: .\templates\core\index.html:131
+msgid "Supervisión humana"
+msgstr ""
+
+#: .\templates\core\index.html:131
+msgid "Las decisiones importantes siempre pasan por una persona."
+msgstr ""
+
+#: .\templates\core\index.html:132
+#, fuzzy
+#| msgid "Explainable and measurable"
+msgid "Explicable y medible"
+msgstr "Explicable y medible"
+
+#: .\templates\core\index.html:132
+msgid "Documentamos qué hace cada modelo, con qué datos y con qué resultados."
+msgstr ""
+
+#: .\templates\core\index.html:139
+msgid "El nombre"
+msgstr ""
+
+#: .\templates\core\index.html:140
+#, fuzzy
+#| msgid ""
+#| "Fixalius joins fixus, “fastened, stable”, and alius, “other, different”: "
+#| "another way of leaving things as they should be."
+msgid ""
+"Fixalius une <i>fixus</i>, “fijado, estable”, y <i>alius</i>, “otro, "
+"diferente”: otra forma de dejar las cosas como deben estar."
+msgstr ""
+"Fixalius une fixus, «clavado, estable», y alius, «otro, distinto»: otra "
+"manera de dejar las cosas como deben estar."
+
+#: .\templates\core\index.html:146
+msgid "Empecemos una conversación"
+msgstr ""
+
+#: .\templates\core\index.html:147
+msgid "¿Tienes un reto"
+msgstr ""
+
+#: .\templates\core\index.html:147
+msgid "que merezca la pena?"
+msgstr ""
+
+#: .\templates\core\index.html:148
+msgid ""
+"Cuéntanos qué necesitas. Nosotros ponemos las preguntas, el oficio y un "
+"siguiente paso claro."
+msgstr ""
+
+#: .\templates\core\index.html:151
+msgid "Gracias. Tu correo ha quedado registrado."
+msgstr ""
+
+#: .\templates\core\index.html:152
+msgid "Recibe ocasionalmente ideas sobre IA aplicada."
+msgstr ""
+
+#: .\templates\core\index.html:154
+msgid "Tu correo electrónico"
+msgstr ""
+
+#: .\templates\core\index.html:155
+#, fuzzy
+#| msgid "Subscribe"
+msgid "Suscribirse"
+msgstr "Suscribirme"
+
+#: .\templates\core\index.html:157
+msgid "Al suscribirte, aceptas nuestra política de privacidad."
+msgstr ""
+
+#: .\templates\core\index.html:168
+#, fuzzy
+#| msgid "Privacy"
+msgid "Privacidad"
+msgstr "Privacidad"
+
+#: .\templates\core\index.html:169
+msgid "Aviso legal"
+msgstr ""
+
+#: .\templates\core\index.html:170
+msgid "Volver arriba"
+msgstr ""
+
+#: .\templates\core\index_00.html:19
+msgid "Language"
+msgstr "Idioma"
+
+#: .\templates\core\index_00.html:24
+msgid "Intranet login"
+msgstr "Acceso intranet"
+
+#: .\templates\core\index_00.html:44
+msgid "Another way of fixing things."
+msgstr "Otra manera de arreglar las cosas."
+
+#: .\templates\core\index_00.html:44
+msgid ""
+"Analysis, design and development of AI-powered applications, for any sector."
+msgstr ""
+"Análisis, diseño y programación de aplicaciones con IA, para cualquier "
+"sector."
+
+#: .\templates\core\index_00.html:45 .\templates\core\index_00.html:105
+msgid "Let’s talk"
+msgstr "Hablemos"
+
+#: .\templates\core\index_00.html:46
+msgid "Pause animation"
+msgstr "Pausar animación"
+
+#: .\templates\core\index_00.html:46
+msgid "Play animation"
+msgstr "Reanudar animación"
+
+#: .\templates\core\index_00.html:51
+msgid "What we do"
+msgstr "Qué hacemos"
+
+#: .\templates\core\index_00.html:53
+msgid "Analysis"
+msgstr "Análisis"
+
+#: .\templates\core\index_00.html:53
+msgid ""
+"We understand the problem before proposing anything: processes, data and "
+"where AI truly adds value."
+msgstr ""
+"Entendemos el problema antes de proponer nada: procesos, datos y dónde la IA "
+"aporta de verdad."
+
+#: .\templates\core\index_00.html:54
+msgid "Design"
+msgstr "Diseño"
+
+#: .\templates\core\index_00.html:54
+msgid ""
+"We design the solution and its user experience, with AI built in where it "
+"helps, not as decoration."
+msgstr ""
+"Diseñamos la solución y su experiencia de uso, con la IA integrada donde "
+"suma y no como adorno."
+
+#: .\templates\core\index_00.html:55
+msgid "Development"
+msgstr "Programación"
+
+#: .\templates\core\index_00.html:55
+msgid ""
+"We build, test and deploy applications that are maintainable, secure and "
+"measurable."
+msgstr ""
+"Construimos, probamos y ponemos en producción aplicaciones mantenibles, "
+"seguras y medibles."
+
+#: .\templates\core\index_00.html:57
+msgid "AI is the piece that fits all three."
+msgstr "La IA es la pieza que encaja en los tres."
+
+#: .\templates\core\index_00.html:61
+msgid "For any sector"
+msgstr "Para cualquier sector"
+
+#: .\templates\core\index_00.html:63
+msgid "Healthcare"
+msgstr "Salud"
+
+#: .\templates\core\index_00.html:64
+msgid "Banking and insurance"
+msgstr "Banca y seguros"
+
+#: .\templates\core\index_00.html:65
+msgid "Industry"
+msgstr "Industria"
+
+#: .\templates\core\index_00.html:67
+msgid "Energy"
+msgstr "Energía"
+
+#: .\templates\core\index_00.html:68
+msgid "Public sector"
+msgstr "Administración pública"
+
+#: .\templates\core\index_00.html:69
+msgid "Logistics"
+msgstr "Logística"
+
+#: .\templates\core\index_00.html:70
+msgid "Education"
+msgstr "Educación"
+
+#: .\templates\core\index_00.html:71
+msgid "Telecommunications"
+msgstr "Telecomunicaciones"
+
+#: .\templates\core\index_00.html:72
+msgid "Tourism"
+msgstr "Turismo"
+
+#: .\templates\core\index_00.html:73
+msgid "Agrifood"
+msgstr "Agroalimentación"
+
+#: .\templates\core\index_00.html:79
+msgid "How we apply AI"
+msgstr "Cómo aplicamos la IA"
+
+#: .\templates\core\index_00.html:81
+msgid "Client data"
+msgstr "Datos del cliente"
+
+#: .\templates\core\index_00.html:81
+msgid ""
+"The data belongs to the client. We design every solution in line with the "
+"GDPR."
+msgstr "Los datos son del cliente. Diseñamos cada solución conforme al RGPD."
+
+#: .\templates\core\index_00.html:82
+msgid "European AI Act"
+msgstr "Reglamento europeo de IA"
+
+#: .\templates\core\index_00.html:82
+msgid "We classify the risk of each system and document its compliance."
+msgstr "Clasificamos el riesgo de cada sistema y documentamos su cumplimiento."
+
+#: .\templates\core\index_00.html:83
+msgid "Human oversight"
+msgstr "Supervisión humana"
+
+#: .\templates\core\index_00.html:83
+msgid "The decisions that matter go through a person."
+msgstr "Las decisiones que importan pasan por una persona."
+
+#: .\templates\core\index_00.html:84
+msgid "Explainable and measurable"
+msgstr "Explicable y medible"
+
+#: .\templates\core\index_00.html:84
+msgid ""
+"We document what each model does, with which data and with what results."
+msgstr "Documentamos qué hace cada modelo, con qué datos y con qué resultados."
+
+#: .\templates\core\index_00.html:89
+msgid "The name"
+msgstr "El nombre"
+
+#: .\templates\core\index_00.html:90
+msgid ""
+"Fixalius joins fixus, “fastened, stable”, and alius, “other, different”: "
+"another way of leaving things as they should be."
+msgstr ""
+"Fixalius une fixus, «clavado, estable», y alius, «otro, distinto»: otra "
+"manera de dejar las cosas como deben estar."
+
+#: .\templates\core\index_00.html:94
+msgid "Insights"
+msgstr "Insights"
+
+#: .\templates\core\index_00.html:95
+msgid ""
+"We will soon publish ideas on applied AI here. Subscribe to the newsletter "
+"and get them first."
+msgstr ""
+"Pronto publicaremos aquí ideas sobre IA aplicada. Suscríbete a la newsletter "
+"y las recibirás primero."
+
+#: .\templates\core\index_00.html:96
+msgid "Prototype: you will get an email to confirm your subscription."
+msgstr "Prototipo: recibirás un correo para confirmar la suscripción."
+
+#: .\templates\core\index_00.html:97 .\templates\core\index_00.html:109
+#: .\templates\core\index_00.html:131
+msgid "Email"
+msgstr "Correo"
+
+#: .\templates\core\index_00.html:98
+msgid "I agree to receive the newsletter and to the privacy policy."
+msgstr "Acepto recibir la newsletter y la política de privacidad."
+
+#: .\templates\core\index_00.html:99
+msgid "Subscribe"
+msgstr "Suscribirme"
+
+#: .\templates\core\index_00.html:106
+msgid "Tell us what you need and we will get back to you."
+msgstr "Cuéntanos qué necesitas y te responderemos."
+
+#: .\templates\core\index_00.html:107
+msgid "Prototype: the message will reach the intranet as a lead."
+msgstr "Prototipo: el mensaje llegará a la intranet como lead."
+
+#: .\templates\core\index_00.html:108
+msgid "Name"
+msgstr "Nombre"
+
+#: .\templates\core\index_00.html:110
+msgid "Message"
+msgstr "Mensaje"
+
+#: .\templates\core\index_00.html:111
+msgid "I agree to the privacy policy."
+msgstr "Acepto la política de privacidad."
+
+#: .\templates\core\index_00.html:112
+msgid "Send"
+msgstr "Enviar"
+
+#: .\templates\core\index_00.html:123
+msgid "Privacy"
+msgstr "Privacidad"
+
+#: .\templates\core\index_00.html:123
+msgid "Legal notice"
+msgstr "Aviso legal"
+
+#: .\templates\core\index_00.html:123
+msgid "Cookies"
+msgstr "Cookies"
+
+#: .\templates\core\index_00.html:129
+msgid "Intranet sign-in"
+msgstr "Acceso a la intranet"
+
+#: .\templates\core\index_00.html:130
+msgid "Prototype: this will connect to the Django login."
+msgstr "Prototipo: aquí se conectará con el login de Django."
+
+#: .\templates\core\index_00.html:132
+msgid "Password"
+msgstr "Contraseña"
+
+#: .\templates\core\index_00.html:133
+msgid "Sign in"
+msgstr "Entrar"
+
+#: .\templates\core\index_00.html:133
+msgid "Close"
+msgstr "Cerrar"

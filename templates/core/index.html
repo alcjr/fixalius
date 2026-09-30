@@ -1,0 +1,252 @@
+{% load i18n static %}{% get_current_language as LANGUAGE_CODE %}{% get_available_languages as LANGUAGES %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{% trans 'Fixalius: análisis, diseño y desarrollo de aplicaciones impulsadas por IA.' %}">
+  <title>{% trans 'Fixalius' %} — {% trans 'Inteligencia aplicada' %}</title>
+
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+  {% for alt in alternates %}
+    <link rel="alternate" hreflang="{{ alt.code }}" href="{{ request.scheme }}://{{ request.get_host }}{{ alt.url }}">
+  {% endfor %}
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23123e5a'/%3E%3Ctext x='32' y='48' font-family='Arial,Helvetica,sans-serif' font-size='44' font-weight='800' font-style='italic' fill='%23f47b36' text-anchor='middle'%3Ef%3C/text%3E%3C/svg%3E">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Fixalius">
+  <meta property="og:title" content="{% trans 'Fixalius' %} — {% trans 'Inteligencia aplicada' %}">
+  <meta property="og:description" content="{% trans 'Análisis, diseño y desarrollo de aplicaciones impulsadas por IA.' %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:locale" content="{{ LANGUAGE_CODE }}">
+  {% for alt in alternates %}{% if alt.code != LANGUAGE_CODE %}<meta property="og:locale:alternate" content="{{ alt.code }}">
+  {% endif %}{% endfor %}
+  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'core/img/og-fixalius.png' %}">
+  <meta property="og:image:alt" content="{% trans 'Fixalius — Inteligencia aplicada' %}">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{% trans 'Fixalius' %} — {% trans 'Inteligencia aplicada' %}">
+  <meta name="twitter:description" content="{% trans 'Análisis, diseño y desarrollo de aplicaciones impulsadas por IA.' %}">
+  <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'core/img/og-fixalius.png' %}">
+
+  <link rel="stylesheet" href="{% static 'core/css/fixalius.css' %}">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Fixalius",
+    "url": "{{ request.build_absolute_uri }}",
+    "email": "hello@fixalius.com",
+    "areaServed": "EU",
+    "knowsLanguage": [{% for alt in alternates %}"{{ alt.code }}"{% if not forloop.last %},{% endif %}{% endfor %}]
+  }
+  </script>
+</head>
+<body>
+
+<!-- Wordmark SVG de Fixalius (definido una vez, reutilizable con <use>) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><g id="g-fix" transform="translate(28.5,0) skewX(-12)" fill="currentColor" stroke="currentColor" stroke-width="5" stroke-linejoin="miter" stroke-miterlimit="10"><path d="M229.625 144.5V95.37890625H220.25V88.25H229.625V85.80859375Q229.625 77.80078125 232.2373046875 73.50390625Q234.849609375 69.20703125 240.3916015625 67.595703125Q245.93359375 65.984375 254.673828125 65.984375H265.5625V73.6015625H254.625Q247.642578125 73.6015625 244.322265625 74.48046875Q241.001953125 75.359375 240.0009765625 77.9716796875Q239.0 80.583984375 239.0 85.80859375V88.25H265.5625V95.37890625H239.0V144.5Z M287.8125 144.5V91.375H297.1875V144.5Z M287.8125 78.875V69.5H297.1875V78.875Z M324.125 144.5 352.93359375 115.88671875 325.4921875 88.25H337.9921875L359.427734375 109.978515625L380.375 88.25H392.875L365.43359375 115.837890625L394.2421875 144.5H381.7421875L359.18359375 120.96484375L336.625 144.5Z"/></g><g id="g-alius" transform="translate(28.5,0) skewX(-12)" fill="currentColor" stroke="currentColor" stroke-width="5" stroke-linejoin="miter" stroke-miterlimit="10"><path d="M421.23,144.50 L447.98,88.25 L458.29,88.25 L485.05,144.50 L471.92,144.50 L453.14,105.00 L434.35,144.50 Z M516.4765625 144.5V69.5H525.8515625V144.5Z M557.4765625 144.5V91.375H566.8515625V144.5Z M557.4765625 78.875V69.5H566.8515625V78.875Z M624.2578125 145.57421875Q613.22265625 145.57421875 606.875 143.1572265625Q600.52734375 140.740234375 597.841796875 135.0517578125Q595.15625 129.36328125 595.15625 119.5V88.25H604.580078125V119.5Q604.580078125 125.06640625 605.4833984375 128.6552734375Q606.38671875 132.244140625 608.681640625 134.2216796875Q610.9765625 136.19921875 615.1513671875 136.98046875Q619.326171875 137.76171875 625.91796875 137.76171875Q635.68359375 137.76171875 641.25 136.150390625Q646.81640625 134.5390625 649.1357421875 131.0966796875Q651.455078125 127.654296875 651.455078125 122.13671875V88.25H660.830078125V144.5H651.455078125V137.029296875Q649.404296875 139.861328125 646.279296875 141.765625Q643.154296875 143.669921875 637.9296875 144.6220703125Q632.705078125 145.57421875 624.2578125 145.57421875Z M721.3125 145.57421875Q711.05859375 145.57421875 704.8330078125 144.890625Q698.607421875 144.20703125 695.4091796875 142.3515625Q692.2109375 140.49609375 691.1123046875 137.078125Q690.013671875 133.66015625 690.013671875 128.19140625H698.998046875Q698.998046875 131.267578125 699.4375 133.1474609375Q699.876953125 135.02734375 701.927734375 136.0283203125Q703.978515625 137.029296875 708.5927734375 137.3955078125Q713.20703125 137.76171875 721.556640625 137.76171875Q730.39453125 137.76171875 735.3017578125 137.3955078125Q740.208984375 137.029296875 742.357421875 136.0283203125Q744.505859375 135.02734375 744.9697265625 133.123046875Q745.43359375 131.21875 745.43359375 128.09375Q745.43359375 124.28515625 744.75 122.380859375Q744.06640625 120.4765625 741.52734375 119.8173828125Q738.98828125 119.158203125 733.421875 119.109375L711.05859375 118.865234375Q702.416015625 118.767578125 697.875 117.400390625Q693.333984375 116.033203125 691.673828125 112.5908203125Q690.013671875 109.1484375 690.013671875 102.80078125Q690.013671875 96.892578125 691.8447265625 93.669921875Q693.67578125 90.447265625 697.58203125 89.080078125Q701.48828125 87.712890625 707.73828125 87.4443359375Q713.98828125 87.17578125 722.826171875 87.17578125Q733.2265625 87.17578125 739.3544921875 87.810546875Q745.482421875 88.4453125 748.5341796875 90.203125Q751.5859375 91.9609375 752.5380859375 95.3056640625Q753.490234375 98.650390625 753.490234375 104.021484375H744.505859375Q744.505859375 100.84765625 744.06640625 99.0166015625Q743.626953125 97.185546875 741.6982421875 96.3310546875Q739.76953125 95.4765625 735.4482421875 95.232421875Q731.126953125 94.98828125 723.314453125 94.98828125Q714.427734375 94.98828125 709.49609375 95.18359375Q704.564453125 95.37890625 702.3671875 96.111328125Q700.169921875 96.84375 699.681640625 98.4306640625Q699.193359375 100.017578125 699.193359375 102.80078125Q699.193359375 105.6328125 699.5107421875 107.2685546875Q699.828125 108.904296875 701.1953125 109.734375Q702.5625 110.564453125 705.6630859375 110.8330078125Q708.763671875 111.1015625 714.330078125 111.150390625L733.6171875 111.345703125Q742.30859375 111.443359375 746.8251953125 112.7861328125Q751.341796875 114.12890625 752.9775390625 117.7177734375Q754.61328125 121.306640625 754.61328125 128.09375Q754.61328125 134.197265625 752.8310546875 137.712890625Q751.048828125 141.228515625 747.142578125 142.9130859375Q743.236328125 144.59765625 736.8642578125 145.0859375Q730.4921875 145.57421875 721.3125 145.57421875Z"/></g></defs></svg>
+
+  <a class="skip-link" href="#top">{% trans "Saltar al contenido" %}</a>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Fixalius — {% trans 'Inicio' %}">
+      <svg class="wm" viewBox="222 61 543 89" aria-hidden="true"><use href="#g-fix"/><use href="#g-alius"/></svg>
+    </a>
+
+    <nav id="site-nav" aria-label="{% trans 'Navegación principal' %}">
+      <a href="#approach">{% trans "Enfoque" %}</a>
+      <a href="#sectors">{% trans "Sectores" %}</a>
+      <a href="#principles">{% trans "Principios" %}</a>
+      <a class="nav-cta" href="#contact">{% trans "Hablemos" %} <span aria-hidden="true">↗</span></a>
+      {% url 'login' as login_url %}
+      <a class="nav-login" href="{{ login_url|default:'/accounts/login/' }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        {% trans "Acceso intranet" %}
+      </a>
+
+      <form class="lang" action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        {% for code, name in LANGUAGES %}
+          <button type="submit" name="language" value="{{ code }}" lang="{{ code }}"
+                  title="{{ name }}" aria-label="{{ name }}"
+                  aria-current="{% if code == LANGUAGE_CODE %}true{% else %}false{% endif %}">
+            {% if code == 'es' %}
+              <svg viewBox="0 0 24 16" aria-hidden="true" focusable="false">
+                <rect width="24" height="16" fill="#c60b1e"/>
+                <rect y="4" width="24" height="8" fill="#ffc400"/>
+              </svg>
+            {% elif code == 'en' %}
+              <svg viewBox="0 0 60 30" aria-hidden="true" focusable="false">
+                <clipPath id="gb-flag-clip-{{ code }}"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+                <rect width="60" height="30" fill="#012169"/>
+                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+                <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#gb-flag-clip-{{ code }})" stroke="#c8102e" stroke-width="4"/>
+                <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+                <path d="M30,0 v30 M0,15 h60" stroke="#c8102e" stroke-width="6"/>
+              </svg>
+            {% endif %}
+          </button>
+        {% endfor %}
+      </form>
+    </nav>
+
+    <button class="menu-toggle" type="button"
+            aria-label="{% trans 'Abrir menú' %}"
+            aria-expanded="false"
+            aria-controls="site-nav"
+            data-label-open="{% trans 'Abrir menú' %}"
+            data-label-close="{% trans 'Cerrar menú' %}"><span></span><span></span></button>
+  </header>
+
+  <main id="top">
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-orbit orbit-one" aria-hidden="true"></div>
+      <div class="hero-orbit orbit-two" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <p class="eyebrow">{% trans "Inteligencia aplicada" %} <span aria-hidden="true">—</span></p>
+        <h1 id="hero-title">{% blocktrans trimmed %}Otra forma<br>de <em>arreglar</em> las cosas{% endblocktrans %}<span class="orange-dot" aria-hidden="true">.</span></h1>
+        <p class="hero-lead">{% trans "Análisis, diseño y desarrollo de aplicaciones impulsadas por IA, para cualquier sector." %}</p>
+        <a class="button button-light" href="#contact">{% trans "Hablemos" %} <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <!-- Animación heredada de 00_fixalius: triángulo + cuña + punto naranja.
+           Aria-hidden: es decorativa; el logotipo real está en la cabecera. -->
+      <div class="hero-mark" aria-hidden="true">
+        <div class="hero-stage">
+          <svg class="iso" viewBox="20 20 170 135">
+            <defs>
+              <linearGradient id="hero-az" gradientUnits="userSpaceOnUse" x1="30" y1="150" x2="115" y2="30">
+                <stop offset="0" stop-color="#369ac0"/>
+                <stop offset="1" stop-color="#0a5272"/>
+              </linearGradient>
+              <linearGradient id="hero-na" gradientUnits="userSpaceOnUse" x1="100" y1="20" x2="180" y2="150">
+                <stop offset="0" stop-color="#f99e45"/>
+                <stop offset="1" stop-color="#e55b2c"/>
+              </linearGradient>
+              <clipPath id="hero-tri">
+                <path d="M101.21,27.52 L27.43,136.07 A7,7 0 0 0 33.22,147 L112.27,147 A5,5 0 0 0 116.19,138.89 A40,40 0 0 1 137.24,75.34 A5,5 0 0 0 140.1,67.69 L112.79,27.52 A7,7 0 0 0 101.21,27.52 Z"/>
+              </clipPath>
+            </defs>
+
+            <!-- Triángulo: se dibuja (trazo), se rellena (degradado azul) y se vacía -->
+            <path class="anim anim-tri" pathLength="1" fill="url(#hero-az)"
+                  d="M101.21,27.52 L27.43,136.07 A7,7 0 0 0 33.22,147 L112.27,147 A5,5 0 0 0 116.19,138.89 A40,40 0 0 1 137.24,75.34 A5,5 0 0 0 140.1,67.69 L112.79,27.52 A7,7 0 0 0 101.21,27.52 Z"/>
+
+            <!-- Cuña naranja: aparece dentro del triángulo, recortada por #hero-tri -->
+            <path class="anim anim-wedge" clip-path="url(#hero-tri)" fill="url(#hero-na)"
+                  d="M98,30 C88,60 98,90 110.4,99 L110.4,115 L220,115 L220,0 L107,0 Z"/>
+
+            <!-- Punto naranja: entra con rebote desde arriba-derecha, sostiene y sale -->
+            <circle class="anim anim-dot" cx="147.5" cy="114" r="33" fill="url(#hero-na)"/>
+          </svg>
+        </div>
+      </div>
+
+      <p class="scroll-hint">{% trans "Desplázate para explorar" %} <span aria-hidden="true">↓</span></p>
+    </section>
+
+    <section class="intro section-pad" id="approach">
+      <div class="section-kicker">01 <span aria-hidden="true">/</span> {% trans "Qué hacemos" %}</div>
+      <div class="intro-grid">
+        <h2>{% trans "La IA no es el destino." %}<br><span>{% trans "Es la pieza que encaja." %}</span></h2>
+        <p>{% trans "Convertimos retos complejos en productos digitales claros, útiles y responsables. Desde la primera pregunta hasta el último despliegue, hacemos que la tecnología parezca estar en su sitio." %}</p>
+      </div>
+      <div class="service-grid">
+        <article class="service-card">
+          <span class="card-number">01</span>
+          <h3>{% trans "Análisis" %}</h3>
+          <p>{% trans "Entendemos el problema antes de proponer nada: procesos, datos y dónde la IA aporta valor real." %}</p>
+          <span class="card-arrow" aria-hidden="true">↗</span>
+        </article>
+        <article class="service-card">
+          <span class="card-number">02</span>
+          <h3>{% trans "Diseño" %}</h3>
+          <p>{% trans "Diseñamos la solución y su experiencia de uso, integrando IA donde ayuda, no como decoración." %}</p>
+          <span class="card-arrow" aria-hidden="true">↗</span>
+        </article>
+        <article class="service-card">
+          <span class="card-number">03</span>
+          <h3>{% trans "Desarrollo" %}</h3>
+          <p>{% trans "Construimos, probamos y desplegamos aplicaciones mantenibles, seguras y medibles." %}</p>
+          <span class="card-arrow" aria-hidden="true">↗</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="sector-section section-pad" id="sectors">
+      <div class="section-kicker light-kicker">02 <span aria-hidden="true">/</span> {% trans "Para cualquier sector" %}</div>
+      <div class="sector-heading">
+        <h2>{% trans "Contextos distintos." %}<br><i>{% trans "La misma curiosidad." %}</i></h2>
+        <p>{% trans "Llevamos una mentalidad de producto a los lugares donde la tecnología tiene más que desbloquear." %}</p>
+      </div>
+      <ul class="sector-list">
+        {% for sector in sectors %}
+          <li class="sector-item">
+            <span aria-hidden="true">{{ forloop.counter|stringformat:'02d' }}</span>{{ sector }}<b aria-hidden="true">↗</b>
+          </li>
+        {% empty %}
+          <li class="sector-item"><span aria-hidden="true">—</span>{% trans "Próximamente." %}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="principles section-pad" id="principles">
+      <div class="section-kicker">03 <span aria-hidden="true">/</span> {% trans "Cómo aplicamos la IA" %}</div>
+      <div class="principle-heading">
+        <h2>{% trans "Útil por diseño." %}<br><span>{% trans "Responsable por defecto." %}</span></h2>
+        <p>{% trans "La buena tecnología no solo es inteligente. Es comprensible, responsable y está hecha para durar." %}</p>
+      </div>
+      <div class="principle-grid">
+        <article><span class="principle-index">01</span><h3>{% trans "Datos del cliente" %}</h3><p>{% trans "Los datos pertenecen al cliente. Cada solución se diseña conforme al RGPD." %}</p></article>
+        <article><span class="principle-index">02</span><h3>{% trans "AI Act europeo" %}</h3><p>{% trans "Clasificamos el riesgo de cada sistema y documentamos su cumplimiento." %}</p></article>
+        <article><span class="principle-index">03</span><h3>{% trans "Supervisión humana" %}</h3><p>{% trans "Las decisiones importantes siempre pasan por una persona." %}</p></article>
+        <article><span class="principle-index">04</span><h3>{% trans "Explicable y medible" %}</h3><p>{% trans "Documentamos qué hace cada modelo, con qué datos y con qué resultados." %}</p></article>
+      </div>
+    </section>
+
+    <section class="contact section-pad" id="contact">
+      <div class="contact-copy">
+        <div class="section-kicker">04 <span aria-hidden="true">/</span> {% trans "Empecemos una conversación" %}</div>
+        <h2>{% blocktrans trimmed %}¿Tienes un reto<br><i>que merezca la pena?</i>{% endblocktrans %}</h2>
+        <p>{% trans "Cuéntanos qué necesitas. Nosotros ponemos las preguntas, el oficio y un siguiente paso claro." %}</p>
+        <a href="mailto:hello@fixalius.com" class="email-link">hello@fixalius.com <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <form class="newsletter"
+            method="post"
+            action="#contact"
+            data-ok="{% trans 'Gracias. Tu correo ha quedado registrado.' %}">
+        {% csrf_token %}
+        <label for="newsletter-email">{% trans "Recibe ocasionalmente ideas sobre IA aplicada." %}</label>
+        <div class="input-row">
+          <input id="newsletter-email" name="email" type="email"
+                 placeholder="{% trans 'Tu correo electrónico' %}"
+                 autocomplete="email" inputmode="email" required>
+          <button type="submit" aria-label="{% trans 'Suscribirse' %}"><span aria-hidden="true">↗</span></button>
+        </div>
+        <small>{% blocktrans trimmed %}Al suscribirte, aceptas nuestra <a href="#contact">política de privacidad</a>.{% endblocktrans %}</small>
+        <p class="form-notice" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="logo" aria-hidden="true" style="color:#fff">
+      <svg class="wm" viewBox="222 61 543 89" style="height:1.5rem"><use href="#g-fix"/><use href="#g-alius"/></svg>
+    </div>
+    <span>© {% now "Y" %} Fixalius</span>
+    <div>
+      <a href="#contact">{% trans "Privacidad" %}</a>
+      <a href="#contact">{% trans "Aviso legal" %}</a>
+      <a href="#top">{% trans "Volver arriba" %} <span aria-hidden="true">↑</span></a>
+    </div>
+  </footer>
+
+  <script src="{% static 'core/js/fixalius.js' %}" defer></script>
+</body>
+</html>

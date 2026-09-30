@@ -1,0 +1,86 @@
+Listado de rutas de carpetas
+El número de serie del volumen es 264F-D9FC
+C:.
+│   fixalius_tree.txt
+│   manage.py
+│   
+├───apps
+│   ├───authentication
+│   │   │   admin.py
+│   │   │   apps.py
+│   │   │   models.py
+│   │   │   tests.py
+│   │   │   views.py
+│   │   │   __init__.py
+│   │   │   
+│   │   └───migrations
+│   │           __init__.py
+│   │           
+│   ├───config
+│   │   │   admin.py
+│   │   │   apps.py
+│   │   │   models.py
+│   │   │   tests.py
+│   │   │   views.py
+│   │   │   __init__.py
+│   │   │   
+│   │   └───migrations
+│   │           __init__.py
+│   │           
+│   └───visor
+│       │   admin.py
+│       │   apps.py
+│       │   models.py
+│       │   tests.py
+│       │   views.py
+│       │   __init__.py
+│       │   
+│       └───migrations
+│               __init__.py
+│               
+├───core
+│       asgi.py
+│       settings.py
+│       urls.py
+│       wsgi.py
+│       __init__.py
+│       
+├───locale
+│   ├───en
+│   │   └───LC_MESSAGES
+│   │           django.mo
+│   │           django.po
+│   │           
+│   └───es
+│       └───LC_MESSAGES
+│               django.mo
+│               django.po
+│               
+├───static
+│   ├───authentication
+│   │   ├───css
+│   │   ├───images
+│   │   └───js
+│   ├───config
+│   │   ├───css
+│   │   ├───images
+│   │   └───js
+│   ├───core
+│   │   ├───css
+│   │   │       fixalius.css
+│   │   │       
+│   │   ├───images
+│   │   └───js
+│   │           fixalius.js
+│   │           
+│   └───visor
+│       ├───css
+│       ├───images
+│       └───js
+└───templates
+    ├───authentication
+    ├───config
+    ├───core
+    │       index.html
+    │       
+    └───visor
