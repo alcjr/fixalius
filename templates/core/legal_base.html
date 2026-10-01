@@ -1,0 +1,242 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+
+{% block body_class %}legal-page{% endblock %}
+
+{% block head_extra %}
+<style>
+  /* =========================================================
+     Fixalius · Páginas legales
+     Estilo editorial coherente con la identidad del sitio
+     ========================================================= */
+
+  .legal-page main { padding: 0; }
+
+  .legal-page .legal-wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 80px clamp(24px, 5vw, 72px) 100px;
+  }
+
+  /* --- Cabecera editorial ---------------------------------- */
+  .legal-page .legal-head {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 32px;
+    margin-bottom: 44px;
+  }
+
+  .legal-page .legal-kicker {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--orange-text);
+    margin: 0 0 14px;
+  }
+  .legal-page .legal-kicker span {
+    color: var(--muted);
+    margin: 0 8px;
+  }
+
+  .legal-page h1 {
+    font-size: clamp(34px, 5vw, 52px);
+    letter-spacing: -.05em;
+    line-height: 1.02;
+    margin: 0 0 14px;
+    color: var(--blue);
+    text-wrap: balance;
+  }
+
+  .legal-page .legal-lead {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--muted);
+    margin: 0;
+    max-width: 620px;
+  }
+
+  .legal-page .legal-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 22px;
+    padding: 8px 14px;
+    background: var(--cream);
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+  .legal-page .legal-meta::before {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+
+  /* --- Cuerpo: secciones numeradas ------------------------- */
+  .legal-page .legal-body {
+    counter-reset: legal-section;
+  }
+
+  .legal-page .legal-body > section {
+    counter-increment: legal-section;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .legal-page .legal-body > section:last-of-type {
+    border-bottom: 0;
+  }
+
+  .legal-page .legal-body h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.25;
+    color: var(--blue);
+    margin: 0 0 14px;
+  }
+  .legal-page .legal-body h2::before {
+    content: counter(legal-section, decimal-leading-zero);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: var(--orange-text);
+    flex: 0 0 auto;
+    padding-top: 4px;
+  }
+
+  .legal-page .legal-body p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink);
+    margin: 0 0 14px;
+  }
+  .legal-page .legal-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .legal-page .legal-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px;
+  }
+  .legal-page .legal-body ul li {
+    position: relative;
+    padding: 6px 0 6px 22px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .legal-page .legal-body ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 15px;
+    width: 8px;
+    height: 2px;
+    background: var(--orange);
+    border-radius: 2px;
+  }
+
+  .legal-page .legal-body strong {
+    font-weight: 700;
+    color: var(--blue);
+  }
+
+  .legal-page .legal-body em {
+    font-style: normal;
+    color: var(--muted);
+  }
+
+  /* Aviso resaltado (p. ej. RGPD) */
+  .legal-page .legal-note {
+    margin: 32px 0 0;
+    padding: 20px 22px;
+    background: var(--cream);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 10px 10px 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .legal-page .legal-note strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--blue);
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  /* --- Pie: última actualización + volver --------------- */
+  .legal-page .legal-foot {
+    margin-top: 56px;
+    padding-top: 26px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .legal-page .legal-foot a {
+    color: var(--blue);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .legal-page .legal-foot a:hover {
+    color: var(--orange-text);
+  }
+
+  /* --- Responsive ----------------------------------------- */
+  @media (max-width: 760px) {
+    .legal-page .legal-wrap {
+      padding: 48px 22px 72px;
+    }
+    .legal-page h1 { font-size: 32px; }
+    .legal-page .legal-body h2 { font-size: 19px; }
+    .legal-page .legal-body p,
+    .legal-page .legal-body ul li { font-size: 14.5px; }
+    .legal-page .legal-foot {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="legal-wrap">
+
+  <header class="legal-head">
+    <p class="legal-kicker">
+      {% block legal_kicker %}{% trans "Legal" %}<span aria-hidden="true">/</span>{% trans "Información" %}{% endblock %}
+    </p>
+    <h1>{% block legal_title %}{% endblock %}</h1>
+    <p class="legal-lead">{% block legal_lead %}{% endblock %}</p>
+
+    <span class="legal-meta">
+      {% trans "Última actualización" %} · {% now "F Y" %}
+    </span>
+  </header>
+
+  <div class="legal-body">
+    {% block legal_content %}{% endblock %}
+  </div>
+
+  <footer class="legal-foot">
+    <span>© {% now "Y" %} Fixalius</span>
+    <a href="/">{% trans "Volver al inicio" %} <span aria-hidden="true">↗</span></a>
+  </footer>
+
+</div>
+{% endblock %}

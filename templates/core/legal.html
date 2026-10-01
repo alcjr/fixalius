@@ -1,5 +1,109 @@
 {% load i18n %}<!doctype html>
-<html lang="es">
-<head><meta charset="utf-8"><title>{% trans "Aviso legal" %}</title></head>
-<body><h1>{% trans "Aviso legal" %}</h1><p>{% trans "Contenido pendiente." %}</p></body>
+<html lang="{{ LANGUAGE_CODE|default:'es' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% trans "Aviso legal" %} · Fixalius</title>
+  <meta name="description" content="{% trans 'Aviso legal de Fixalius.' %}">
+</head>
+<body>
+  <main>
+    <h1>{% trans "Aviso legal" %}</h1>
+
+    <h2>{% trans "1. Datos identificativos" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      En cumplimiento del deber de información recogido en la Ley 34/2002, de 11
+      de julio, de Servicios de la Sociedad de la Información y del Comercio
+      Electrónico (LSSI-CE), se indican a continuación los datos identificativos
+      del titular de este sitio web:
+      {% endblocktrans %}
+    </p>
+    <ul>
+      <li><strong>{% trans "Denominación social" %}:</strong> FIXALIUS CORP</li>
+      <li><strong>{% trans "Número de identificación fiscal (FEI/EIN)" %}:</strong> 88-1125926</li>
+      <li><strong>{% trans "Número de registro" %}:</strong> P22000016224</li>
+      <li><strong>{% trans "Domicilio social" %}:</strong> 11450 SW 196 Terrace, Miami, FL 33157, United States</li>
+      <li><strong>{% trans "Correo electrónico de contacto" %}:</strong> hello@fixalius.com</li>
+      <li><strong>{% trans "Sitio web" %}:</strong> fixalius.com</li>
+    </ul>
+
+    <h2>{% trans "2. Objeto" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      El presente aviso legal regula el uso del sitio web fixalius.com (en
+      adelante, «el Sitio»), cuyo titular es FIXALIUS CORP. El acceso al Sitio
+      atribuye la condición de usuario e implica la aceptación plena y sin
+      reservas de todas y cada una de las condiciones aquí publicadas.
+      {% endblocktrans %}
+    </p>
+
+    <h2>{% trans "3. Condiciones de uso" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      El usuario se compromete a hacer un uso adecuado de los contenidos y
+      servicios que FIXALIUS CORP ofrece a través del Sitio, y a no emplearlos
+      para incurrir en actividades ilícitas, ilegales o contrarias a la buena fe
+      y al orden público.
+      {% endblocktrans %}
+    </p>
+    <p>
+      {% blocktrans trimmed %}
+      Queda prohibida cualquier reproducción, distribución, comunicación pública,
+      transformación o modificación de los contenidos del Sitio sin la
+      autorización previa y por escrito de FIXALIUS CORP.
+      {% endblocktrans %}
+    </p>
+
+    <h2>{% trans "4. Propiedad intelectual e industrial" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      Todos los contenidos del Sitio (textos, imágenes, logotipos, marcas,
+      nombres comerciales, código fuente, diseño gráfico, etc.) son propiedad
+      exclusiva de FIXALIUS CORP o de terceros que han autorizado su uso, y se
+      encuentran protegidos por las leyes de propiedad intelectual e industrial.
+      {% endblocktrans %}
+    </p>
+
+    <h2>{% trans "5. Exclusión de responsabilidad" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      FIXALIUS CORP no se hace responsable de los daños y perjuicios de
+      cualquier naturaleza que pudieran derivarse del acceso, uso o mala
+      utilización del Sitio, ni de la información contenida en él. El Sitio se
+      ofrece «tal cual», sin garantías de ningún tipo, expresas o implícitas.
+      {% endblocktrans %}
+    </p>
+
+    <h2>{% trans "6. Enlaces a terceros" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      El Sitio puede contener enlaces a páginas web de terceros. FIXALIUS CORP
+      no controla ni se responsabiliza del contenido, políticas de privacidad o
+      prácticas de dichos sitios web de terceros.
+      {% endblocktrans %}
+    </p>
+
+    <h2>{% trans "7. Modificaciones" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      FIXALIUS CORP se reserva el derecho a modificar, en cualquier momento y sin
+      previo aviso, el presente aviso legal, así como los contenidos y servicios
+      del Sitio. Dichas modificaciones serán efectivas desde su publicación en el
+      Sitio.
+      {% endblocktrans %}
+    </p>
+
+    <h2>{% trans "8. Legislación aplicable y jurisdicción" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      La relación entre FIXALIUS CORP y el usuario se regirá por la legislación
+      vigente en el Estado de Florida, Estados Unidos, a la que ambas partes se
+      someten expresamente para la resolución de cualquier controversia.
+      {% endblocktrans %}
+    </p>
+
+    <p><em>{% trans "Última actualización" %}: {% now "j F Y" %}.</em></p>
+  </main>
+</body>
 </html>

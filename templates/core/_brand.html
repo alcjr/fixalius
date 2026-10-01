@@ -1,0 +1,19 @@
+{% load i18n %}
+{% comment %}
+  Bloque de marca: símbolo (#g-mark) + wordmark (#g-fix/#g-alius).
+  Requiere haber incluido antes core/_wordmark.html en el documento.
+
+  Uso:
+    {% include 'core/_brand.html' with brand_href='#top' %}
+    {% include 'core/_brand.html' with brand_href=menu_url brand_label='Fixalius — Intranet' %}
+{% endcomment %}
+<a class="brand"
+   href="{{ brand_href|default:'/' }}"
+   aria-label="{{ brand_label|default:'Fixalius' }}">
+  <svg class="brand-mark" viewBox="20 20 170 135" aria-hidden="true">
+    <use href="#g-mark"/>
+  </svg>
+  <svg class="brand-wordmark" viewBox="222 61 543 89" aria-hidden="true">
+    <use href="#g-fix"/><use href="#g-alius"/>
+  </svg>
+</a>

@@ -1,0 +1,157 @@
+{% extends 'core/legal_base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Política de privacidad" %} · Fixalius{% endblock %}
+{% block meta_description %}{% trans "Política de privacidad de Fixalius: responsable, finalidades, base jurídica, derechos y uso responsable de la IA." %}{% endblock %}
+
+{% block legal_kicker %}{% trans "Legal" %}<span aria-hidden="true">/</span>{% trans "Privacidad" %}{% endblock %}
+
+{% block legal_title %}{% trans "Política de privacidad" %}{% endblock %}
+
+{% block legal_lead %}
+  {% trans "Cómo tratamos tus datos, con qué finalidad, sobre qué base jurídica y qué derechos puedes ejercer." %}
+{% endblock %}
+
+{% block legal_content %}
+
+  <section>
+    <h2>{% trans "Responsable del tratamiento" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      El responsable del tratamiento de los datos personales recogidos a través
+      de este sitio web es FIXALIUS CORP, con domicilio social en 11450 SW 196
+      Terrace, Miami, FL 33157, United States, y correo electrónico de contacto
+      hello@fixalius.com.
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <section>
+    <h2>{% trans "Datos que recopilamos" %}</h2>
+    <p>{% trans "Recopilamos las siguientes categorías de datos personales:" %}</p>
+    <ul>
+      <li>
+        <strong>{% trans "Datos de contacto" %}:</strong>
+        {% trans "nombre, dirección de correo electrónico y cualquier otra información que el usuario proporcione voluntariamente a través del formulario de suscripción o de correo electrónico." %}
+      </li>
+      <li>
+        <strong>{% trans "Datos de navegación" %}:</strong>
+        {% trans "dirección IP, tipo de navegador, sistema operativo, páginas visitadas, fecha y hora de acceso, y otra información técnica similar, recopilada de forma agregada y con fines estadísticos." %}
+      </li>
+      <li>
+        <strong>{% trans "Datos de la cuenta de intranet" %}:</strong>
+        {% trans "si el usuario accede a la intranet de Fixalius, se tratarán las credenciales de acceso y los datos de perfil asociados." %}
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>{% trans "Finalidades del tratamiento" %}</h2>
+    <p>{% trans "Los datos personales recopilados se utilizan para las siguientes finalidades:" %}</p>
+    <ul>
+      <li>{% trans "Gestionar la suscripción a la newsletter y enviar comunicaciones periódicas sobre inteligencia artificial aplicada, siempre que el usuario haya dado su consentimiento." %}</li>
+      <li>{% trans "Atender las consultas, solicitudes de información o propuestas de colaboración que el usuario remita a través de los canales de contacto habilitados." %}</li>
+      <li>{% trans "Garantizar el correcto funcionamiento, seguridad y mejora continua del sitio web y de los servicios ofrecidos a través del mismo." %}</li>
+      <li>{% trans "Cumplir con las obligaciones legales que sean de aplicación." %}</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>{% trans "Base jurídica del tratamiento" %}</h2>
+    <ul>
+      <li>
+        <strong>{% trans "Consentimiento" %}:</strong>
+        {% trans "para el envío de la newsletter y comunicaciones comerciales, así como para el uso de cookies no esenciales." %}
+      </li>
+      <li>
+        <strong>{% trans "Interés legítimo" %}:</strong>
+        {% trans "para la seguridad del sitio web, la prevención del fraude y la mejora de nuestros servicios." %}
+      </li>
+      <li>
+        <strong>{% trans "Ejecución de un contrato" %}:</strong>
+        {% trans "cuando el usuario accede a la intranet o contrata alguno de nuestros servicios." %}
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>{% trans "Conservación de los datos" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      Los datos personales se conservarán durante el tiempo estrictamente
+      necesario para cumplir con las finalidades para las que fueron recogidos,
+      o durante el plazo que exija la legislación aplicable. Una vez finalizado
+      dicho plazo, los datos serán suprimidos o anonimizados de forma segura.
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <section>
+    <h2>{% trans "Derechos del usuario" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      El usuario puede ejercer en cualquier momento los derechos de acceso,
+      rectificación, supresión, limitación del tratamiento, portabilidad de los
+      datos y oposición, así como retirar su consentimiento, dirigiéndose por
+      correo electrónico a hello@fixalius.com. Asimismo, tiene derecho a
+      presentar una reclamación ante la autoridad de control competente.
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <section>
+    <h2>{% trans "Comunicación de datos a terceros" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      FIXALIUS CORP no vende, alquila ni cede los datos personales de sus
+      usuarios a terceros, salvo obligación legal o cuando sea necesario para la
+      prestación de un servicio solicitado por el usuario, en cuyo caso se
+      formalizarán los correspondientes contratos de encargado del tratamiento.
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <section>
+    <h2>{% trans "Seguridad de los datos" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      FIXALIUS CORP aplica medidas técnicas y organizativas apropiadas para
+      garantizar un nivel de seguridad adecuado al riesgo, conforme a lo
+      establecido en el RGPD y en la legislación aplicable en materia de
+      protección de datos, incluyendo el cifrado de las comunicaciones, el
+      control de accesos y la monitorización de la seguridad.
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <section>
+    <h2>{% trans "Uso responsable de la inteligencia artificial" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      En coherencia con nuestro compromiso de diseño responsable, los sistemas
+      de inteligencia artificial que FIXALIUS CORP pudiera emplear en el
+      tratamiento de datos se rigen por los principios de transparencia,
+      explicabilidad, supervisión humana y cumplimiento del Reglamento Europeo
+      de Inteligencia Artificial (AI Act). Las decisiones automatizadas con
+      impacto significativo siempre contarán con intervención humana.
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <section>
+    <h2>{% trans "Modificaciones de la política de privacidad" %}</h2>
+    <p>
+      {% blocktrans trimmed %}
+      FIXALIUS CORP se reserva el derecho a modificar la presente política de
+      privacidad para adaptarla a novedades legislativas o jurisprudenciales.
+      Las modificaciones serán publicadas en este mismo espacio.
+      {% endblocktrans %}
+    </p>
+  </section>
+
+  <p class="legal-note">
+    <strong>{% trans "Compromiso Fixalius" %}</strong>
+    {% trans "Los datos pertenecen al cliente. Cada solución se diseña conforme al RGPD y al AI Act europeo, con supervisión humana en las decisiones relevantes." %}
+  </p>
+
+{% endblock %}
