@@ -1,15 +1,20 @@
 from pathlib import Path
+
 from django.utils.translation import gettext_lazy as _
+from decouple import config as decouple_config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-1!4jt_d4d*+d!0$-o#lnesupgbugn&bo8kid6layt%^_%3b7rw'
+# === SEGURIDAD (en producción, todas desde .env) ===
+SECRET_KEY = decouple_config(
+    'SECRET_KEY',
+    default='django-insecure-1!4jt_d4d*+d!0$-o#lnesupgbugn&bo8kid6layt%^_%3b7rw',
+)
+DEBUG = decouple_config('DEBUG', default=True, cast=bool)
 
-DEBUG = True
-
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-
-USE_I18N = True
+ALLOWED_HOSTS = decouple_config(
+    'ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=lambda v: [h.strip() for h in v.split(',')]
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,6 +26,7 @@ INSTALLED_APPS = [
     'apps.authentication',
     'apps.config',
     'apps.visor',
+    'apps.dashboard',
 ]
 
 MIDDLEWARE = [
@@ -33,7 +39,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 
 ROOT_URLCONF = 'core.urls'
 
@@ -53,16 +58,37 @@ TEMPLATES = [
     },
 ]
 
+# === AUTENTICACIÓN ===
+AUTHENTICATION_BACKENDS = [
+    'apps.authentication.backends.EmailOrUsernameBackend',
+]
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/menu/'          # ← antes /dashboard/
+LOGOUT_REDIRECT_URL = '/'              # ← antes /accounts/login/
+
+
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
+# === BASE DE DATOS ===
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': decouple_config('DB_NAME', default='fixalius_db'),
+        'USER': decouple_config('DB_USER', default='fixalius_db'),
+        'PASSWORD': decouple_config('DB_PASSWORD', default=''),
+        'HOST': decouple_config('DB_HOST', default='localhost'),
+        'PORT': decouple_config('DB_PORT', default='5432'),
+        'CONN_MAX_AGE': 60,
+        'ATOMIC_REQUESTS': True,
     }
 }
 
+# === AUTENTICACIÓN ===
+# Login con nombre de usuario O correo electrónico
+AUTHENTICATION_BACKENDS = [
+    'apps.authentication.backends.EmailOrUsernameBackend',
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -71,28 +97,30 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
+# === INTERNACIONALIZACIÓN ===
 LANGUAGE_CODE = 'es'
-
 LANGUAGES = [
     ('es', _('Español')),
     ('en', _('English')),
 ]
-
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
+LOCALE_PATHS = [BASE_DIR / 'locale']
+TIME_ZONE = 'UTC'
 USE_TZ = True
 
-LOCALE_PATHS = [BASE_DIR / 'locale']
-
+# === ESTÁTICOS ===
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# === EMAIL ===
+# En desarrollo, los correos se imprimen en la consola.
+# En producción, configurar SMTP real.
+EMAIL_BACKEND = decouple_config(
+    'EMAIL_BACKEND',
+    default='django.core.mail.backends.console.EmailBackend',
+)
+DEFAULT_FROM_EMAIL = decouple_config('DEFAULT_FROM_EMAIL', default='no-reply@fixalius.com')
+SERVER_EMAIL = DEFAULT_FROM_EMAIL

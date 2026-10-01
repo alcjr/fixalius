@@ -1,0 +1,252 @@
+{% load i18n %}
+{% comment %}
+  Sidebar de Fixalius (intranet) — versión mínima.
+  Cuando se activen las apps 'dashboard' y 'config', sustituir el <li>
+  por los enlaces reales con {% url 'dashboard:index' %} y {% url 'config:index' %}.
+{% endcomment %}
+
+<style>
+    :root {
+        --sidebar-width-expanded: 280px;
+        --sidebar-width-collapsed: 76px;
+        --sidebar-top: 64px;
+        --sidebar-bottom: 40px;
+        --sidebar-bg: #1e293b;
+        --sidebar-text: #e2e8f0;
+        --sidebar-text-muted: #94a3b8;
+        --sidebar-hover: #334155;
+        --sidebar-active-bg: #0f172a;
+        --sidebar-active-border: #00b8c9;
+        --sidebar-border: rgba(148, 163, 184, 0.1);
+        --sidebar-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar-modern {
+        background-color: var(--sidebar-bg);
+        width: var(--sidebar-width-expanded);
+        position: fixed;
+        left: 0; top: var(--sidebar-top); bottom: var(--sidebar-bottom);
+        z-index: 40;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-right: 1px solid var(--sidebar-border);
+        box-shadow: 4px 0 24px rgba(0,0,0,.15);
+        transition: width var(--sidebar-transition);
+        display: flex; flex-direction: column;
+    }
+    .sidebar-modern.sidebar-collapsed { width: var(--sidebar-width-collapsed); }
+
+    .sidebar-header {
+        padding: .75rem 1rem;
+        border-bottom: 1px solid var(--sidebar-border);
+        display: flex; align-items: center; justify-content: flex-end;
+        min-height: 56px; flex-shrink: 0;
+    }
+    .sidebar-modern.sidebar-collapsed .sidebar-header {
+        justify-content: center; padding: .75rem .5rem;
+    }
+
+    .sidebar-toggle-btn {
+        width: 40px; height: 40px; min-width: 40px;
+        border: none;
+        background: rgba(255,255,255,.08);
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--sidebar-text);
+        transition: all .2s ease;
+        flex-shrink: 0;
+    }
+    .sidebar-toggle-btn:hover { background: rgba(255,255,255,.15); color: #fff; }
+
+    .hamburger-icon line {
+        transition: all .3s cubic-bezier(.4,0,.2,1);
+        transform-origin: center;
+    }
+    .sidebar-collapsed .hamburger-icon line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .sidebar-collapsed .hamburger-icon line:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .sidebar-collapsed .hamburger-icon line:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .sidebar-nav { padding: 1rem .75rem; flex: 1; overflow-y: auto; }
+    .nav-section { margin-bottom: 1.5rem; }
+
+    .nav-section-title {
+        font-size: .65rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: .1em;
+        color: var(--sidebar-text-muted);
+        padding: .5rem .75rem; margin-bottom: .5rem;
+        white-space: nowrap; overflow: hidden;
+        transition: opacity var(--sidebar-transition);
+    }
+    .sidebar-collapsed .nav-section-title { opacity: 0; height: 0; padding: 0; margin: 0; }
+
+    .nav-list {
+        list-style: none; padding: 0; margin: 0;
+        display: flex; flex-direction: column; gap: .25rem;
+    }
+
+    .nav-link {
+        display: flex; align-items: center; gap: .75rem;
+        padding: .7rem .75rem; border-radius: 10px;
+        color: var(--sidebar-text); text-decoration: none;
+        font-size: .875rem; font-weight: 500;
+        transition: all .2s ease;
+        white-space: nowrap; overflow: hidden;
+    }
+    .nav-link:hover { background: var(--sidebar-hover); color: #fff; }
+    .nav-link.active {
+        background: var(--sidebar-active-bg);
+        color: #fff;
+        border-left: 3px solid var(--sidebar-active-border);
+    }
+    .nav-link.active .nav-icon { color: var(--sidebar-active-border); }
+
+    .nav-text {
+        flex: 1; overflow: hidden; text-overflow: ellipsis;
+        transition: opacity var(--sidebar-transition), width var(--sidebar-transition);
+    }
+    .sidebar-collapsed .nav-text { opacity: 0; width: 0; display: none; }
+
+    .nav-icon {
+        width: 24px; height: 24px; min-width: 24px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        transition: color .2s ease;
+    }
+    .nav-icon svg { width: 20px; height: 20px; display: block; }
+
+    .sidebar-collapsed .nav-link { justify-content: center; padding: .7rem 0; }
+
+    .sidebar-collapsed [data-tooltip] { position: relative; }
+    .sidebar-collapsed [data-tooltip]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: calc(100% + 8px); top: 50%;
+        transform: translateY(-50%);
+        background: #1e293b; color: #fff;
+        padding: .5rem .75rem; border-radius: 6px;
+        font-size: .75rem; font-weight: 500; white-space: nowrap;
+        z-index: 1000;
+        border: 1px solid rgba(0,184,201,.3);
+        box-shadow: 0 4px 12px rgba(0,0,0,.25);
+        pointer-events: none;
+    }
+
+    .sidebar-footer {
+        padding: .75rem;
+        border-top: 1px solid var(--sidebar-border);
+        flex-shrink: 0;
+    }
+    .user-card {
+        display: flex; align-items: center; gap: .75rem;
+        padding: .5rem; border-radius: 10px;
+        background: rgba(255,255,255,.05);
+        transition: background .2s;
+        overflow: hidden;
+    }
+    .user-card:hover { background: rgba(255,255,255,.1); }
+    .user-avatar {
+        width: 36px; height: 36px; min-width: 36px;
+        border-radius: 8px;
+        background: linear-gradient(135deg,#00b8c9,#0090a1);
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 600; color: #fff; font-size: .875rem;
+        flex-shrink: 0;
+    }
+    .user-info { flex: 1; min-width: 0; transition: opacity var(--sidebar-transition); }
+    .sidebar-collapsed .user-info { opacity: 0; width: 0; display: none; }
+    .user-name {
+        font-size: .8125rem; font-weight: 600; color: #fff;
+        overflow: hidden; text-overflow: ellipsis;
+    }
+    .user-role { font-size: .6875rem; color: var(--sidebar-text-muted); }
+</style>
+
+<aside class="sidebar-modern" id="appSidebar" aria-label="{% trans 'Barra lateral de navegación' %}">
+
+    <div class="sidebar-header">
+        <button class="sidebar-toggle-btn"
+                id="sidebarToggleBtn"
+                type="button"
+                title="{% trans 'Expandir / Colapsar menú' %}"
+                aria-label="{% trans 'Expandir o colapsar barra lateral' %}"
+                aria-controls="appSidebar"
+                aria-expanded="true"
+                data-tooltip="{% trans 'Expandir / Colapsar' %}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 class="hamburger-icon" aria-hidden="true">
+                <line x1="4" y1="6"  x2="20" y2="6"></line>
+                <line x1="4" y1="12" x2="20" y2="12"></line>
+                <line x1="4" y1="18" x2="20" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="{% trans 'Navegación de la intranet' %}">
+        <div class="nav-section">
+            <div class="nav-section-title">{% trans "Principal" %}</div>
+            <ul class="nav-list">
+
+                <li>
+                    <a href="{% url 'menu' %}"
+                       class="nav-link{% if request.resolver_match and request.resolver_match.url_name == 'menu' %} active{% endif %}"
+                       data-tooltip="{% trans 'Inicio' %}">
+                        <span class="nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 11.5 12 4l9 7.5"></path>
+                                <path d="M5 10v10h14V10"></path>
+                            </svg>
+                        </span>
+                        <span class="nav-text">{% trans "Inicio" %}</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="user-card"
+             data-tooltip="{{ request.user.get_full_name|default:request.user.username }}">
+            <div class="user-avatar" aria-hidden="true">
+                {{ request.user.username|first|upper }}
+            </div>
+            <div class="user-info">
+                <div class="user-name">{{ request.user.get_full_name|default:request.user.username }}</div>
+                <div class="user-role">
+                    {% if request.user.is_staff %}{% trans "Administrador" %}{% else %}{% trans "Usuario" %}{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<script>
+(function () {
+    'use strict';
+    const STORAGE_KEY_COLLAPSED = 'fixalius_sidebar_collapsed';
+    const sidebar   = document.getElementById('appSidebar');
+    const toggleBtn = document.getElementById('sidebarToggleBtn');
+    if (!sidebar || !toggleBtn) return;
+
+    let isCollapsed = localStorage.getItem(STORAGE_KEY_COLLAPSED) === 'true';
+
+    function applyCollapsed(collapsed) {
+        sidebar.classList.toggle('sidebar-collapsed', collapsed);
+        toggleBtn.setAttribute('aria-expanded', String(!collapsed));
+        document.documentElement.style.setProperty(
+            '--sidebar-current-width',
+            collapsed ? '76px' : '280px'
+        );
+    }
+    applyCollapsed(isCollapsed);
+
+    toggleBtn.addEventListener('click', function () {
+        isCollapsed = !isCollapsed;
+        applyCollapsed(isCollapsed);
+        localStorage.setItem(STORAGE_KEY_COLLAPSED, String(isCollapsed));
+    });
+})();
+</script>

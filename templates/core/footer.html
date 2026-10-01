@@ -1,0 +1,12 @@
+{% load i18n %}
+<footer>
+  <div class="logo" aria-hidden="true" style="color:#fff">
+    <svg class="wm" viewBox="222 61 543 89" style="height:1.5rem"><use href="#g-fix"/><use href="#g-alius"/></svg>
+  </div>
+  <span>© {% now "Y" %} Fixalius</span>
+  <div>
+    <a href="#contact">{% trans "Privacidad" %}</a>
+    <a href="#contact">{% trans "Aviso legal" %}</a>
+    <a href="#top">{% trans "Volver arriba" %} <span aria-hidden="true">↑</span></a>
+  </div>
+</footer>

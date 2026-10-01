@@ -1,0 +1,113 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Iniciar sesión" %} · Fixalius{% endblock %}
+{% block meta_description %}{% trans "Acceso a la intranet de Fixalius." %}{% endblock %}
+{% block body_class %}login-page{% endblock %}
+
+{% block head_extra %}
+  <style>
+    .login-page main { padding: 0; }
+    .login-wrap {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 40px 24px;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(16,24,32,.08);
+    }
+    .login-card h1 {
+      font-size: 32px;
+      letter-spacing: -.04em;
+      margin: 0 0 24px;
+    }
+    .login-card label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin: 16px 0 6px;
+    }
+    .login-card input[type="text"],
+    .login-card input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;
+      background: var(--cream);
+    }
+    .login-card input:focus {
+      outline: 2px solid var(--orange);
+      outline-offset: 1px;
+      background: #fff;
+    }
+    .login-card button[type="submit"] {
+      width: 100%;
+      margin-top: 28px;
+      padding: 14px;
+      background: var(--blue);
+      color: #fff;
+      border: 0;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .login-card button[type="submit"]:hover { background: var(--blue-2); }
+    .login-errors {
+      background: #fdecec;
+      color: #8a1f1f;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .login-alt { text-align: center; margin-top: 20px; font-size: 14px; }
+    .login-alt a { color: var(--orange-text); text-decoration: underline; }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="login-wrap">
+    <div class="login-card">
+      <h1>{% trans "Iniciar sesión" %}</h1>
+
+      {% if form.errors %}
+        <p class="login-errors" role="alert">
+          {% trans "Usuario/correo o contraseña incorrectos." %}
+        </p>
+      {% endif %}
+
+      {% if next %}
+        {% if user.is_authenticated %}
+          <p class="login-errors">{% trans "Tu cuenta no tiene acceso a esta página." %}</p>
+        {% else %}
+          <p class="login-errors">{% trans "Inicia sesión para continuar." %}</p>
+        {% endif %}
+      {% endif %}
+
+      <form method="post" action="{% url 'authentication:login' %}">
+        {% csrf_token %}
+        <label for="{{ form.username.id_for_label }}">{% trans "Usuario o correo electrónico" %}</label>
+        {{ form.username }}
+
+        <label for="{{ form.password.id_for_label }}">{% trans "Contraseña" %}</label>
+        {{ form.password }}
+
+        <input type="hidden" name="next" value="{{ next }}">
+        <button type="submit">{% trans "Entrar" %}</button>
+      </form>
+
+      <p class="login-alt">
+        <a href="{% url 'authentication:password_reset' %}">{% trans "¿Olvidaste tu contraseña?" %}</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

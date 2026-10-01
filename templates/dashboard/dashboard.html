@@ -1,0 +1,12 @@
+{% extends 'core/base_intranet.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Dashboard" %} · Fixalius{% endblock %}
+
+{% block intranet_content %}
+  <h1>{% trans "Dashboard" %}</h1>
+  <p>
+    {% trans "Bienvenido," %}
+    {{ request.user.get_full_name|default:request.user.username }}.
+  </p>
+{% endblock %}
