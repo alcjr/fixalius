@@ -82,4 +82,28 @@
       form.reset();
     });
   });
+
+  /* ---------- Modales legales (Privacidad / Aviso legal) ---------- */
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('[data-modal-open]');
+    if (trigger) {
+      e.preventDefault();
+      const dlg = document.getElementById(trigger.dataset.modalOpen);
+      if (!dlg) return;
+      if (typeof dlg.showModal === 'function') {
+        dlg.showModal();
+      } else {
+        dlg.setAttribute('open', '');
+      }
+      return;
+    }
+
+    if (e.target.matches('dialog.modal') || e.target.closest('.modal-close')) {
+      const dlg = e.target.closest('dialog.modal');
+      if (dlg) {
+        if (typeof dlg.close === 'function') { dlg.close(); }
+        else { dlg.removeAttribute('open'); }
+      }
+    }
+  });
 })();

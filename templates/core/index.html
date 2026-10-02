@@ -250,13 +250,39 @@
     </div>
     <span>© {% now "Y" %} Fixalius</span>
     <div>
-      {% url 'privacy' as privacy_url %}
-      {% url 'legal' as legal_url %}
-      <a href="{{ privacy_url|default:'/privacidad/' }}">{% trans "Privacidad" %}</a>
-      <a href="{{ legal_url|default:'/legal/' }}">{% trans "Aviso legal" %}</a>
+      {# Ahora estos enlaces abren modales en lugar de navegar #}
+      <button type="button" class="link-button" data-modal-open="modal-privacy">
+        {% trans "Privacidad" %}
+      </button>
+      <button type="button" class="link-button" data-modal-open="modal-legal">
+        {% trans "Aviso legal" %}
+      </button>
       <a href="#top">{% trans "Volver arriba" %} <span aria-hidden="true">↑</span></a>
     </div>
   </footer>
+
+  {# ---------- Modales legales ---------- #}
+  <dialog id="modal-privacy" class="modal" aria-labelledby="privacy-title">
+    <div class="modal-panel">
+      <button type="button" class="modal-close" aria-label="{% trans 'Cerrar' %}">
+        <span aria-hidden="true">×</span>
+      </button>
+      <div class="modal-scroll">
+        {% include 'core/_privacy_content.html' %}
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="modal-legal" class="modal" aria-labelledby="legal-title">
+    <div class="modal-panel">
+      <button type="button" class="modal-close" aria-label="{% trans 'Cerrar' %}">
+        <span aria-hidden="true">×</span>
+      </button>
+      <div class="modal-scroll">
+        {% include 'core/_legal_content.html' %}
+      </div>
+    </div>
+  </dialog>
 
   <script src="{% static 'core/js/fixalius.js' %}" defer></script>
 </body>
