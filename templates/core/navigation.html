@@ -1,0 +1,105 @@
+<!-- ================= HEADER / NAVIGATION ================= -->
+{% load static %}
+{% load i18n %}
+<header class="bg-primary h-16 fixed top-0 left-0 right-0 z-50 shadow-lg">
+    <div class="flex items-center justify-between h-full px-6">
+        <!-- Logo y nombre -->
+        <div class="flex items-center gap-3">
+            <img src="{% static 'core/images/logo-icon.png' %}" alt="{% trans 'Logo FINGEST' %}" class="w-8 h-8 object-contain">
+            <img src="{% static 'core/images/logo-text_b.png' %}" alt="{% trans 'FINGEST' %}" class="h-6 w-auto object-contain hidden sm:block">
+            <span class="hidden md:inline-block text-slate-400 text-sm font-normal ml-1">{% trans "Gestión de comunidades de vecinos" %}</span>
+        </div>
+
+        <!-- Right side: timestamp + user info -->
+        <div class="flex items-center gap-4">
+            <span class="text-slate-300 text-sm hidden md:flex items-center gap-2">
+                <i class="far fa-clock"></i>
+                <span id="last-update-text">—</span>
+            </span>
+
+            <!-- Selector de idioma EN/ES -->
+            <form method="post" action="{% url 'set_language' %}" class="flex items-center gap-1" aria-label="{% trans 'Selector de idioma' %}" onsubmit="return fingestBustCacheOnLangSwitch(this)">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                <button type="submit" name="language" value="es"
+                        class="px-2 py-1 rounded-md text-xs font-semibold uppercase tracking-wide transition-colors
+                               {% if LANGUAGE_CODE == 'es' %}bg-accent text-white{% else %}text-slate-300 hover:bg-white/10{% endif %}"
+                        title="Español" {% if LANGUAGE_CODE == 'es' %}aria-current="true"{% endif %}>
+                    ES
+                </button>
+                <span class="text-slate-500 text-xs">|</span>
+                <button type="submit" name="language" value="en"
+                        class="px-2 py-1 rounded-md text-xs font-semibold uppercase tracking-wide transition-colors
+                               {% if LANGUAGE_CODE == 'en' %}bg-accent text-white{% else %}text-slate-300 hover:bg-white/10{% endif %}"
+                        title="English" {% if LANGUAGE_CODE == 'en' %}aria-current="true"{% endif %}>
+                    EN
+                </button>
+            </form>
+            <!-- Botón dark mode ELIMINADO -->
+            {% if request.user.is_authenticated %}
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-accent/90 rounded-full flex items-center justify-center font-semibold text-white">
+                        {{ request.user.username|first|upper }}
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-300/80">{% trans "Usuario" %}</div>
+                        <div class="text-sm font-medium">{{ request.user.username }}</div>
+                    </div>
+                </div>
+                <form method="post" action="{% url 'authentication:logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/10 transition-colors" onclick="return confirm('{% trans "¿Cerrar sesión?" %}')">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>{% trans "Salir" %}</span>
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<style>
+/* Los estilos del header-btn ya no son necesarios porque el botón fue eliminado */
+</style>
+
+<script>
+// Solo timestamp - Dark mode eliminado (ahora está en comunidad.js)
+// Locale dinámico: usa el idioma activo de Django ({{ LANGUAGE_CODE }})
+// en vez de 'es-ES' fijo, para que el formato de hora coincida con el
+// idioma seleccionado (12h en 'en', 24h en 'es').
+var CURRENT_LOCALE = '{{ LANGUAGE_CODE|default:"es" }}';
+
+function updateTimestamp() {
+    var el = document.getElementById('last-update-text');
+    if (el) {
+        el.textContent = new Date().toLocaleTimeString(CURRENT_LOCALE);
+    }
+}
+updateTimestamp();
+setInterval(updateTimestamp, 60000);
+
+// =========================================================================
+// FIX: sincronización del selector de idioma con la caché del navegador.
+// -------------------------------------------------------------------------
+// El selector hace un POST normal a set_language, que responde con un
+// redirect 302 a la misma URL (`next`). Si esa URL quedó en la caché del
+// navegador, un F5 normal la sirve desde ahí SIN contactar al servidor,
+// así que la página se queda en el idioma anterior hasta un hard refresh
+// (Ctrl+Shift+R). Para evitarlo, justo antes de enviar el formulario le
+// añadimos un parámetro de cache-busting a `next`, de forma que la URL de
+// destino sea siempre "nueva" para el navegador y se fuerce una petición
+// real al servidor (que ya tendrá la cookie de idioma actualizada).
+// =========================================================================
+function fingestBustCacheOnLangSwitch(form) {
+    var nextInput = form.querySelector('input[name="next"]');
+    if (nextInput) {
+        var url = nextInput.value || (window.location.pathname + window.location.search);
+        // quita un _ts previo (por si el usuario cambia de idioma varias veces)
+        url = url.replace(/([?&])_ts=\d+(?=&|$)/, '$1').replace(/[?&]$/, '');
+        var separator = url.indexOf('?') === -1 ? '?' : '&';
+        nextInput.value = url + separator + '_ts=' + Date.now();
+    }
+    return true;
+}
+window.fingestBustCacheOnLangSwitch = fingestBustCacheOnLangSwitch;
+</script>

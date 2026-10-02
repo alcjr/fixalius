@@ -91,9 +91,9 @@ a{color:inherit;text-decoration:none}
 .logo-alius{color:var(--orange);font-style:italic}
 .logo-dot{color:var(--orange);font-size:33px;margin:0 2px}
 
-nav{display:flex;align-items:center;gap:32px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-nav a:not(.nav-cta):not(.nav-login){opacity:.78;transition:opacity .2s}
-nav a:not(.nav-cta):not(.nav-login):hover{opacity:1}
+nav:not(.sidebar-nav){display:flex;align-items:center;gap:32px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+nav:not(.sidebar-nav) a:not(.nav-cta):not(.nav-login){opacity:.78;transition:opacity .2s}
+nav:not(.sidebar-nav) a:not(.nav-cta):not(.nav-login):hover{opacity:1}
 .nav-cta{border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:12px 17px}
 .nav-cta span{color:var(--orange-on-dark);margin-left:8px;font-size:16px}
 
@@ -351,7 +351,7 @@ footer a:hover{color:#fff}
   .wm{height:1.5rem}
 
   /* El menú se ancla al borde inferior de la cabecera */
-  nav{
+  nav:not(.sidebar-nav){
     display:none;
     position:absolute;
     top:calc(100% + 8px);

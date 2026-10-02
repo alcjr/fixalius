@@ -1,0 +1,398 @@
+{% load static i18n %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE|default:'es' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+
+  <meta name="description" content="{% block meta_description %}{% trans 'Fixalius — Inteligencia aplicada.' %}{% endblock %}">
+  <meta name="theme-color" content="#123e5a">
+
+  <title>{% block title %}{% trans "Fixalius" %}{% endblock %}</title>
+
+  {# --- Favicons (mismos que la landing) --- #}
+  <link rel="icon" type="image/png" sizes="32x32"   href="{% static 'core/images/fixalius-mark.png' %}">
+  <link rel="icon" type="image/x-icon"              href="{% static 'core/images/favicon.ico' %}">
+  <link rel="apple-touch-icon" sizes="180x180"      href="{% static 'core/images/fixalius-256.png' %}">
+
+  {# --- Tipografía --- #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+
+  {# --- Iconos --- #}
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  {# --- Tokens, reset y layout del shell --- #}
+  <style>
+    :root {
+      /* Paleta Fixalius */
+      --fx-blue:       #123e5a;
+      --fx-blue-dark:  #0a2a41;
+      --fx-blue-soft:  rgba(18, 62, 90, .08);
+      --fx-cyan:       #00b8c9;
+      --fx-cyan-dark:  #0090a1;
+      --fx-cyan-soft:  rgba(0, 184, 201, .12);
+      --fx-orange:     #e55b2c;
+      --fx-orange-soft: rgba(229, 91, 44, .12);
+      --fx-amber:      #f99e45;
+
+      /* Semántica de UI */
+      --accent:        var(--fx-cyan);
+      --accent-dark:   var(--fx-cyan-dark);
+      --accent-soft:   var(--fx-cyan-soft);
+
+      --bg-page:       #eef1f6;
+      --bg-card:       #ffffff;
+      --bg-subtle:     #f6f8fc;
+      --bg-hover:      #f0fbfc;
+
+      --text-900:      #0c111b;
+      --text-700:      #1e293b;
+      --text-500:      #475569;
+      --text-400:      #64748b;
+      --text-300:      #94a3b8;
+
+      --border:        #e2e8f0;
+      --border-strong: #cbd5e1;
+
+      --success:       #059669;  --success-bg: #ecfdf5;
+      --warning:       #d97706;  --warning-bg: #fffbeb;
+      --danger:        #e11d48;  --danger-bg:  #fff1f2;
+      --info:          #2563eb;  --info-bg:    #eff6ff;
+
+      --shadow-xs: 0 1px 2px rgba(15,23,42,.04);
+      --shadow-sm: 0 2px 8px rgba(15,23,42,.07);
+      --shadow-md: 0 4px 16px rgba(15,23,42,.10);
+      --shadow-lg: 0 12px 32px rgba(15,23,42,.13);
+
+      --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px; --r-full: 9999px;
+
+      --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-body:    'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-mono:    ui-monospace, 'SFMono-Regular', 'Consolas', monospace;
+
+      /* Layout (consumidas por el shell y por el sidebar.js) */
+      --sidebar-width-expanded:  280px;
+      --sidebar-width-collapsed: 76px;
+      --sidebar-current-width:   var(--sidebar-width-expanded);
+      --header-height: 64px;
+      --footer-height: 40px;
+    }
+
+    /* Modo oscuro — opt-in vía [data-theme="dark"] en <html> */
+    [data-theme="dark"] {
+      --bg-page:   #0d1117;
+      --bg-card:   #161b22;
+      --bg-subtle: #1c2230;
+      --bg-hover:  #1a2744;
+      --text-900:  #e6edf3;
+      --text-700:  #c9d1d9;
+      --text-500:  #8b949e;
+      --text-400:  #6e7681;
+      --text-300:  #484f58;
+      --border:        #30363d;
+      --border-strong: #3d444d;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      overflow: hidden;
+      font-family: var(--font-body);
+      color: var(--text-700);
+      background: var(--bg-page);
+      transition: background .3s ease, color .3s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--fx-blue); }
+    a:hover { color: var(--fx-cyan-dark); }
+
+    :focus-visible {
+      outline: 2px solid var(--fx-cyan);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* --- Accesibilidad: saltar al contenido --- */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 8px; left: 8px;
+      padding: .5rem .9rem;
+      background: var(--fx-blue);
+      color: #fff;
+      border-radius: var(--r-sm);
+      font-size: .85rem;
+      font-weight: 600;
+      z-index: 10000;
+    }
+    .skip-link:focus { left: 8px; }
+
+    /* --- Shell principal --- */
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app-header { height: var(--header-height); flex-shrink: 0; z-index: 100; }
+
+    .app-body {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .app-sidebar {
+      width: var(--sidebar-current-width);
+      flex-shrink: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      transition: width .25s cubic-bezier(.4,0,.2,1);
+    }
+
+    .app-main {
+      flex: 1;
+      min-width: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 16px 20px;
+      scroll-behavior: smooth;
+    }
+
+    .app-footer { height: var(--footer-height); flex-shrink: 0; z-index: 100; }
+
+    @media (max-width: 767px) {
+      .app-sidebar { display: none; }
+      .app-main { padding: 12px 14px; }
+    }
+
+    /* --- Scrollbars --- */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-strong);
+      border-radius: var(--r-full);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* --- Mensajes flash (Django) --- */
+    .flash-stack {
+      position: fixed;
+      top: calc(var(--header-height) + 12px);
+      right: 20px;
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 420px;
+      pointer-events: none;
+    }
+    .flash {
+      pointer-events: auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: var(--r-md);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      font-size: .875rem;
+      color: var(--text-700);
+      animation: flash-in .25s ease-out;
+    }
+    .flash i { font-size: 1rem; line-height: 1.3; flex-shrink: 0; }
+    .flash.success { border-left: 4px solid var(--success); }
+    .flash.success i { color: var(--success); }
+    .flash.error   { border-left: 4px solid var(--danger); }
+    .flash.error i { color: var(--danger); }
+    .flash.warning { border-left: 4px solid var(--warning); }
+    .flash.warning i { color: var(--warning); }
+    .flash.info    { border-left: 4px solid var(--info); }
+    .flash.info i { color: var(--info); }
+
+    .flash .close {
+      margin-left: auto;
+      background: none;
+      border: 0;
+      color: var(--text-400);
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 2px;
+    }
+    .flash .close:hover { color: var(--text-700); }
+
+    @keyframes flash-in {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- Loading overlay global --- */
+    #global-loading {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, .35);
+      backdrop-filter: blur(3px);
+    }
+    #global-loading.is-visible { display: flex; }
+
+    #global-loading .loading-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 22px 34px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-lg);
+    }
+    #global-loading .loading-panel i {
+      font-size: 32px;
+      color: var(--accent);
+    }
+    #global-loading .loading-panel span {
+      font-size: 13px;
+      color: var(--text-500);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        transition-duration: .001ms !important;
+      }
+      .app-main { scroll-behavior: auto; }
+    }
+  </style>
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+  <a class="skip-link" href="#main-content">{% trans "Saltar al contenido" %}</a>
+
+  <div class="app-shell">
+
+    {# ---------- Header ---------- #}
+    <header class="app-header">
+      {% block header %}
+        {% include 'core/navigation.html' %}
+      {% endblock %}
+    </header>
+
+    {# ---------- Body: sidebar + main ---------- #}
+    <div class="app-body">
+
+      <aside class="app-sidebar" aria-label="{% trans 'Navegación lateral' %}">
+        {% block sidebar %}
+          {% include 'core/sidebar.html' %}
+        {% endblock %}
+      </aside>
+
+      <main class="app-main" id="main-content" tabindex="-1">
+
+        {% if messages %}
+        <div class="flash-stack" role="status" aria-live="polite">
+          {% for message in messages %}
+            <div class="flash {{ message.tags|default:'info' }}">
+              <i class="fas
+                {% if message.tags == 'success' %}fa-check-circle
+                {% elif message.tags == 'error' %}fa-exclamation-circle
+                {% elif message.tags == 'warning' %}fa-exclamation-triangle
+                {% else %}fa-info-circle{% endif %}"
+                 aria-hidden="true"></i>
+              <span>{{ message }}</span>
+              <button type="button" class="close" aria-label="{% trans 'Cerrar' %}"
+                      onclick="this.closest('.flash').remove()">×</button>
+            </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+
+    {# ---------- Footer ---------- #}
+    <footer class="app-footer">
+      {% block footer %}
+        {% include 'core/footbar.html' %}
+      {% endblock %}
+    </footer>
+
+  </div>
+
+  {# ---------- Loading overlay global ---------- #}
+  <div id="global-loading" role="status" aria-live="polite" aria-hidden="true">
+    <div class="loading-panel">
+      <i class="fas fa-spinner fa-pulse" aria-hidden="true"></i>
+      <span id="global-loading-msg">{% trans "Cargando…" %}</span>
+    </div>
+  </div>
+
+  {# ---------- Utilidades globales ---------- #}
+  <script>
+    (function () {
+      'use strict';
+
+      /* CSRF: getCookie disponible globalmente */
+      window.getCookie = function (name) {
+        var value = null;
+        if (document.cookie && document.cookie !== '') {
+          document.cookie.split(';').forEach(function (c) {
+            c = c.trim();
+            if (c.substring(0, name.length + 1) === name + '=') {
+              value = decodeURIComponent(c.substring(name.length + 1));
+            }
+          });
+        }
+        return value;
+      };
+
+      /* Loading overlay */
+      var overlay = document.getElementById('global-loading');
+      var msgEl   = document.getElementById('global-loading-msg');
+
+      window.showLoading = function (message) {
+        if (!overlay) return;
+        if (message && msgEl) msgEl.textContent = message;
+        overlay.classList.add('is-visible');
+        overlay.setAttribute('aria-hidden', 'false');
+      };
+
+      window.hideLoading = function () {
+        if (!overlay) return;
+        overlay.classList.remove('is-visible');
+        overlay.setAttribute('aria-hidden', 'true');
+      };
+
+      /* Auto-cierre de mensajes flash a los 6s */
+      document.querySelectorAll('.flash').forEach(function (el) {
+        setTimeout(function () {
+          el.style.transition = 'opacity .3s ease, transform .3s ease';
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(-6px)';
+          setTimeout(function () { el.remove(); }, 320);
+        }, 6000);
+      });
+    })();
+  </script>
+
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

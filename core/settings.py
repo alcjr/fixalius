@@ -4,6 +4,11 @@ from django.utils.translation import gettext_lazy as _
 from decouple import config as decouple_config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+MEDIA_URL  = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+
+
 
 # === SEGURIDAD (en producción, todas desde .env) ===
 SECRET_KEY = decouple_config(
@@ -27,6 +32,7 @@ INSTALLED_APPS = [
     'apps.config',
     'apps.visor',
     'apps.dashboard',
+    'apps.sources',
 ]
 
 MIDDLEWARE = [

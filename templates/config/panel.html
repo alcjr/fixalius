@@ -1,9 +1,70 @@
-{% extends 'core/base_intranet.html' %}
-{% load i18n %}
+{% extends 'core/base.html' %}
+{% load static i18n %}
 
-{% block title %}{% trans "Panel de control" %} · Fixalius{% endblock %}
+{% block title %}{% trans "Panel de control · Fixalius" %}{% endblock %}
 
-{% block intranet_content %}
-  <h1>{% trans "Panel de control" %}</h1>
-  <p>{% trans "Aquí irán los ajustes de la aplicación." %}</p>
+{% block content %}
+<div class="panel-wrap">
+  <header class="panel-header">
+    <h1><i class="fas fa-sliders-h"></i> {% trans "Panel de control" %}</h1>
+    <p>{% trans "Acceso a las herramientas internas del sistema." %}</p>
+  </header>
+  <div class="panel-grid">
+    <a class="panel-card" href="{% url 'admin:index' %}">
+      <div class="panel-card-icon"><i class="fas fa-user-shield"></i></div>
+      <h3>{% trans "Administrador" %}</h3>
+      <p>{% trans "Usuarios, grupos y permisos del sistema." %}</p>
+    </a>
+    <a class="panel-card" href="{% url 'config:home' %}">
+      <div class="panel-card-icon"><i class="fas fa-gears"></i></div>
+      <h3>{% trans "Configuración" %}</h3>
+      <p>{% trans "Parámetros de la aplicación (config.ini)." %}</p>
+    </a>
+    <a class="panel-card" href="{% url 'visor:index' %}">
+      <div class="panel-card-icon"><i class="fas fa-eye"></i></div>
+      <h3>{% trans "Visor" %}</h3>
+      <p>{% trans "Visualización y exploración de datos." %}</p>
+    </a>
+  </div>
+</div>
+
+<style>
+  .panel-wrap { padding: 24px; max-width: 1100px; margin: 0 auto; }
+  .panel-header h1 {
+    margin: 0 0 4px; font-size: 22px; font-weight: 700;
+    color: var(--text-900);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .panel-header h1 i { color: var(--fx-cyan); }
+  .panel-header p { margin: 0 0 24px; font-size: 13px; color: var(--text-500); }
+  .panel-grid {
+    display: grid; gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .panel-card {
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 22px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .panel-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--fx-cyan);
+  }
+  .panel-card-icon {
+    width: 44px; height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--fx-cyan) 12%, transparent);
+    color: var(--fx-cyan);
+    font-size: 18px;
+  }
+  .panel-card h3 { margin: 0; font-size: 15px; font-weight: 700; color: var(--text-900); }
+  .panel-card p  { margin: 0; font-size: 12.5px; line-height: 1.55; color: var(--text-500); }
+</style>
 {% endblock %}

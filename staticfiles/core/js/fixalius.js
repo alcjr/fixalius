@@ -106,4 +106,15 @@
       }
     }
   });
+    /* ---------- Volver arriba ---------- */
+  document.querySelectorAll('[data-scroll-top]').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Limpia el hash de la URL sin provocar un salto
+      if (history.replaceState) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    });
+  });
 })();

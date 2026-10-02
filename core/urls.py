@@ -21,10 +21,12 @@ urlpatterns = [
     # i18n (set_language)
     path('i18n/', include('django.conf.urls.i18n')),
 
-    # ⏸ Aplazado: dashboard y config
-    # path('dashboard/', include('apps.dashboard.urls', namespace='dashboard')),
-    # path('config/',    include('apps.config.urls',    namespace='config')),
-    
-    path('legal/',    TemplateView.as_view(template_name='core/legal.html'),   name='legal'),
+    # ===== Apps de la intranet =====
+    path('sources/',   include('apps.sources.urls',   namespace='sources')),
+    path('dashboard/', include('apps.dashboard.urls', namespace='dashboard')),
+    path('config/',    include('apps.config.urls',    namespace='config')),
+
+    # Legal
+    path('legal/',      TemplateView.as_view(template_name='core/legal.html'),   name='legal'),
     path('privacidad/', TemplateView.as_view(template_name='core/privacy.html'), name='privacy'),
 ]

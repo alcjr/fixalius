@@ -1,0 +1,285 @@
+{% extends 'core/base_intranet.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Aplicaciones · Fixalius" %}{% endblock %}
+
+{% block body_class %}page-apps{% endblock %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/22.1.7/css/dx.light.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'sources/css/applications.css' %}">
+
+  <style>
+  /* ============================================================
+     ENCAJE EN LA INTRANET (mismo criterio que el cuadro de mando)
+     Va después de applications.css para poder sobrescribirlo.
+     ============================================================ */
+  .intranet-body.page-apps .intranet-main {
+      padding: 12px 14px;
+      max-width: none;
+      width: auto;
+  }
+
+  .theme-apps {
+      height: 100%;
+      min-height: 480px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+  }
+  .theme-apps *, .theme-apps *::before, .theme-apps *::after { box-sizing: border-box; }
+  .theme-apps > .apps-header,
+  .theme-apps > .apps-kpi-strip,
+  .theme-apps > .apps-filters { margin: 0; flex: 0 0 auto; }
+  .theme-apps > .apps-main    { margin: 0; flex: 1 1 auto; min-height: 0; min-width: 0; }
+
+  /* Cabecera tipo banner */
+  .theme-apps .apps-header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 14px 20px;
+      border-radius: var(--r-lg, 16px);
+      background: linear-gradient(110deg, #1f3a4d 0%, #123e5a 35%, #00b8c9 100%);
+      border: 0;
+      box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
+      color: #fff;
+  }
+  .theme-apps .apps-header .apps-header-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .theme-apps .apps-header .hdr-ico {
+      width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.25);
+      font-size: 16px; color: #fff;
+  }
+  .theme-apps .apps-header h1 {
+      margin: 0; color: #fff;
+      font-family: var(--font-display, 'Inter', sans-serif);
+      font-size: 20px; font-weight: 800; letter-spacing: -.01em; line-height: 1.2;
+  }
+  .theme-apps .apps-header p {
+      margin: 2px 0 0; font-size: 12px; color: rgba(255,255,255,.8);
+  }
+  .theme-apps .apps-header .apps-last-update {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 999px;
+      font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap;
+      background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.25);
+  }
+  @media (max-width: 768px) {
+      .theme-apps .apps-header p { display: none; }
+  }
+  </style>
+{% endblock %}
+
+{% block intranet_content %}
+<div class="theme-apps">
+
+  {# ============ CABECERA ============ #}
+  <header class="apps-header">
+    <div class="apps-header-left">
+      <span class="hdr-ico"><i class="fas fa-cube"></i></span>
+      <div>
+        <h1>{% trans "Aplicaciones" %}</h1>
+        <p>{% trans "Casos de éxito y soluciones desarrolladas por Fixalius." %}</p>
+      </div>
+    </div>
+    <div class="apps-header-right">
+      <span class="apps-last-update" id="last-update-label">
+        <i class="far fa-clock"></i> <span id="last-update-text">—</span>
+      </span>
+    </div>
+  </header>
+
+  {# ============ KPIs ============ #}
+  <section class="apps-kpi-strip">
+    <div class="apps-kpi" style="--kpi-color:#e55b2c">
+      <div class="apps-kpi-icon"><i class="fas fa-cubes"></i></div>
+      <div>
+        <div class="apps-kpi-value" id="kpi-total">—</div>
+        <div class="apps-kpi-label">{% trans "Total aplicaciones" %}</div>
+      </div>
+    </div>
+    <div class="apps-kpi" style="--kpi-color:#f99e45">
+      <div class="apps-kpi-icon"><i class="fas fa-calendar-check"></i></div>
+      <div>
+        <div class="apps-kpi-value" id="kpi-year">—</div>
+        <div class="apps-kpi-label">{% trans "Este año" %}</div>
+      </div>
+    </div>
+    <div class="apps-kpi" style="--kpi-color:#123e5a">
+      <div class="apps-kpi-icon"><i class="fas fa-layer-group"></i></div>
+      <div>
+        <div class="apps-kpi-value" id="kpi-sectors">—</div>
+        <div class="apps-kpi-label">{% trans "Sectores" %}</div>
+      </div>
+    </div>
+    <div class="apps-kpi" style="--kpi-color:#00b8c9">
+      <div class="apps-kpi-icon"><i class="fas fa-users"></i></div>
+      <div>
+        <div class="apps-kpi-value" id="kpi-clients">—</div>
+        <div class="apps-kpi-label">{% trans "Clientes" %}</div>
+      </div>
+    </div>
+  </section>
+
+  {# ============ FILTROS ============ #}
+  <section class="apps-filters">
+    <div class="apps-filter-search">
+      <i class="fas fa-magnifying-glass"></i>
+      <input type="text" id="filter-search"
+             placeholder="{% trans 'Buscar por descripción, sector o cliente…' %}"
+             autocomplete="off">
+      <button type="button" class="clear-btn" id="clear-search"
+              title="{% trans 'Limpiar búsqueda' %}">
+        <i class="fas fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="apps-filter-select">
+      <i class="fas fa-tag"></i>
+      <select id="filter-sector">
+        <option value="">{% trans "Todos los sectores" %}</option>
+      </select>
+    </div>
+
+    <div class="apps-chips">
+      <button type="button" class="apps-chip active" data-filter="all">
+        <i class="fas fa-border-all"></i> {% trans "Todas" %}
+      </button>
+      <button type="button" class="apps-chip" data-filter="this-year">
+        <i class="fas fa-calendar"></i> {% trans "Este año" %}
+      </button>
+      <button type="button" class="apps-chip" data-filter="last-year">
+        <i class="fas fa-calendar-minus"></i> {% trans "Año anterior" %}
+      </button>
+    </div>
+
+    <div class="apps-filters-spacer"></div>
+
+    <div class="apps-filters-right">
+      <button type="button" class="apps-icon-btn" id="btn-refresh"
+              title="{% trans 'Actualizar' %}">
+        <i class="fas fa-sync-alt" id="refresh-icon"></i>
+      </button>
+      <button type="button" class="apps-icon-btn" id="btn-darkmode"
+              title="{% trans 'Modo oscuro' %}">
+        <i class="fas fa-moon" id="darkmode-icon"></i>
+      </button>
+    </div>
+  </section>
+
+  {# ============ GRID ============ #}
+  <section class="apps-main">
+    <div class="apps-grid-container">
+      <div id="appsGrid"></div>
+      <div class="apps-pager" id="appsPager">
+        <span class="apps-pager-info" id="pager-info">{% trans "Cargando…" %}</span>
+        <div class="apps-pager-controls" id="pager-controls"></div>
+      </div>
+    </div>
+  </section>
+
+  {# ============ POPUP EDICIÓN (form estándar con file upload) ============ #}
+  <div class="apps-modal" id="edit-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="apps-modal-panel">
+      <header class="apps-modal-header">
+        <h2 id="edit-modal-title">{% trans "Nueva aplicación" %}</h2>
+        <button type="button" class="apps-modal-close" data-close="edit-modal" aria-label="{% trans 'Cerrar' %}">
+          <i class="fas fa-times"></i>
+        </button>
+      </header>
+      <form id="edit-form" class="apps-form" enctype="multipart/form-data" novalidate>
+        <input type="hidden" name="id_case" id="field-id">
+
+        <div class="apps-form-group">
+          <label for="field-client">{% trans "Cliente" %} <span class="req">*</span></label>
+          <select name="id_client" id="field-client" required></select>
+          <small>{% trans "Cliente al que pertenece la aplicación." %}</small>
+        </div>
+
+        <div class="apps-form-row">
+          <div class="apps-form-group">
+            <label for="field-sector">{% trans "Sector" %} <span class="req">*</span></label>
+            <input type="text" name="sector_case" id="field-sector" maxlength="100" required
+                   placeholder="{% trans 'Industria, Salud, Finanzas…' %}">
+          </div>
+          <div class="apps-form-group">
+            <label for="field-date">{% trans "Fecha" %} <span class="req">*</span></label>
+            <input type="date" name="date_case" id="field-date" required>
+          </div>
+        </div>
+
+        <div class="apps-form-group">
+          <label for="field-description">{% trans "Descripción" %} <span class="req">*</span></label>
+          <textarea name="descripcion_case" id="field-description" rows="5"
+                    maxlength="4000" required
+                    placeholder="{% trans 'Describe la aplicación, el reto y la solución…' %}"></textarea>
+        </div>
+
+        <div class="apps-form-group">
+          <label for="field-www">{% trans "Sitio web" %}</label>
+          <input type="url" name="www_case" id="field-www" maxlength="255"
+                 placeholder="https://…">
+        </div>
+
+        <div class="apps-form-group">
+          <label for="field-image">{% trans "Imagen / logo" %}</label>
+          <div class="apps-image-picker">
+            <div class="apps-image-preview" id="image-preview">
+              <i class="fas fa-image"></i>
+            </div>
+            <div class="apps-image-controls">
+              <input type="file" name="image_case" id="field-image" accept="image/*">
+              <button type="button" class="apps-btn apps-btn-ghost" id="btn-clear-image">
+                {% trans "Quitar imagen" %}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <p class="apps-form-error" id="edit-form-error" role="alert"></p>
+
+        <footer class="apps-modal-footer">
+          <button type="button" class="apps-btn apps-btn-ghost" data-close="edit-modal">
+            {% trans "Cancelar" %}
+          </button>
+          <button type="submit" class="apps-btn apps-btn-primary" id="edit-submit">
+            <i class="fas fa-floppy-disk"></i> {% trans "Guardar" %}
+          </button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  {# ============ POPUP DETALLE ============ #}
+  <div class="apps-modal" id="detail-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="apps-modal-panel apps-modal-panel--wide">
+      <header class="apps-modal-header">
+        <h2 id="detail-modal-title">{% trans "Detalle" %}</h2>
+        <button type="button" class="apps-modal-close" data-close="detail-modal" aria-label="{% trans 'Cerrar' %}">
+          <i class="fas fa-times"></i>
+        </button>
+      </header>
+      <div class="apps-detail" id="detail-body"></div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdn3.devexpress.com/jslib/22.1.7/js/dx.all.js"></script>
+  <script src="https://cdn3.devexpress.com/jslib/22.1.7/js/localization/dx.messages.es.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  {# URLs y contexto que JS necesita — json_script evita XSS y problemas de escape #}
+  {{ urls|json_script:"app-urls" }}
+  {{ i18n_strings|json_script:"app-i18n" }}
+
+  <script src="{% static 'sources/js/applications.js' %}" defer></script>
+{% endblock %}

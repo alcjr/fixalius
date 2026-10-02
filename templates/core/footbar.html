@@ -1,0 +1,13 @@
+<!-- ================= FOOTER ================= -->
+{% load i18n %}
+<footer class="bg-primary h-10 fixed bottom-0 left-0 right-0 z-40 shadow-lg">
+    <div class="flex items-center justify-between h-full px-6 text-xs text-slate-400">
+        {% now "Y" as current_year %}
+        <span class="font-medium">{% blocktrans %}© {{ current_year }} FINGEST - Todos los derechos reservados.{% endblocktrans %}</span>
+        <div class="flex gap-6">
+            <a href="#" class="hover:text-white transition-colors duration-200">{% trans "Política de Privacidad" %}</a>
+            <a href="#" class="hover:text-white transition-colors duration-200">{% trans "Términos de Uso" %}</a>
+            <a href="#" class="hover:text-white transition-colors duration-200">{% trans "Contacto" %}</a>
+        </div>
+    </div>
+</footer>
