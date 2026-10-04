@@ -106,15 +106,206 @@
       }
     }
   });
-    /* ---------- Volver arriba ---------- */
-  document.querySelectorAll('[data-scroll-top]').forEach((el) => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Limpia el hash de la URL sin provocar un salto
-      if (history.replaceState) {
-        history.replaceState(null, '', window.location.pathname + window.location.search);
-      }
-    });
+  /* ---------- Navegación interna: el único scroll es el de <main> ---------- */
+  const scroller = document.querySelector('main');
+  const reduceMotionNav = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const goToHash = (hash, { smooth = true, push = true } = {}) => {
+    if (!scroller) return false;
+    let id = hash.slice(1);
+    try { id = decodeURIComponent(id); } catch (_) { /* hash mal codificado */ }
+    const target = id ? document.getElementById(id) : scroller;
+    if (!target || (target !== scroller && !scroller.contains(target))) return false;
+
+    const top = target === scroller
+      ? 0
+      : scroller.scrollTop + target.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
+    scroller.scrollTo({ top, behavior: smooth && !reduceMotionNav.matches ? 'smooth' : 'auto' });
+
+    if (push && history.replaceState) {
+      const clean = window.location.pathname + window.location.search;
+      history.replaceState(null, '', target === scroller ? clean : hash);
+    }
+
+    // Accesibilidad: el foco sigue al destino, sin que el navegador mueva nada
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+    return true;
+  };
+
+  // Enlaces internos (menú, "Hablemos", "Volver arriba", skip-link...)
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    const hash = link.getAttribute('href');
+    if (hash.length < 2) return;
+    if (goToHash(hash)) e.preventDefault();
   });
+
+  window.addEventListener('hashchange', () => {
+    if (window.location.hash) goToHash(window.location.hash, { push: false });
+  });
+  if (window.location.hash) {
+    requestAnimationFrame(() => goToHash(window.location.hash, { smooth: false, push: false }));
+  }
+
+  // Red de seguridad: si algo llegase a desplazar la ventana, se devuelve a su sitio
+  window.addEventListener('scroll', () => {
+    const se = document.scrollingElement;
+    if (se && (se.scrollTop || se.scrollLeft)) se.scrollTo(0, 0);
+  }, { passive: true });
+
+  /* ---------- Carrusel de casos de éxito (bucle infinito, movimiento continuo) ---------- */
+  const casesTrack = document.querySelector('[data-cases-track]');
+  if (casesTrack) {
+    const zone      = casesTrack.closest('.cases') || casesTrack;
+    const prevBtn   = document.querySelector('[data-cases-prev]');
+    const nextBtn   = document.querySelector('[data-cases-next]');
+    const toggleBtn = document.querySelector('[data-cases-toggle]');
+    const originals = [...casesTrack.querySelectorAll('.case-card')];
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const SPEED  = 45;     // píxeles por segundo
+    const RESUME = 3000;   // ms tras soltar el dedo antes de reanudar
+
+    const loop = originals.length > 1;
+    let setWidth   = 0;
+    let raf        = 0;
+    let last       = 0;
+    let pos        = 0;
+    let userPaused = false;   // pausa pedida con el botón
+    let hovering   = false;   // ratón, foco o dedo dentro del carrusel
+    let visible    = true;    // la sección está en pantalla
+
+    const gapPx = () => parseFloat(getComputedStyle(casesTrack).columnGap) || 0;
+    const step  = () => originals[0].getBoundingClientRect().width + gapPx();
+
+    // Clona las cards (decorativas, fuera del foco y del árbol de accesibilidad)
+    // las veces necesarias para que el bucle no deje huecos.
+    const build = () => {
+      casesTrack.querySelectorAll('[data-clone]').forEach((c) => c.remove());
+      if (!loop) return;
+      setWidth = step() * originals.length;
+      let guard = 0;
+      while (casesTrack.scrollWidth < setWidth + casesTrack.clientWidth + step() && guard++ < 6) {
+        originals.forEach((card) => {
+          const clone = card.cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          clone.setAttribute('inert', '');
+          clone.dataset.clone = '1';
+          casesTrack.appendChild(clone);
+        });
+      }
+    };
+
+    // Movimiento continuo: se acumula la posición con el tiempo real entre frames
+    // y, al llegar al final del primer juego de cards, se vuelve al inicio sin salto.
+    const tick = (ts) => {
+      if (!last) last = ts;
+      const dt = Math.min(ts - last, 64);
+      last = ts;
+      pos += SPEED * dt / 1000;
+      if (pos >= setWidth) pos -= setWidth;
+      casesTrack.scrollLeft = pos;
+      raf = requestAnimationFrame(tick);
+    };
+
+    const shouldPlay = () =>
+      loop && !userPaused && !hovering && visible && !document.hidden && !reduceMotion.matches;
+
+    const sync = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      last = 0;
+      if (shouldPlay()) {
+        pos = casesTrack.scrollLeft;   // retoma desde donde esté
+        raf = requestAnimationFrame(tick);
+      }
+    };
+
+    // Flechas: un paso de una card con animación; el bucle se cierra por ambos lados.
+    const go = (dir) => {
+      if (loop && dir < 0 && casesTrack.scrollLeft < step()) casesTrack.scrollLeft += setWidth;
+      casesTrack.scrollBy({ left: dir * step(), behavior: 'smooth' });
+    };
+
+    const normalize = () => {
+      if (loop && casesTrack.scrollLeft >= setWidth) casesTrack.scrollLeft -= setWidth;
+    };
+
+    const paintToggle = () => {
+      if (!toggleBtn) return;
+      toggleBtn.hidden = !loop || reduceMotion.matches;
+      toggleBtn.setAttribute('aria-label',
+        (userPaused ? toggleBtn.dataset.labelPlay : toggleBtn.dataset.labelPause) || '');
+      toggleBtn.textContent = userPaused ? '▶' : '❚❚';
+    };
+
+    // Controles
+    if (!loop) {
+      if (prevBtn) prevBtn.disabled = true;
+      if (nextBtn) nextBtn.disabled = true;
+    }
+    if (prevBtn) prevBtn.addEventListener('click', () => go(-1));
+    if (nextBtn) nextBtn.addEventListener('click', () => go(1));
+    if (toggleBtn) toggleBtn.addEventListener('click', () => {
+      userPaused = !userPaused;
+      paintToggle();
+      sync();
+    });
+
+    casesTrack.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    });
+
+    // Cierra el bucle cuando el scroll manual se detiene
+    let idle;
+    casesTrack.addEventListener('scroll', () => {
+      if (raf) return;               // durante el autoplay ya lo gestiona tick()
+      clearTimeout(idle);
+      idle = setTimeout(normalize, 160);
+    }, { passive: true });
+
+    // Pausa mientras el usuario interactúa
+    zone.addEventListener('pointerenter', () => { hovering = true;  sync(); });
+    zone.addEventListener('pointerleave', () => { hovering = false; sync(); });
+    zone.addEventListener('focusin',      () => { hovering = true;  sync(); });
+    zone.addEventListener('focusout',     () => { hovering = false; sync(); });
+    let touchTimer;
+    zone.addEventListener('touchstart', () => {
+      clearTimeout(touchTimer);
+      hovering = true;
+      sync();
+    }, { passive: true });
+    zone.addEventListener('touchend', () => {
+      clearTimeout(touchTimer);
+      touchTimer = setTimeout(() => { hovering = false; sync(); }, RESUME);
+    }, { passive: true });
+
+    // Pausa si la sección no se ve o la pestaña está en segundo plano
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        sync();
+      }, { threshold: 0.2 }).observe(zone);
+    }
+    document.addEventListener('visibilitychange', sync);
+    if (reduceMotion.addEventListener) {
+      reduceMotion.addEventListener('change', () => { paintToggle(); sync(); });
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        build();
+        casesTrack.scrollLeft = 0;
+        sync();
+      }, 200);
+    });
+
+    build();
+    paintToggle();
+    sync();
+  }
 })();
