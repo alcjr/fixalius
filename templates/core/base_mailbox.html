@@ -1,0 +1,276 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% trans 'Sistema de Gestión de comunidades de vecinos - FINGEST' %}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <!-- PWA: manifest + theme color -->
+    <link rel="manifest" href="{% static 'pwa/manifest.json' %}">
+    <meta name="theme-color" content="#0b1b2f">
+
+    <!-- PWA: iOS no lee manifest.json, necesita sus propios meta tags -->
+    <link rel="apple-touch-icon" href="{% static 'pwa/icons/apple-touch-icon.png' %}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FINGEST">
+
+    <title>{% block title %}{% trans "FINGEST" %}{% endblock %}</title>
+
+    <!-- Google Fonts - Syne y DM Sans (canon) -->
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f172a',
+                        secondary: '#1e293b',
+                        accent: '#00b8c9',
+                        'accent-hover': '#0090a1',
+                    },
+                    fontFamily: {
+                        'sans': ['DM Sans', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Fluent UI Icons (necesario para mailbox_00) -->
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css">
+
+    <!-- Variables CSS del canon + soporte colapso sidebar -->
+    <style>
+        :root {
+            --accent: #00b8c9;
+            --accent-dim: #e0f9fb;
+            --accent-dark: #0090a1;
+            --accent-mid: #00a8b8;
+            --accent-glow: rgba(0,184,201,.18);
+            --bg-page: #eef1f6;
+            --bg-card: #ffffff;
+            --bg-subtle: #f6f8fc;
+            --bg-hover: #f0fbfc;
+            --text-900: #0c111b;
+            --text-700: #1e293b;
+            --text-500: #475569;
+            --text-400: #64748b;
+            --text-300: #94a3b8;
+            --border: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --warning: #d97706;
+            --warning-bg: #fffbeb;
+            --danger: #e11d48;
+            --danger-bg: #fff1f2;
+            --info: #2563eb;
+            --info-bg: #eff6ff;
+            --purple: #7c3aed;
+            --purple-bg: #f5f3ff;
+            --shadow-xs: 0 1px 2px rgba(15,23,42,.04);
+            --shadow-sm: 0 2px 8px rgba(15,23,42,.07);
+            --shadow-md: 0 4px 16px rgba(15,23,42,.10);
+            --shadow-lg: 0 12px 32px rgba(15,23,42,.13);
+            --r-sm: 8px;
+            --r-md: 12px;
+            --r-lg: 16px;
+            --r-xl: 20px;
+            --r-full: 9999px;
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'SFMono-Regular', 'Consolas', monospace;
+            --sidebar-current-width: 280px;
+            --header-height: 64px;
+            --footer-height: 40px;
+        }
+
+        /* Dark mode variables */
+        [data-theme="dark"] {
+            --bg-page: #0d1117;
+            --bg-card: #161b22;
+            --bg-subtle: #1c2230;
+            --bg-hover: #1a2744;
+            --text-900: #e6edf3;
+            --text-700: #c9d1d9;
+            --text-500: #8b949e;
+            --text-400: #6e7681;
+            --text-300: #484f58;
+            --border: #30363d;
+            --border-strong: #3d444d;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font-body);
+            background: var(--bg-page);
+            transition: background .3s ease, color .3s ease;
+        }
+
+        /* Layout principal: header + scrollable content + footer */
+        .app-shell {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-header {
+            height: var(--header-height);
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .app-body {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .app-sidebar {
+            width: var(--sidebar-current-width);
+            flex-shrink: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        @media (max-width: 767px) {
+            .app-sidebar { display: none; }
+        }
+
+        .app-main {
+            flex: 1;
+            min-width: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 16px 20px;
+            scroll-behavior: smooth;
+        }
+
+        .app-footer {
+            height: var(--footer-height);
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--r-full); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <div class="app-shell">
+        <!-- Header (navigation) -->
+        <header class="app-header">
+            {% include 'core/navigation.html' %}
+        </header>
+
+        <!-- Body: sidebar + main content -->
+        <div class="app-body">
+            <!-- Sidebar del sistema -->
+            <aside class="app-sidebar">
+                {% include 'core/sidebar.html' %}
+            </aside>
+
+            <!-- Contenido principal scrollable -->
+            <main class="app-main">
+                {% if messages %}
+                <div class="fixed top-20 right-4 z-50 space-y-2 max-w-md">
+                    {% for message in messages %}
+                    <div class="p-3 rounded-md shadow-lg border {% if message.tags == 'success' %}bg-green-50 border-green-200 text-green-700
+                                 {% elif message.tags == 'error' %}bg-red-50 border-red-200 text-red-700
+                                 {% elif message.tags == 'warning' %}bg-yellow-50 border-yellow-200 text-yellow-700
+                                 {% else %}bg-blue-50 border-blue-200 text-blue-700{% endif %}">
+                        <div class="flex items-center">
+                            <i class="fas {% if message.tags == 'success' %}fa-check-circle
+                                        {% elif message.tags == 'error' %}fa-exclamation-circle
+                                        {% elif message.tags == 'warning' %}fa-exclamation-triangle
+                                        {% else %}fa-info-circle{% endif %} mr-2"></i>
+                            <span>{{ message }}</span>
+                            <button class="ml-auto" onclick="this.parentElement.parentElement.remove()">×</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            {% include 'core/footbar.html' %}
+        </footer>
+    </div>
+
+    <!-- Loading overlay global (único en toda la aplicación) -->
+    <div id="global-loading" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.3); z-index:10000; align-items:center; justify-content:center; backdrop-filter:blur(2px);">
+        <div style="background:var(--bg-card); border-radius:20px; padding:20px 32px; display:flex; flex-direction:column; align-items:center; gap:12px; box-shadow:0 20px 40px rgba(0,0,0,0.2); border:1px solid var(--border);">
+            <i class="fas fa-spinner fa-pulse" style="font-size:32px; color:var(--accent)"></i>
+            <span style="font-size:13px; color:var(--text-500)">{% trans "Cargando..." %}</span>
+        </div>
+    </div>
+
+    <script src="{% static 'core/js/i18n/fingest-i18n-' %}{{ LANGUAGE_CODE }}.js"></script>
+    <script src="{% static 'core/js/fingest-i18n.js' %}"></script>
+    <script>
+    // CSRF setup — disponible globalmente para todas las páginas
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Loading overlay functions (canon) — globales
+    window.showLoading = function(message) {
+        var overlay = document.getElementById('global-loading');
+        if (overlay) {
+            overlay.style.display = 'flex';
+            var span = overlay.querySelector('span');
+            if (span && message) span.textContent = message;
+        }
+    };
+
+    window.hideLoading = function() {
+        var overlay = document.getElementById('global-loading');
+        if (overlay) overlay.style.display = 'none';
+    };
+    </script>
+
+    <!-- PWA: registro del service worker (send_issue instalable en móvil/tablet) -->
+    <script src="{% static 'pwa/register-sw.js' %}" defer></script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

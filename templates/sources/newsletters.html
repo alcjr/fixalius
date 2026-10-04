@@ -1,0 +1,207 @@
+{% extends 'core/base_intranet.html' %}
+{% load static i18n %}
+{% comment %}
+  Clientes (tabla Client) — patrón de página de tabla de la intranet.
+
+  Ruta de la página:  sources:clients        (la que enlaza el sidebar)
+  Nombres de URL de la API que esta plantilla espera (ajústalos aquí si difieren):
+      sources:client-list        GET/POST  .../clients/        y  PATCH/DELETE .../clients/<id>/
+      sources:client-kpis        GET       .../clients/kpis/
+      sources:client-sectors     GET       .../clients/sectors/
+      sources:client-countries   GET       .../clients/countries/
+      sources:successcase-list   GET       .../cases/?id_client=   (últimas aplicaciones en la ficha)
+  Estáticos:  core/css/table_page.css · core/js/table_page.js · sources/js/clients.js
+{% endcomment %}
+
+{% block title %}Fixalius · {% trans "Clientes" %}{% endblock %}
+{% block main_class %}intranet-main--flush{% endblock %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/22.1.7/css/dx.light.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap">
+  <link rel="stylesheet" href="{% static 'core/css/table_page.css' %}">
+{% endblock %}
+
+{% block intranet_content %}
+<section class="tp" id="tablePage" data-density="compact" aria-labelledby="tp-title">
+
+  {# ------------------------------ Cabecera ------------------------------ #}
+  <header class="tp-header">
+    <div class="tp-title-wrap">
+      <span class="tp-title-icon" aria-hidden="true"><i class="fas fa-building"></i></span>
+      <div>
+        <h1 id="tp-title">{% trans "Clientes" %}</h1>
+        <p>{% trans "Empresas para las que Fixalius ha realizado aplicaciones" %}</p>
+      </div>
+    </div>
+    <span class="tp-updated" title="{% trans 'Última actualización de los datos' %}">
+      <i class="far fa-clock" aria-hidden="true"></i>
+      {% trans "Actualizado" %} <span id="last-update-text">—</span>
+    </span>
+  </header>
+
+  {# -------------------------------- KPIs -------------------------------- #}
+  <div class="tp-kpis" aria-label="{% trans 'Resumen' %}">
+    <div class="tp-kpi">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-building"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value loading" id="kpi-total">&nbsp;</div>
+        <div class="tp-kpi-label">{% trans "Clientes" %}</div>
+      </div>
+      <div class="tp-kpi-spark" id="spark-total" hidden></div>
+    </div>
+    <div class="tp-kpi tp-kpi--success">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-trophy"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value loading" id="kpi-active">&nbsp;</div>
+        <div class="tp-kpi-label">{% trans "Con aplicaciones" %}</div>
+      </div>
+      <div class="tp-kpi-spark" id="spark-active" hidden></div>
+    </div>
+    <div class="tp-kpi tp-kpi--info">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-industry"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value loading" id="kpi-sectors">&nbsp;</div>
+        <div class="tp-kpi-label">{% trans "Sectores" %}</div>
+      </div>
+      <div class="tp-kpi-spark" id="spark-sectors" hidden></div>
+    </div>
+    <div class="tp-kpi tp-kpi--warning">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-globe"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value loading" id="kpi-countries">&nbsp;</div>
+        <div class="tp-kpi-label">{% trans "Países" %}</div>
+      </div>
+      <div class="tp-kpi-spark" id="spark-countries" hidden></div>
+    </div>
+  </div>
+
+  {# ------------------------------- Filtros ------------------------------ #}
+  <div class="tp-filters" role="search">
+    <div class="tp-search">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <input type="text" id="filter-search" autocomplete="off"
+             placeholder="{% trans 'Buscar por descripción, sector, país o correo…' %}"
+             aria-label="{% trans 'Buscar' %}">
+      <button type="button" class="tp-search-clear" id="clear-search" hidden
+              aria-label="{% trans 'Borrar búsqueda' %}"><i class="fas fa-times-circle" aria-hidden="true"></i></button>
+    </div>
+
+    <div class="tp-select-wrap">
+      <i class="fas fa-industry" aria-hidden="true"></i>
+      <select id="filter-sector" aria-label="{% trans 'Filtrar por sector' %}">
+        <option value="">{% trans "Todos los sectores" %}</option>
+      </select>
+    </div>
+    <div class="tp-select-wrap">
+      <i class="fas fa-globe" aria-hidden="true"></i>
+      <select id="filter-country" aria-label="{% trans 'Filtrar por país' %}">
+        <option value="">{% trans "Todos los países" %}</option>
+      </select>
+    </div>
+
+    <div class="tp-chips" role="group" aria-label="{% trans 'Filtros rápidos' %}">
+      <button type="button" class="tp-chip is-active" data-chip="all" aria-pressed="true">{% trans "Todos" %}</button>
+      <button type="button" class="tp-chip" data-chip="with_cases" aria-pressed="false">{% trans "Con aplicaciones" %}</button>
+      <button type="button" class="tp-chip" data-chip="no_cases" aria-pressed="false">{% trans "Sin aplicaciones" %}</button>
+      <button type="button" class="tp-chip" data-chip="no_logo" aria-pressed="false">{% trans "Sin logo" %}</button>
+    </div>
+    <span class="tp-filter-count" id="filter-count" hidden title="{% trans 'Filtros activos' %}">0</span>
+
+    <div class="tp-tools">
+      <div class="tp-density" role="group" aria-label="{% trans 'Densidad de filas' %}">
+        <button type="button" data-density-set="compact" title="{% trans 'Compacta' %}" aria-label="{% trans 'Compacta' %}"><i class="fas fa-grip-lines" aria-hidden="true"></i></button>
+        <button type="button" data-density-set="normal" title="{% trans 'Normal' %}" aria-label="{% trans 'Normal' %}"><i class="fas fa-list" aria-hidden="true"></i></button>
+        <button type="button" data-density-set="comfortable" title="{% trans 'Cómoda' %}" aria-label="{% trans 'Cómoda' %}"><i class="fas fa-align-justify" aria-hidden="true"></i></button>
+      </div>
+      <button type="button" class="tp-btn-new" id="btn-new"><i class="fas fa-plus" aria-hidden="true"></i> {% trans "Nuevo cliente" %}</button>
+      <button type="button" class="tp-iconbtn" id="btn-refresh" title="{% trans 'Refrescar datos' %}" aria-label="{% trans 'Refrescar datos' %}"><i class="fas fa-rotate-right" aria-hidden="true"></i></button>
+      <button type="button" class="tp-iconbtn" id="btn-export" title="{% trans 'Exportar a Excel' %}" aria-label="{% trans 'Exportar a Excel' %}"><i class="fas fa-file-excel" aria-hidden="true"></i></button>
+      <button type="button" class="tp-iconbtn" id="btn-print" title="{% trans 'Imprimir la página actual' %}" aria-label="{% trans 'Imprimir la página actual' %}"><i class="fas fa-print" aria-hidden="true"></i></button>
+      <button type="button" class="tp-iconbtn" id="btn-theme" title="{% trans 'Modo claro / oscuro' %}" aria-label="{% trans 'Modo claro / oscuro' %}"><i class="fas fa-moon" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  {# -------------------------------- Tabla ------------------------------- #}
+  <div class="tp-main">
+    <div class="tp-grid">
+      <div class="tp-grid-body"><div id="gridContainer"></div></div>
+      <div class="tp-pager">
+        <div class="tp-pager-left">
+          <span class="tp-pager-info" id="pager-info" aria-live="polite">{% trans "Cargando…" %}</span>
+          <label class="tp-pager-size">{% trans "Filas:" %}
+            <select id="page-size">
+              <option value="10">10</option>
+              <option value="25" selected>25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </label>
+        </div>
+        <nav class="tp-pager-controls" id="pager-controls" aria-label="{% trans 'Paginación' %}"></nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# Menú contextual (clic derecho sobre una fila) #}
+<div class="tp-ctx" id="ctx-menu" role="menu">
+  <button type="button" role="menuitem" data-action="view"><i class="fas fa-eye" aria-hidden="true"></i> {% trans "Ver ficha" %}</button>
+  <button type="button" role="menuitem" data-action="edit"><i class="fas fa-pen" aria-hidden="true"></i> {% trans "Editar" %}</button>
+  <hr>
+  <button type="button" role="menuitem" class="is-danger" data-action="del"><i class="fas fa-trash-can" aria-hidden="true"></i> {% trans "Eliminar" %}</button>
+</div>
+
+{# Indicador de carga (guardar, eliminar, exportar) #}
+<div class="tp-loading" id="tp-loading" hidden>
+  <div class="tp-loading-box" role="status">
+    <i class="fas fa-spinner fa-pulse" aria-hidden="true"></i>
+    <span>{% trans "Cargando…" %}</span>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn3.devexpress.com/jslib/22.1.7/js/dx.all.js"></script>
+  {% if LANGUAGE_CODE == 'en' %}
+    <script src="https://cdn3.devexpress.com/jslib/22.1.7/js/localization/dx.messages.en.js"></script>
+  {% else %}
+    <script src="https://cdn3.devexpress.com/jslib/22.1.7/js/localization/dx.messages.es.js"></script>
+  {% endif %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  {# Catálogo de traducciones del JS: si la URL no existe, el JS usa los textos en español #}
+  {% url 'javascript-catalog' as jsi18n_url %}
+  {% if jsi18n_url %}<script src="{{ jsi18n_url }}"></script>{% endif %}
+
+  {# Forma "as": si una ruta no existe, la variable queda vacía en vez de lanzar NoReverseMatch. #}
+  {# clients.js detecta las rutas vacías y muestra en la página qué nombres faltan.             #}
+  {% url 'sources:successcase-list' as api_list %}
+  {% url 'sources:successcase-kpis' as api_kpis %}
+  {% url 'sources:successcase-sectors' as api_sectors %}
+  {% url 'sources:client-list' as api_clients %}
+  {% url 'sources:sector-list' as api_sectors_all %}     {# ⬅️ NUEVO #}
+<script>
+  window.FIXALIUS_PAGE = {
+    urls: {
+      list:        "{{ api_list|escapejs }}",
+      kpis:        "{{ api_kpis|escapejs }}",
+      sectors:     "{{ api_sectors|escapejs }}",
+      clients:     "{{ api_clients|escapejs }}",
+      sectors_all: "{{ api_sectors_all|escapejs }}"    {# ⬅️ NUEVO #}
+    },
+    expected: {
+      list: "sources:successcase-list", kpis: "sources:successcase-kpis",
+      sectors: "sources:successcase-sectors", clients: "sources:client-list"
+    }
+  };
+</script>
+
+  <script src="{% static 'core/js/table_page.js' %}"></script>
+  <script src="{% static 'sources/js/clients.js' %}"></script>
+{% endblock %}

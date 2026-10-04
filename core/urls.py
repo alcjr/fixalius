@@ -25,7 +25,7 @@ urlpatterns = [
     path('sources/',   include('apps.sources.urls',   namespace='sources')),
     path('dashboard/', include('apps.dashboard.urls', namespace='dashboard')),
     path('config/',    include('apps.config.urls',    namespace='config')),
-
+    
     # Legal
     path('legal/',      TemplateView.as_view(template_name='core/legal.html'),   name='legal'),
     path('privacidad/', TemplateView.as_view(template_name='core/privacy.html'), name='privacy'),

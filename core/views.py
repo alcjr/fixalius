@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.urls import translate_url
 from django.utils.translation import gettext_lazy as _
 
+from apps.sources.models import Sector, SuccessCase
+
 # Lista a nivel de módulo: debe ser lazy para traducirse en cada petición
 SECTORS = [
     _("Salud"),
@@ -38,3 +40,14 @@ def legal(request):
 def menu(request):
     """Página de aterrizaje de la intranet tras el login."""
     return render(request, 'core/menu.html')
+
+def home(request):
+    return render(request, "core/index.html", {
+        "sectors": Sector.objects.filter(activo=True),
+        "success_cases": (
+            SuccessCase.objects
+            .select_related("sector", "client")
+            .order_by("-date_case", "-id")[:12]
+        ),
+        "alternates": [],
+    })
