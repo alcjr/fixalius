@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
@@ -25,8 +27,13 @@ urlpatterns = [
     path('sources/',   include('apps.sources.urls',   namespace='sources')),
     path('dashboard/', include('apps.dashboard.urls', namespace='dashboard')),
     path('config/',    include('apps.config.urls',    namespace='config')),
-    
+
     # Legal
     path('legal/',      TemplateView.as_view(template_name='core/legal.html'),   name='legal'),
     path('privacidad/', TemplateView.as_view(template_name='core/privacy.html'), name='privacy'),
 ]
+
+# Ficheros subidos (imágenes de casos de éxito, logos de clientes...).
+# Solo en desarrollo: en producción /media/ debe servirlo el servidor web.
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
