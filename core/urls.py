@@ -4,12 +4,13 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
 
+from apps.sources import newsletter_views
 from core import views as core_views
 
 
 urlpatterns = [
     # Landing pública
-    path('', TemplateView.as_view(template_name='core/index.html'), name='home'),
+    path('', core_views.home, name='home'),
 
     # Intranet (tras login)
     path('menu/', core_views.menu, name='menu'),
@@ -27,6 +28,11 @@ urlpatterns = [
     path('sources/',   include('apps.sources.urls',   namespace='sources')),
     path('dashboard/', include('apps.dashboard.urls', namespace='dashboard')),
     path('config/',    include('apps.config.urls',    namespace='config')),
+
+    # Newsletter (doble opt-in)
+    path('newsletter/subscribe/',                newsletter_views.subscribe,   name='newsletter_subscribe'),
+    path('newsletter/confirm/<uuid:token>/',     newsletter_views.confirm,     name='newsletter_confirm'),
+    path('newsletter/unsubscribe/<str:token>/',  newsletter_views.unsubscribe, name='newsletter_unsubscribe'),
 
     # Legal
     path('legal/',      TemplateView.as_view(template_name='core/legal.html'),   name='legal'),

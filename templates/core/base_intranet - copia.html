@@ -1,0 +1,98 @@
+{# Plantilla base de la intranet de Fixalius #}
+{% load i18n static tz %}{% get_current_language as LANGUAGE_CODE %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}Fixalius · {% trans 'Intranet' %}{% endblock %}</title>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23123e5a'/%3E%3Ctext x='32' y='48' font-family='Arial,Helvetica,sans-serif' font-size='44' font-weight='800' font-style='italic' fill='%23f47b36' text-anchor='middle'%3Ef%3C/text%3E%3C/svg%3E">
+
+  <link rel="stylesheet" href="{% static 'core/css/fixalius.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/intranet.css' %}">
+
+  {# Sin defer a propósito: aplica el estado del sidebar (colapsado/expandido) #}
+  {# antes del primer pintado y evita el parpadeo al cargar la página.        #}
+  <script src="{% static 'core/js/intranet.js' %}"></script>
+
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="intranet-body{% if request.user.is_authenticated %} has-sidebar{% endif %} {% block body_class %}{% endblock %}">
+
+  <a class="skip-link" href="#main">{% trans "Saltar al contenido" %}</a>
+
+  {% include 'core/_wordmark.html' %}
+
+  <header class="intranet-header">
+    <a class="brand" href="{% url 'menu' %}" aria-label="Fixalius — {% trans 'Intranet' %}">
+      <svg class="wm" viewBox="222 61 543 89" aria-hidden="true"><use href="#g-fix"/><use href="#g-alius"/></svg>
+    </a>
+
+    <div class="intranet-header-actions">
+      {% if request.user.is_authenticated %}
+        {% with display_name=request.user.get_full_name|default:request.user.username %}
+          <span class="intranet-user" title="{{ request.user.email|default:display_name }}">
+            {{ display_name }}
+          </span>
+        {% endwith %}
+
+        {# Texto inicial en servidor (settings.TIME_ZONE es UTC, de ahí el timezone);   #}
+        {# intranet.js lo sustituye por la hora del navegador y lo actualiza cada minuto #}
+        {% timezone "Europe/Madrid" %}
+        <time class="intranet-clock"
+              id="intranetClock"
+              datetime="{% now 'c' %}"
+              aria-live="off">
+          {% now "SHORT_DATETIME_FORMAT" %}
+        </time>
+        {% endtimezone %}
+
+        <form method="post" action="{% url 'authentication:logout' %}" class="logout-form">
+          {% csrf_token %}
+          <button type="submit">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            {% trans "Salir" %}
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </header>
+
+  {# El sidebar solo existe para usuarios autenticados (ver .has-sidebar en el body) #}
+  {% if request.user.is_authenticated %}
+    {% include 'core/sidebar.html' %}
+  {% endif %}
+
+  {% if messages %}
+    <div class="intranet-messages" role="status" aria-live="polite">
+      {% for message in messages %}
+        <div class="intranet-message intranet-message--{{ message.level_tag|default:'info' }}">
+          <span class="intranet-message-text">{{ message }}</span>
+          <button type="button" class="intranet-message-close" data-dismiss-message
+                  aria-label="{% trans 'Cerrar' %}">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {# main_class: "intranet-main--flush" para páginas de tabla (sin padding, altura completa) #}
+  <main class="intranet-main {% block main_class %}{% endblock %}" id="main" tabindex="-1">
+    {% block intranet_content %}{% endblock %}
+  </main>
+
+  <footer class="intranet-footer">
+    <span>© {% now "Y" %} Fixalius</span>
+    <span>{% trans "Intranet" %}</span>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

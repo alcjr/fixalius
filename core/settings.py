@@ -35,6 +35,20 @@ INSTALLED_APPS = [
     'apps.sources',
 ]
 
+# --- CSRF --------------------------------------------------------------
+CSRF_COOKIE_SECURE    = False          # True SOLO en HTTPS
+CSRF_COOKIE_HTTPONLY  = False          # True rompe document.cookie en JS
+CSRF_COOKIE_SAMESITE  = "Lax"          # "Strict" puede romper logout cross-tab
+CSRF_COOKIE_NAME      = "csrftoken"
+CSRF_COOKIE_PATH      = "/"
+CSRF_COOKIE_DOMAIN    = None
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -122,11 +136,14 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # === EMAIL ===
-# En desarrollo, los correos se imprimen en la consola.
-# En producción, configurar SMTP real.
-EMAIL_BACKEND = decouple_config(
-    'EMAIL_BACKEND',
-    default='django.core.mail.backends.console.EmailBackend',
-)
+# En desarrollo (sin EMAIL_BACKEND en .env) los correos se imprimen en la consola.
+EMAIL_BACKEND = decouple_config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = decouple_config('EMAIL_HOST', default='localhost')
+EMAIL_PORT = decouple_config('EMAIL_PORT', default=465, cast=int)
+EMAIL_HOST_USER = decouple_config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = decouple_config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_USE_SSL = decouple_config('EMAIL_USE_SSL', default=True, cast=bool)   # puerto 465
+EMAIL_USE_TLS = False                                                       # solo para 587
+EMAIL_TIMEOUT = 15
 DEFAULT_FROM_EMAIL = decouple_config('DEFAULT_FROM_EMAIL', default='no-reply@fixalius.com')
-SERVER_EMAIL = DEFAULT_FROM_EMAIL
+SERVER_EMAIL = decouple_config('SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)

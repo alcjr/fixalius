@@ -44,7 +44,8 @@ msgstr ""
 msgid "activo"
 msgstr ""
 
-#: .\apps\sources\models.py:66 .\apps\sources\models.py:102 .\apps\sources\models.py:176
+#: .\apps\sources\models.py:66 .\apps\sources\models.py:102
+#: .\apps\sources\models.py:176
 #, fuzzy
 #| msgid "Sectores"
 msgid "sector"
@@ -92,7 +93,8 @@ msgstr ""
 msgid "cliente"
 msgstr ""
 
-#: .\apps\sources\models.py:123 .\templates\dashboard\dashboard.html:394 .\templates\sources\dashboard.html:448
+#: .\apps\sources\models.py:123 .\templates\dashboard\dashboard.html:394
+#: .\templates\sources\dashboard.html:448
 msgid "clientes"
 msgstr ""
 
@@ -191,7 +193,8 @@ msgstr "Sign in"
 # =========================================================
 # templates/core/_brand.html (aria-labels por defecto)
 # =========================================================
-#: .\templates\authentication\base_auth.html:93 .\templates\authentication\login.html:17
+#: .\templates\authentication\base_auth.html:93
+#: .\templates\authentication\login.html:17
 msgid "Inicio"
 msgstr "Home"
 
@@ -202,14 +205,19 @@ msgstr "Home"
 msgid "Navegación de acceso"
 msgstr "Access navigation"
 
-#: .\templates\authentication\base_auth.html:97 .\templates\authentication\password_reset.html:33 .\templates\authentication\password_reset_complete.html:14 .\templates\authentication\password_reset_confirm.html:46 .\templates\authentication\password_reset_done.html:16
+#: .\templates\authentication\base_auth.html:97
+#: .\templates\authentication\password_reset.html:33
+#: .\templates\authentication\password_reset_complete.html:14
+#: .\templates\authentication\password_reset_confirm.html:46
+#: .\templates\authentication\password_reset_done.html:16
 msgid "Volver al sitio"
 msgstr "Back to site"
 
 # =========================================================
 # templates/authentication/login.html
 # =========================================================
-#: .\templates\authentication\login.html:4 .\templates\authentication\password_reset_complete.html:11
+#: .\templates\authentication\login.html:4
+#: .\templates\authentication\password_reset_complete.html:11
 msgid "Iniciar sesión"
 msgstr "Sign in"
 
@@ -252,7 +260,15 @@ msgstr "Private area"
 # =========================================================
 # templates/core/base_intranet.html
 # =========================================================
-#: .\templates\authentication\login.html:542 .\templates\authentication\password_reset.html:7 .\templates\authentication\password_reset_complete.html:7 .\templates\authentication\password_reset_confirm.html:7 .\templates\authentication\password_reset_done.html:7 .\templates\core\base_intranet.html:9 .\templates\core\base_intranet.html:29 .\templates\core\base_intranet.html:93 .\templates\core\menu.html:4 .\templates\core\menu.html:8
+#: .\templates\authentication\login.html:542
+#: .\templates\authentication\password_reset.html:7
+#: .\templates\authentication\password_reset_complete.html:7
+#: .\templates\authentication\password_reset_confirm.html:7
+#: .\templates\authentication\password_reset_done.html:7
+#: .\templates\core\base_intranet.html:9
+#: .\templates\core\base_intranet.html:29
+#: .\templates\core\base_intranet.html:93 .\templates\core\menu.html:4
+#: .\templates\core\menu.html:8
 msgid "Intranet"
 msgstr "Intranet"
 
@@ -288,7 +304,8 @@ msgstr "Username or email"
 msgid "Contraseña"
 msgstr "Password"
 
-#: .\templates\authentication\login.html:593 .\templates\authentication\login.html:689
+#: .\templates\authentication\login.html:593
+#: .\templates\authentication\login.html:689
 msgid "Mostrar contraseña"
 msgstr "Show password"
 
@@ -323,13 +340,18 @@ msgstr "Hide password"
 # =========================================================
 # templates/authentication/password_reset.html
 # =========================================================
-#: .\templates\authentication\password_reset.html:4 .\templates\authentication\password_reset.html:8
+#: .\templates\authentication\password_reset.html:4
+#: .\templates\authentication\password_reset.html:8
 msgid "Restablecer contraseña"
 msgstr "Reset password"
 
 #: .\templates\authentication\password_reset.html:9
-msgid "Si el correo corresponde a una cuenta, te enviaremos un enlace para elegir una nueva contraseña."
-msgstr "If the email matches an account, we will send you a link to choose a new password."
+msgid ""
+"Si el correo corresponde a una cuenta, te enviaremos un enlace para elegir "
+"una nueva contraseña."
+msgstr ""
+"If the email matches an account, we will send you a link to choose a new "
+"password."
 
 #: .\templates\authentication\password_reset.html:23
 msgid "Correo electrónico"
@@ -339,25 +361,34 @@ msgstr "Email"
 msgid "Enviar enlace"
 msgstr "Send link"
 
-#: .\templates\authentication\password_reset.html:32 .\templates\authentication\password_reset_confirm.html:45 .\templates\authentication\password_reset_done.html:15
+#: .\templates\authentication\password_reset.html:32
+#: .\templates\authentication\password_reset_confirm.html:45
+#: .\templates\authentication\password_reset_done.html:15
 msgid "Volver al acceso"
 msgstr "Back to sign in"
 
 # =========================================================
 # templates/authentication/password_reset_complete.html
 # =========================================================
-#: .\templates\authentication\password_reset_complete.html:4 .\templates\authentication\password_reset_complete.html:8
+#: .\templates\authentication\password_reset_complete.html:4
+#: .\templates\authentication\password_reset_complete.html:8
 msgid "Contraseña cambiada"
 msgstr "Password changed"
 
 #: .\templates\authentication\password_reset_complete.html:9
-msgid "Tu contraseña se ha cambiado correctamente. Ya puedes iniciar sesión con tu nueva contraseña."
-msgstr "Your password has been changed successfully. You can now sign in with your new password."
+msgid ""
+"Tu contraseña se ha cambiado correctamente. Ya puedes iniciar sesión con tu "
+"nueva contraseña."
+msgstr ""
+"Your password has been changed successfully. You can now sign in with your "
+"new password."
 
 # =========================================================
 # templates/authentication/password_reset_confirm.html
 # =========================================================
-#: .\templates\authentication\password_reset_confirm.html:4 .\templates\authentication\password_reset_confirm.html:8 .\templates\authentication\password_reset_confirm.html:25
+#: .\templates\authentication\password_reset_confirm.html:4
+#: .\templates\authentication\password_reset_confirm.html:8
+#: .\templates\authentication\password_reset_confirm.html:25
 msgid "Nueva contraseña"
 msgstr "New password"
 
@@ -384,13 +415,18 @@ msgstr "Request a new link"
 # =========================================================
 # templates/authentication/password_reset_done.html
 # =========================================================
-#: .\templates\authentication\password_reset_done.html:4 .\templates\authentication\password_reset_done.html:8
+#: .\templates\authentication\password_reset_done.html:4
+#: .\templates\authentication\password_reset_done.html:8
 msgid "Revisa tu correo"
 msgstr "Check your email"
 
 #: .\templates\authentication\password_reset_done.html:10
-msgid "Si el correo que has indicado corresponde a una cuenta, en unos minutos recibirás un mensaje con el enlace para cambiar la contraseña."
-msgstr "If the email you entered matches an account, you will receive a message with the link to change your password within a few minutes."
+msgid ""
+"Si el correo que has indicado corresponde a una cuenta, en unos minutos "
+"recibirás un mensaje con el enlace para cambiar la contraseña."
+msgstr ""
+"If the email you entered matches an account, you will receive a message with"
+" the link to change your password within a few minutes."
 
 #: .\templates\authentication\password_reset_done.html:11
 msgid "Si no lo ves, mira en la carpeta de spam."
@@ -399,7 +435,8 @@ msgstr "If you do not see it, check your spam folder."
 # =========================================================
 # templates/core/menu.html (intranet)
 # =========================================================
-#: .\templates\authentication\password_reset_email.html:2 .\templates\core\menu.html:10
+#: .\templates\authentication\password_reset_email.html:2
+#: .\templates\core\menu.html:10
 msgid "Hola,"
 msgstr "Hello,"
 
@@ -408,16 +445,24 @@ msgstr "Hello,"
 # =========================================================
 #: .\templates\authentication\password_reset_email.html:4
 #, python-format
-msgid "Has recibido este correo porque solicitaste restablecer la contraseña de tu cuenta en %(site_name)s."
-msgstr "You are receiving this email because you requested a password reset for your account on %(site_name)s."
+msgid ""
+"Has recibido este correo porque solicitaste restablecer la contraseña de tu "
+"cuenta en %(site_name)s."
+msgstr ""
+"You are receiving this email because you requested a password reset for your"
+" account on %(site_name)s."
 
 #: .\templates\authentication\password_reset_email.html:6
 msgid "Abre el siguiente enlace y elige una nueva contraseña:"
 msgstr "Open the link below and choose a new password:"
 
 #: .\templates\authentication\password_reset_email.html:10
-msgid "Si no fuiste tú quien lo solicitó, puedes ignorar este mensaje. Tu contraseña no cambiará hasta que accedas al enlace y crees una nueva."
-msgstr "If it wasn't you, you can ignore this message. Your password will not change until you open the link and create a new one."
+msgid ""
+"Si no fuiste tú quien lo solicitó, puedes ignorar este mensaje. Tu "
+"contraseña no cambiará hasta que accedas al enlace y crees una nueva."
+msgstr ""
+"If it wasn't you, you can ignore this message. Your password will not change"
+" until you open the link and create a new one."
 
 #: .\templates\authentication\password_reset_email.html:12
 #, python-format
@@ -472,7 +517,9 @@ msgstr ""
 msgid "Todas las secciones"
 msgstr ""
 
-#: .\templates\config\config.html:84 .\templates\sources\clients.html:108 .\templates\sources\newsletters.html:107 .\templates\sources\suscribers.html:93
+#: .\templates\config\config.html:84 .\templates\sources\clients.html:108
+#: .\templates\sources\newsletters.html:107
+#: .\templates\sources\suscribers.html:93
 msgid "Todos"
 msgstr ""
 
@@ -496,7 +543,11 @@ msgstr ""
 msgid "Compacto"
 msgstr ""
 
-#: .\templates\config\config.html:104 .\templates\sources\applications.html:118 .\templates\sources\clients.html:118 .\templates\sources\newsletters.html:117 .\templates\sources\suscribers.html:103
+#: .\templates\config\config.html:104
+#: .\templates\sources\applications.html:118
+#: .\templates\sources\clients.html:118
+#: .\templates\sources\newsletters.html:117
+#: .\templates\sources\suscribers.html:103
 msgid "Normal"
 msgstr ""
 
@@ -512,7 +563,8 @@ msgstr ""
 msgid "Guardar cambios"
 msgstr ""
 
-#: .\templates\config\config.html:120 .\templates\dashboard\dashboard.html:323 .\templates\sources\dashboard.html:377
+#: .\templates\config\config.html:120 .\templates\dashboard\dashboard.html:323
+#: .\templates\sources\dashboard.html:377
 msgid "Modo oscuro"
 msgstr ""
 
@@ -520,7 +572,14 @@ msgstr ""
 msgid "Cargando config.ini…"
 msgstr ""
 
-#: .\templates\config\config.html:136 .\templates\core\base_d.html:343 .\templates\sources\applications.html:135 .\templates\sources\applications.html:163 .\templates\sources\clients.html:135 .\templates\sources\clients.html:163 .\templates\sources\newsletters.html:134 .\templates\sources\newsletters.html:162 .\templates\sources\suscribers.html:118 .\templates\sources\suscribers.html:144
+#: .\templates\config\config.html:136 .\templates\core\base_d.html:343
+#: .\templates\sources\applications.html:135
+#: .\templates\sources\applications.html:163
+#: .\templates\sources\clients.html:135 .\templates\sources\clients.html:163
+#: .\templates\sources\newsletters.html:134
+#: .\templates\sources\newsletters.html:162
+#: .\templates\sources\suscribers.html:118
+#: .\templates\sources\suscribers.html:144
 msgid "Cargando…"
 msgstr ""
 
@@ -554,7 +613,8 @@ msgstr "Control panel"
 # =========================================================
 # templates/config/panel.html
 # =========================================================
-#: .\templates\config\panel.html:9 .\templates\core\sidebar.html:172 .\templates\core\sidebar.html:182
+#: .\templates\config\panel.html:9 .\templates\core\sidebar.html:172
+#: .\templates\core\sidebar.html:182
 msgid "Panel de control"
 msgstr "Control panel"
 
@@ -588,283 +648,452 @@ msgstr ""
 msgid "Visualización y exploración de datos."
 msgstr ""
 
-#: .\templates\core\_legal_content.html:2 .\templates\core\footer.html:9 ⁨.\templates\core\index - copia.html⁩:300 .\templates\core\index.html:304 .\templates\core\legal.html:6 .\templates\core\legal.html:11
+#: .\templates\core\_legal_content.html:2 .\templates\core\footer.html:9
+#: ⁨.\templates\core\index - copia.html⁩:300 .\templates\core\index.html:304
+#: .\templates\core\legal.html:6 .\templates\core\legal.html:11
 msgid "Aviso legal"
 msgstr "Legal notice"
 
 #: .\templates\core\_legal_content.html:4 .\templates\core\legal.html:13
 msgid "1. Datos identificativos"
-msgstr ""
+msgstr "1. Identification details"
 
 #: .\templates\core\_legal_content.html:6 .\templates\core\legal.html:15
-msgid "En cumplimiento del deber de información recogido en la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y del Comercio Electrónico (LSSI-CE), se indican a continuación los datos identificativos del titular de este sitio web:"
+msgid ""
+"En cumplimiento del deber de información recogido en la Ley 34/2002, de 11 "
+"de julio, de Servicios de la Sociedad de la Información y del Comercio "
+"Electrónico (LSSI-CE), se indican a continuación los datos identificativos "
+"del titular de este sitio web:"
 msgstr ""
+"In compliance with the duty of information set out in Spanish Law 34/2002 of"
+" 11 July on Information Society Services and Electronic Commerce (LSSI-CE), "
+"the identification details of the owner of this website are provided below:"
 
 #: .\templates\core\_legal_content.html:14 .\templates\core\legal.html:23
 msgid "Denominación social"
-msgstr ""
+msgstr "Company name"
 
 #: .\templates\core\_legal_content.html:15 .\templates\core\legal.html:24
 msgid "Número de identificación fiscal (FEI/EIN)"
-msgstr ""
+msgstr "Tax identification number (FEI/EIN)"
 
 #: .\templates\core\_legal_content.html:16 .\templates\core\legal.html:25
 msgid "Número de registro"
-msgstr ""
+msgstr "Registration number"
 
 #: .\templates\core\_legal_content.html:17 .\templates\core\legal.html:26
 msgid "Domicilio social"
-msgstr ""
+msgstr "Registered address"
 
 #: .\templates\core\_legal_content.html:18 .\templates\core\legal.html:27
-#, fuzzy
-#| msgid "Correo electrónico"
 msgid "Correo electrónico de contacto"
-msgstr "Email"
+msgstr "Contact email"
 
 #: .\templates\core\_legal_content.html:19 .\templates\core\legal.html:28
 msgid "Sitio web"
-msgstr ""
+msgstr "Website"
 
 #: .\templates\core\_legal_content.html:22 .\templates\core\legal.html:31
 msgid "2. Objeto"
-msgstr ""
+msgstr "2. Purpose"
 
 #: .\templates\core\_legal_content.html:24 .\templates\core\legal.html:33
-msgid "El presente aviso legal regula el uso del sitio web fixalius.com (en adelante, «el Sitio»), cuyo titular es FIXALIUS CORP. El acceso al Sitio atribuye la condición de usuario e implica la aceptación plena y sin reservas de todas y cada una de las condiciones aquí publicadas."
+msgid ""
+"El presente aviso legal regula el uso del sitio web fixalius.com (en "
+"adelante, «el Sitio»), cuyo titular es FIXALIUS CORP. El acceso al Sitio "
+"atribuye la condición de usuario e implica la aceptación plena y sin "
+"reservas de todas y cada una de las condiciones aquí publicadas."
 msgstr ""
+"This legal notice governs the use of the website fixalius.com (hereinafter, "
+"\"the Site\"), owned by FIXALIUS CORP. Accessing the Site grants the status "
+"of user and implies full and unreserved acceptance of each and every one of "
+"the conditions published here."
 
 #: .\templates\core\_legal_content.html:32 .\templates\core\legal.html:41
 msgid "3. Condiciones de uso"
-msgstr ""
+msgstr "3. Terms of use"
 
 #: .\templates\core\_legal_content.html:34 .\templates\core\legal.html:43
-msgid "El usuario se compromete a hacer un uso adecuado de los contenidos y servicios que FIXALIUS CORP ofrece a través del Sitio, y a no emplearlos para incurrir en actividades ilícitas, ilegales o contrarias a la buena fe y al orden público."
+msgid ""
+"El usuario se compromete a hacer un uso adecuado de los contenidos y "
+"servicios que FIXALIUS CORP ofrece a través del Sitio, y a no emplearlos "
+"para incurrir en actividades ilícitas, ilegales o contrarias a la buena fe y"
+" al orden público."
 msgstr ""
+"The user agrees to make appropriate use of the content and services that "
+"FIXALIUS CORP offers through the Site, and not to use them to engage in "
+"unlawful or illegal activities or activities contrary to good faith and "
+"public order."
 
 #: .\templates\core\_legal_content.html:42 .\templates\core\legal.html:51
-msgid "Queda prohibida cualquier reproducción, distribución, comunicación pública, transformación o modificación de los contenidos del Sitio sin la autorización previa y por escrito de FIXALIUS CORP."
+msgid ""
+"Queda prohibida cualquier reproducción, distribución, comunicación pública, "
+"transformación o modificación de los contenidos del Sitio sin la "
+"autorización previa y por escrito de FIXALIUS CORP."
 msgstr ""
+"Any reproduction, distribution, public communication, transformation or "
+"modification of the Site's content is prohibited without the prior written "
+"authorization of FIXALIUS CORP."
 
 #: .\templates\core\_legal_content.html:49 .\templates\core\legal.html:58
 msgid "4. Propiedad intelectual e industrial"
-msgstr ""
+msgstr "4. Intellectual and industrial property"
 
 #: .\templates\core\_legal_content.html:51 .\templates\core\legal.html:60
-msgid "Todos los contenidos del Sitio (textos, imágenes, logotipos, marcas, nombres comerciales, código fuente, diseño gráfico, etc.) son propiedad exclusiva de FIXALIUS CORP o de terceros que han autorizado su uso, y se encuentran protegidos por las leyes de propiedad intelectual e industrial."
+msgid ""
+"Todos los contenidos del Sitio (textos, imágenes, logotipos, marcas, nombres"
+" comerciales, código fuente, diseño gráfico, etc.) son propiedad exclusiva "
+"de FIXALIUS CORP o de terceros que han autorizado su uso, y se encuentran "
+"protegidos por las leyes de propiedad intelectual e industrial."
 msgstr ""
+"All content on the Site (texts, images, logos, trademarks, trade names, "
+"source code, graphic design, etc.) is the exclusive property of FIXALIUS "
+"CORP or of third parties who have authorized its use, and is protected by "
+"intellectual and industrial property laws."
 
 #: .\templates\core\_legal_content.html:59 .\templates\core\legal.html:68
 msgid "5. Exclusión de responsabilidad"
-msgstr ""
+msgstr "5. Disclaimer of liability"
 
 #: .\templates\core\_legal_content.html:61 .\templates\core\legal.html:70
-msgid "FIXALIUS CORP no se hace responsable de los daños y perjuicios de cualquier naturaleza que pudieran derivarse del acceso, uso o mala utilización del Sitio, ni de la información contenida en él. El Sitio se ofrece «tal cual», sin garantías de ningún tipo, expresas o implícitas."
+msgid ""
+"FIXALIUS CORP no se hace responsable de los daños y perjuicios de cualquier "
+"naturaleza que pudieran derivarse del acceso, uso o mala utilización del "
+"Sitio, ni de la información contenida en él. El Sitio se ofrece «tal cual», "
+"sin garantías de ningún tipo, expresas o implícitas."
 msgstr ""
+"FIXALIUS CORP is not liable for any damages of any kind that may arise from "
+"access to, use or misuse of the Site, or from the information it contains. "
+"The Site is provided \"as is\", without warranties of any kind, express or "
+"implied."
 
 #: .\templates\core\_legal_content.html:69 .\templates\core\legal.html:78
 msgid "6. Enlaces a terceros"
-msgstr ""
+msgstr "6. Third-party links"
 
 #: .\templates\core\_legal_content.html:71 .\templates\core\legal.html:80
-msgid "El Sitio puede contener enlaces a páginas web de terceros. FIXALIUS CORP no controla ni se responsabiliza del contenido, políticas de privacidad o prácticas de dichos sitios web de terceros."
+msgid ""
+"El Sitio puede contener enlaces a páginas web de terceros. FIXALIUS CORP no "
+"controla ni se responsabiliza del contenido, políticas de privacidad o "
+"prácticas de dichos sitios web de terceros."
 msgstr ""
+"The Site may contain links to third-party websites. FIXALIUS CORP does not "
+"control and is not responsible for the content, privacy policies or "
+"practices of such third-party websites."
 
 #: .\templates\core\_legal_content.html:78 .\templates\core\legal.html:87
 msgid "7. Modificaciones"
-msgstr ""
+msgstr "7. Changes"
 
 #: .\templates\core\_legal_content.html:80 .\templates\core\legal.html:89
-msgid "FIXALIUS CORP se reserva el derecho a modificar, en cualquier momento y sin previo aviso, el presente aviso legal, así como los contenidos y servicios del Sitio. Dichas modificaciones serán efectivas desde su publicación en el Sitio."
+msgid ""
+"FIXALIUS CORP se reserva el derecho a modificar, en cualquier momento y sin "
+"previo aviso, el presente aviso legal, así como los contenidos y servicios "
+"del Sitio. Dichas modificaciones serán efectivas desde su publicación en el "
+"Sitio."
 msgstr ""
+"FIXALIUS CORP reserves the right to modify this legal notice, as well as the"
+" content and services of the Site, at any time and without prior notice. "
+"Such changes take effect upon their publication on the Site."
 
 #: .\templates\core\_legal_content.html:88 .\templates\core\legal.html:97
 msgid "8. Legislación aplicable y jurisdicción"
-msgstr ""
+msgstr "8. Governing law and jurisdiction"
 
 #: .\templates\core\_legal_content.html:90 .\templates\core\legal.html:99
-msgid "La relación entre FIXALIUS CORP y el usuario se regirá por la legislación vigente en el Estado de Florida, Estados Unidos, a la que ambas partes se someten expresamente para la resolución de cualquier controversia."
+msgid ""
+"La relación entre FIXALIUS CORP y el usuario se regirá por la legislación "
+"vigente en el Estado de Florida, Estados Unidos, a la que ambas partes se "
+"someten expresamente para la resolución de cualquier controversia."
 msgstr ""
+"The relationship between FIXALIUS CORP and the user shall be governed by the"
+" laws in force in the State of Florida, United States, to which both parties"
+" expressly submit for the resolution of any dispute."
 
-#: .\templates\core\_legal_content.html:97 .\templates\core\_privacy_content.html:110 .\templates\core\legal.html:106 .\templates\core\legal_base.html:228 .\templates\core\privacy.html:119
+#: .\templates\core\_legal_content.html:97
+#: .\templates\core\_privacy_content.html:110 .\templates\core\legal.html:106
+#: .\templates\core\legal_base.html:228 .\templates\core\privacy.html:119
 msgid "Última actualización"
-msgstr ""
+msgstr "Last updated"
 
-#: .\templates\core\_privacy_content.html:2 .\templates\core\privacy.html:6 .\templates\core\privacy.html:11
+#: .\templates\core\_privacy_content.html:2 .\templates\core\privacy.html:6
+#: .\templates\core\privacy.html:11
 msgid "Política de privacidad"
 msgstr "Privacy policy"
 
 #: .\templates\core\_privacy_content.html:4 .\templates\core\privacy.html:13
-#, fuzzy
-#| msgid "Responsable por defecto."
 msgid "1. Responsable del tratamiento"
-msgstr "Responsible by default."
+msgstr "1. Data controller"
 
 #: .\templates\core\_privacy_content.html:6 .\templates\core\privacy.html:15
-msgid "El responsable del tratamiento de los datos personales recogidos a través de este sitio web es FIXALIUS CORP, con domicilio social en 11450 SW 196 Terrace, Miami, FL 33157, United States, y correo electrónico de contacto hello@fixalius.com."
+msgid ""
+"El responsable del tratamiento de los datos personales recogidos a través de"
+" este sitio web es FIXALIUS CORP, con domicilio social en 11450 SW 196 "
+"Terrace, Miami, FL 33157, United States, y correo electrónico de contacto "
+"hello@fixalius.com."
 msgstr ""
+"The controller of the personal data collected through this website is "
+"FIXALIUS CORP, with registered office at 11450 SW 196 Terrace, Miami, FL "
+"33157, United States, and contact email hello@fixalius.com."
 
 #: .\templates\core\_privacy_content.html:14 .\templates\core\privacy.html:23
 msgid "2. Datos que recopilamos"
-msgstr ""
+msgstr "2. Data we collect"
 
 #: .\templates\core\_privacy_content.html:15 .\templates\core\privacy.html:24
 msgid "Recopilamos las siguientes categorías de datos personales:"
-msgstr ""
+msgstr "We collect the following categories of personal data:"
 
 #: .\templates\core\_privacy_content.html:18 .\templates\core\privacy.html:27
-#, fuzzy
-#| msgid "Datos del cliente"
 msgid "Datos de contacto"
-msgstr "Client data"
+msgstr "Contact data"
 
 #: .\templates\core\_privacy_content.html:19 .\templates\core\privacy.html:28
-msgid "nombre, dirección de correo electrónico y cualquier otra información que el usuario proporcione voluntariamente a través del formulario de suscripción o de correo electrónico."
+msgid ""
+"nombre, dirección de correo electrónico y cualquier otra información que el "
+"usuario proporcione voluntariamente a través del formulario de suscripción o"
+" de correo electrónico."
 msgstr ""
+"name, email address and any other information the user voluntarily provides "
+"through the subscription form or by email."
 
 # =========================================================
 # templates/core/sidebar.html
 # =========================================================
 #: .\templates\core\_privacy_content.html:22 .\templates\core\privacy.html:31
-#, fuzzy
-#| msgid "Barra lateral de navegación"
 msgid "Datos de navegación"
-msgstr "Navigation sidebar"
+msgstr "Browsing data"
 
 #: .\templates\core\_privacy_content.html:23 .\templates\core\privacy.html:32
-msgid "dirección IP, tipo de navegador, sistema operativo, páginas visitadas, fecha y hora de acceso, y otra información técnica similar, recopilada de forma agregada y con fines estadísticos."
+msgid ""
+"dirección IP, tipo de navegador, sistema operativo, páginas visitadas, fecha"
+" y hora de acceso, y otra información técnica similar, recopilada de forma "
+"agregada y con fines estadísticos."
 msgstr ""
+"IP address, browser type, operating system, pages visited, date and time of "
+"access, and other similar technical information, collected in aggregate form"
+" and for statistical purposes."
 
 #: .\templates\core\_privacy_content.html:26 .\templates\core\privacy.html:35
-#, fuzzy
-#| msgid "Datos del cliente"
 msgid "Datos de la cuenta de intranet"
-msgstr "Client data"
+msgstr "Intranet account data"
 
 #: .\templates\core\_privacy_content.html:27 .\templates\core\privacy.html:36
-msgid "si el usuario accede a la intranet de Fixalius, se tratarán las credenciales de acceso y los datos de perfil asociados."
+msgid ""
+"si el usuario accede a la intranet de Fixalius, se tratarán las credenciales"
+" de acceso y los datos de perfil asociados."
 msgstr ""
+"if the user accesses the Fixalius intranet, the access credentials and "
+"associated profile data will be processed."
 
 #: .\templates\core\_privacy_content.html:31 .\templates\core\privacy.html:40
 msgid "3. Finalidades del tratamiento"
-msgstr ""
+msgstr "3. Purposes of processing"
 
 #: .\templates\core\_privacy_content.html:32 .\templates\core\privacy.html:41
-msgid "Los datos personales recopilados se utilizan para las siguientes finalidades:"
-msgstr ""
+msgid ""
+"Los datos personales recopilados se utilizan para las siguientes "
+"finalidades:"
+msgstr "The personal data collected is used for the following purposes:"
 
 #: .\templates\core\_privacy_content.html:34 .\templates\core\privacy.html:43
-msgid "Gestionar la suscripción a la newsletter y enviar comunicaciones periódicas sobre inteligencia artificial aplicada, siempre que el usuario haya dado su consentimiento."
+msgid ""
+"Gestionar la suscripción a la newsletter y enviar comunicaciones periódicas "
+"sobre inteligencia artificial aplicada, siempre que el usuario haya dado su "
+"consentimiento."
 msgstr ""
+"To manage the newsletter subscription and send periodic communications about"
+" applied artificial intelligence, provided the user has given consent."
 
 #: .\templates\core\_privacy_content.html:35 .\templates\core\privacy.html:44
-msgid "Atender las consultas, solicitudes de información o propuestas de colaboración que el usuario remita a través de los canales de contacto habilitados."
+msgid ""
+"Atender las consultas, solicitudes de información o propuestas de "
+"colaboración que el usuario remita a través de los canales de contacto "
+"habilitados."
 msgstr ""
+"To handle the enquiries, information requests or collaboration proposals "
+"that the user submits through the available contact channels."
 
 #: .\templates\core\_privacy_content.html:36 .\templates\core\privacy.html:45
-msgid "Garantizar el correcto funcionamiento, seguridad y mejora continua del sitio web y de los servicios ofrecidos a través del mismo."
+msgid ""
+"Garantizar el correcto funcionamiento, seguridad y mejora continua del sitio"
+" web y de los servicios ofrecidos a través del mismo."
 msgstr ""
+"To ensure the proper functioning, security and continuous improvement of the"
+" website and the services offered through it."
 
 #: .\templates\core\_privacy_content.html:37 .\templates\core\privacy.html:46
 msgid "Cumplir con las obligaciones legales que sean de aplicación."
-msgstr ""
+msgstr "To comply with applicable legal obligations."
 
 #: .\templates\core\_privacy_content.html:40 .\templates\core\privacy.html:49
 msgid "4. Base jurídica del tratamiento"
-msgstr ""
+msgstr "4. Legal basis for processing"
 
 #: .\templates\core\_privacy_content.html:42 .\templates\core\privacy.html:51
 msgid "Consentimiento"
-msgstr ""
+msgstr "Consent"
 
 #: .\templates\core\_privacy_content.html:42 .\templates\core\privacy.html:51
-msgid "para el envío de la newsletter y comunicaciones comerciales, así como para el uso de cookies no esenciales."
+msgid ""
+"para el envío de la newsletter y comunicaciones comerciales, así como para "
+"el uso de cookies no esenciales."
 msgstr ""
+"for sending the newsletter and commercial communications, as well as for the"
+" use of non-essential cookies."
 
 #: .\templates\core\_privacy_content.html:43 .\templates\core\privacy.html:52
 msgid "Interés legítimo"
-msgstr ""
+msgstr "Legitimate interest"
 
 #: .\templates\core\_privacy_content.html:43 .\templates\core\privacy.html:52
-msgid "para la seguridad del sitio web, la prevención del fraude y la mejora de nuestros servicios."
+msgid ""
+"para la seguridad del sitio web, la prevención del fraude y la mejora de "
+"nuestros servicios."
 msgstr ""
+"for website security, fraud prevention and the improvement of our services."
 
 #: .\templates\core\_privacy_content.html:44 .\templates\core\privacy.html:53
-#, fuzzy
-#| msgid "Navegación de la intranet"
 msgid "Ejecución de un contrato"
-msgstr "Intranet navigation"
+msgstr "Performance of a contract"
 
 #: .\templates\core\_privacy_content.html:44 .\templates\core\privacy.html:53
-msgid "cuando el usuario accede a la intranet o contrata alguno de nuestros servicios."
-msgstr ""
+msgid ""
+"cuando el usuario accede a la intranet o contrata alguno de nuestros "
+"servicios."
+msgstr "when the user accesses the intranet or hires any of our services."
 
 #: .\templates\core\_privacy_content.html:47 .\templates\core\privacy.html:56
 msgid "5. Conservación de los datos"
-msgstr ""
+msgstr "5. Data retention"
 
 #: .\templates\core\_privacy_content.html:49 .\templates\core\privacy.html:58
-msgid "Los datos personales se conservarán durante el tiempo estrictamente necesario para cumplir con las finalidades para las que fueron recogidos, o durante el plazo que exija la legislación aplicable. Una vez finalizado dicho plazo, los datos serán suprimidos o anonimizados de forma segura."
+msgid ""
+"Los datos personales se conservarán durante el tiempo estrictamente "
+"necesario para cumplir con las finalidades para las que fueron recogidos, o "
+"durante el plazo que exija la legislación aplicable. Una vez finalizado "
+"dicho plazo, los datos serán suprimidos o anonimizados de forma segura."
 msgstr ""
+"Personal data will be kept for the time strictly necessary to fulfil the "
+"purposes for which it was collected, or for the period required by "
+"applicable law. Once that period has ended, the data will be securely "
+"deleted or anonymized."
 
 #: .\templates\core\_privacy_content.html:57 .\templates\core\privacy.html:66
 msgid "6. Derechos del usuario"
-msgstr ""
+msgstr "6. User rights"
 
 #: .\templates\core\_privacy_content.html:59 .\templates\core\privacy.html:68
-msgid "El usuario puede ejercer en cualquier momento los derechos de acceso, rectificación, supresión, limitación del tratamiento, portabilidad de los datos y oposición, así como retirar su consentimiento, dirigiéndose por correo electrónico a hello@fixalius.com. Asimismo, tiene derecho a presentar una reclamación ante la autoridad de control competente."
+msgid ""
+"El usuario puede ejercer en cualquier momento los derechos de acceso, "
+"rectificación, supresión, limitación del tratamiento, portabilidad de los "
+"datos y oposición, así como retirar su consentimiento, dirigiéndose por "
+"correo electrónico a hello@fixalius.com. Asimismo, tiene derecho a presentar"
+" una reclamación ante la autoridad de control competente."
 msgstr ""
+"The user may exercise at any time the rights of access, rectification, "
+"erasure, restriction of processing, data portability and objection, as well "
+"as withdraw their consent, by writing to hello@fixalius.com. The user also "
+"has the right to lodge a complaint with the competent supervisory authority."
 
 #: .\templates\core\_privacy_content.html:68 .\templates\core\privacy.html:77
 msgid "7. Comunicación de datos a terceros"
-msgstr ""
+msgstr "7. Disclosure of data to third parties"
 
 #: .\templates\core\_privacy_content.html:70 .\templates\core\privacy.html:79
-msgid "FIXALIUS CORP no vende, alquila ni cede los datos personales de sus usuarios a terceros, salvo obligación legal o cuando sea necesario para la prestación de un servicio solicitado por el usuario, en cuyo caso se formalizarán los correspondientes contratos de encargado del tratamiento."
+msgid ""
+"FIXALIUS CORP no vende, alquila ni cede los datos personales de sus usuarios"
+" a terceros, salvo obligación legal o cuando sea necesario para la "
+"prestación de un servicio solicitado por el usuario, en cuyo caso se "
+"formalizarán los correspondientes contratos de encargado del tratamiento."
 msgstr ""
+"FIXALIUS CORP does not sell, rent or transfer its users' personal data to "
+"third parties, except where legally required or where necessary to provide a"
+" service requested by the user, in which case the corresponding data "
+"processing agreements will be put in place."
 
 #: .\templates\core\_privacy_content.html:78 .\templates\core\privacy.html:87
 msgid "8. Seguridad de los datos"
-msgstr ""
+msgstr "8. Data security"
 
 #: .\templates\core\_privacy_content.html:80 .\templates\core\privacy.html:89
-msgid "FIXALIUS CORP aplica medidas técnicas y organizativas apropiadas para garantizar un nivel de seguridad adecuado al riesgo, conforme a lo establecido en el RGPD y en la legislación aplicable en materia de protección de datos, incluyendo el cifrado de las comunicaciones, el control de accesos y la monitorización de la seguridad."
+msgid ""
+"FIXALIUS CORP aplica medidas técnicas y organizativas apropiadas para "
+"garantizar un nivel de seguridad adecuado al riesgo, conforme a lo "
+"establecido en el RGPD y en la legislación aplicable en materia de "
+"protección de datos, incluyendo el cifrado de las comunicaciones, el control"
+" de accesos y la monitorización de la seguridad."
 msgstr ""
+"FIXALIUS CORP applies appropriate technical and organizational measures to "
+"ensure a level of security appropriate to the risk, in accordance with the "
+"GDPR and applicable data protection legislation, including encryption of "
+"communications, access control and security monitoring."
 
 #: .\templates\core\_privacy_content.html:89 .\templates\core\privacy.html:98
 msgid "9. Uso de inteligencia artificial"
-msgstr ""
+msgstr "9. Use of artificial intelligence"
 
 #: .\templates\core\_privacy_content.html:91 .\templates\core\privacy.html:100
-msgid "En coherencia con nuestro compromiso de diseño responsable, los sistemas de inteligencia artificial que FIXALIUS CORP pudiera emplear en el tratamiento de datos se rigen por los principios de transparencia, explicabilidad, supervisión humana y cumplimiento del Reglamento Europeo de Inteligencia Artificial (AI Act). Las decisiones automatizadas con impacto significativo siempre contarán con intervención humana."
+msgid ""
+"En coherencia con nuestro compromiso de diseño responsable, los sistemas de "
+"inteligencia artificial que FIXALIUS CORP pudiera emplear en el tratamiento "
+"de datos se rigen por los principios de transparencia, explicabilidad, "
+"supervisión humana y cumplimiento del Reglamento Europeo de Inteligencia "
+"Artificial (AI Act). Las decisiones automatizadas con impacto significativo "
+"siempre contarán con intervención humana."
 msgstr ""
+"In line with our commitment to responsible design, any artificial "
+"intelligence systems that FIXALIUS CORP may use in processing data are "
+"governed by the principles of transparency, explainability, human oversight "
+"and compliance with the European Artificial Intelligence Act (AI Act). "
+"Automated decisions with a significant impact will always involve human "
+"intervention."
 
-#: .\templates\core\_privacy_content.html:101 .\templates\core\privacy.html:110
-#, fuzzy
-#| msgid "política de privacidad"
+#: .\templates\core\_privacy_content.html:101
+#: .\templates\core\privacy.html:110
 msgid "10. Modificaciones de la política de privacidad"
-msgstr "privacy policy"
+msgstr "10. Changes to the privacy policy"
 
-#: .\templates\core\_privacy_content.html:103 .\templates\core\privacy.html:112
-msgid "FIXALIUS CORP se reserva el derecho a modificar la presente política de privacidad para adaptarla a novedades legislativas o jurisprudenciales. Las modificaciones serán publicadas en este mismo espacio."
+#: .\templates\core\_privacy_content.html:103
+#: .\templates\core\privacy.html:112
+msgid ""
+"FIXALIUS CORP se reserva el derecho a modificar la presente política de "
+"privacidad para adaptarla a novedades legislativas o jurisprudenciales. Las "
+"modificaciones serán publicadas en este mismo espacio."
 msgstr ""
+"FIXALIUS CORP reserves the right to modify this privacy policy to adapt it "
+"to legislative or case-law developments. Changes will be published in this "
+"same space."
 
 # =========================================================
 # templates/core/base.html
 # =========================================================
-#: .\templates\core\base.html:7 .\templates\core\base_d.html:11 ⁨.\templates\core\index - copia.html⁩:7 ⁨.\templates\core\index - copia.html⁩:24 ⁨.\templates\core\index - copia.html⁩:34 .\templates\core\index.html:7 .\templates\core\index.html:24 .\templates\core\index.html:34
+#: .\templates\core\base.html:7 .\templates\core\base_d.html:11
+#: ⁨.\templates\core\index - copia.html⁩:7 ⁨.\templates\core\index -
+#: copia.html⁩:24 ⁨.\templates\core\index - copia.html⁩:34
+#: .\templates\core\index.html:7 .\templates\core\index.html:24
+#: .\templates\core\index.html:34
 msgid "Fixalius"
 msgstr "Fixalius"
 
-#: .\templates\core\base.html:7 ⁨.\templates\core\index - copia.html⁩:7 ⁨.\templates\core\index - copia.html⁩:24 ⁨.\templates\core\index - copia.html⁩:34 ⁨.\templates\core\index - copia.html⁩:115 .\templates\core\index.html:7 .\templates\core\index.html:24 .\templates\core\index.html:34 .\templates\core\index.html:115
+#: .\templates\core\base.html:7 ⁨.\templates\core\index - copia.html⁩:7
+#: ⁨.\templates\core\index - copia.html⁩:24 ⁨.\templates\core\index -
+#: copia.html⁩:34 ⁨.\templates\core\index - copia.html⁩:115
+#: .\templates\core\index.html:7 .\templates\core\index.html:24
+#: .\templates\core\index.html:34 .\templates\core\index.html:115
 msgid "Inteligencia aplicada"
 msgstr "Applied intelligence"
 
-#: .\templates\core\base.html:8 ⁨.\templates\core\index - copia.html⁩:6 .\templates\core\index.html:6
-msgid "Fixalius: análisis, diseño y desarrollo de aplicaciones impulsadas por IA."
-msgstr "Fixalius: analysis, design and development of AI-powered applications."
+#: .\templates\core\base.html:8 ⁨.\templates\core\index - copia.html⁩:6
+#: .\templates\core\index.html:6
+msgid ""
+"Fixalius: análisis, diseño y desarrollo de aplicaciones impulsadas por IA."
+msgstr ""
+"Fixalius: analysis, design and development of AI-powered applications."
 
-#: .\templates\core\base.html:27 .\templates\core\base_d.html:286 .\templates\core\base_intranet.html:24 ⁨.\templates\core\index - copia.html⁩:57 .\templates\core\index.html:57
+#: .\templates\core\base.html:27 .\templates\core\base_d.html:286
+#: .\templates\core\base_intranet.html:24 ⁨.\templates\core\index -
+#: copia.html⁩:57 .\templates\core\index.html:57
 msgid "Saltar al contenido"
 msgstr "Skip to content"
 
@@ -883,7 +1112,10 @@ msgstr "Fixalius — Applied intelligence"
 msgid "Navegación lateral"
 msgstr "Intranet navigation"
 
-#: .\templates\core\base_d.html:319 .\templates\core\base_intranet.html:80 ⁨.\templates\core\index - copia.html⁩:309 ⁨.\templates\core\index - copia.html⁩:320 .\templates\core\index.html:313 .\templates\core\index.html:324
+#: .\templates\core\base_d.html:319 .\templates\core\base_intranet.html:80
+#: ⁨.\templates\core\index - copia.html⁩:309 ⁨.\templates\core\index -
+#: copia.html⁩:320 .\templates\core\index.html:313
+#: .\templates\core\index.html:324
 #, fuzzy
 #| msgid "Cerrar menú"
 msgid "Cerrar"
@@ -927,15 +1159,19 @@ msgstr ""
 # =========================================================
 # templates/core/footer.html
 # =========================================================
-#: .\templates\core\footer.html:8 ⁨.\templates\core\index - copia.html⁩:297 .\templates\core\index.html:301
+#: .\templates\core\footer.html:8 ⁨.\templates\core\index - copia.html⁩:297
+#: .\templates\core\index.html:301
 msgid "Privacidad"
 msgstr "Privacy"
 
-#: .\templates\core\footer.html:10 ⁨.\templates\core\index - copia.html⁩:302 .\templates\core\index.html:306
+#: .\templates\core\footer.html:10 ⁨.\templates\core\index - copia.html⁩:302
+#: .\templates\core\index.html:306
 msgid "Volver arriba"
 msgstr "Back to top"
 
-#: ⁨.\templates\core\index - copia.html⁩:25 ⁨.\templates\core\index - copia.html⁩:35 .\templates\core\index.html:25 .\templates\core\index.html:35
+#: ⁨.\templates\core\index - copia.html⁩:25 ⁨.\templates\core\index -
+#: copia.html⁩:35 .\templates\core\index.html:25
+#: .\templates\core\index.html:35
 msgid "Análisis, diseño y desarrollo de aplicaciones impulsadas por IA."
 msgstr "Analysis, design and development of AI-powered applications."
 
@@ -957,7 +1193,13 @@ msgstr "Main navigation"
 msgid "Enfoque"
 msgstr "Approach"
 
-#: ⁨.\templates\core\index - copia.html⁩:64 .\templates\core\index.html:64 .\templates\dashboard\dashboard.html:349 .\templates\dashboard\dashboard.html:402 .\templates\sources\applications.html:69 .\templates\sources\clients.html:69 .\templates\sources\dashboard.html:403 .\templates\sources\dashboard.html:456 .\templates\sources\newsletters.html:68
+#: ⁨.\templates\core\index - copia.html⁩:64 .\templates\core\index.html:64
+#: .\templates\dashboard\dashboard.html:349
+#: .\templates\dashboard\dashboard.html:402
+#: .\templates\sources\applications.html:69
+#: .\templates\sources\clients.html:69 .\templates\sources\dashboard.html:403
+#: .\templates\sources\dashboard.html:456
+#: .\templates\sources\newsletters.html:68
 msgid "Sectores"
 msgstr "Sectors"
 
@@ -965,11 +1207,16 @@ msgstr "Sectors"
 msgid "Principios"
 msgstr "Principles"
 
-#: ⁨.\templates\core\index - copia.html⁩:66 ⁨.\templates\core\index - copia.html⁩:218 .\templates\core\index.html:66 .\templates\core\index.html:218 .\templates\dashboard\dashboard.html:337 .\templates\sources\dashboard.html:391
+#: ⁨.\templates\core\index - copia.html⁩:66 ⁨.\templates\core\index -
+#: copia.html⁩:218 .\templates\core\index.html:66
+#: .\templates\core\index.html:218 .\templates\dashboard\dashboard.html:337
+#: .\templates\sources\dashboard.html:391
 msgid "Casos de éxito"
 msgstr "Success stories"
 
-#: ⁨.\templates\core\index - copia.html⁩:67 ⁨.\templates\core\index - copia.html⁩:118 .\templates\core\index.html:67 .\templates\core\index.html:118
+#: ⁨.\templates\core\index - copia.html⁩:67 ⁨.\templates\core\index -
+#: copia.html⁩:118 .\templates\core\index.html:67
+#: .\templates\core\index.html:118
 msgid "Hablemos"
 msgstr "Let's talk"
 
@@ -977,7 +1224,9 @@ msgstr "Let's talk"
 msgid "Acceso intranet"
 msgstr "Intranet login"
 
-#: ⁨.\templates\core\index - copia.html⁩:102 ⁨.\templates\core\index - copia.html⁩:105 .\templates\core\index.html:102 .\templates\core\index.html:105
+#: ⁨.\templates\core\index - copia.html⁩:102 ⁨.\templates\core\index -
+#: copia.html⁩:105 .\templates\core\index.html:102
+#: .\templates\core\index.html:105
 msgid "Abrir menú"
 msgstr "Open menu"
 
@@ -993,8 +1242,11 @@ msgid "Otra forma<br>de <em>arreglar</em> las cosas"
 msgstr "Another way<br>of <em>fixing</em> things"
 
 #: ⁨.\templates\core\index - copia.html⁩:117 .\templates\core\index.html:117
-msgid "Análisis, diseño y desarrollo de aplicaciones impulsadas por IA, para cualquier sector."
-msgstr "Analysis, design and development of AI-powered applications, for any sector."
+msgid ""
+"Análisis, diseño y desarrollo de aplicaciones impulsadas por IA, para "
+"cualquier sector."
+msgstr ""
+"Analysis, design and development of AI-powered applications, for any sector."
 
 #: ⁨.\templates\core\index - copia.html⁩:154 .\templates\core\index.html:154
 msgid "Desplázate para explorar"
@@ -1016,32 +1268,50 @@ msgid "Es la pieza que encaja."
 msgstr "It's the piece that fits."
 
 #: ⁨.\templates\core\index - copia.html⁩:161 .\templates\core\index.html:161
-msgid "Convertimos retos complejos en productos digitales claros, útiles y responsables. Desde la primera pregunta hasta el último despliegue, hacemos que la tecnología parezca estar en su sitio."
-msgstr "We turn complex challenges into clear, useful and responsible digital products. From the first question to the last deployment, we make technology look like it belongs."
+msgid ""
+"Convertimos retos complejos en productos digitales claros, útiles y "
+"responsables. Desde la primera pregunta hasta el último despliegue, hacemos "
+"que la tecnología parezca estar en su sitio."
+msgstr ""
+"We turn complex challenges into clear, useful and responsible digital "
+"products. From the first question to the last deployment, we make technology"
+" look like it belongs."
 
 #: ⁨.\templates\core\index - copia.html⁩:166 .\templates\core\index.html:166
 msgid "Análisis"
 msgstr "Analysis"
 
 #: ⁨.\templates\core\index - copia.html⁩:167 .\templates\core\index.html:167
-msgid "Entendemos el problema antes de proponer nada: procesos, datos y dónde la IA aporta valor real."
-msgstr "We understand the problem before proposing anything: processes, data and where AI adds real value."
+msgid ""
+"Entendemos el problema antes de proponer nada: procesos, datos y dónde la IA"
+" aporta valor real."
+msgstr ""
+"We understand the problem before proposing anything: processes, data and "
+"where AI adds real value."
 
 #: ⁨.\templates\core\index - copia.html⁩:172 .\templates\core\index.html:172
 msgid "Diseño"
 msgstr "Design"
 
 #: ⁨.\templates\core\index - copia.html⁩:173 .\templates\core\index.html:173
-msgid "Diseñamos la solución y su experiencia de uso, integrando IA donde ayuda, no como decoración."
-msgstr "We design the solution and its user experience, integrating AI where it helps, not as decoration."
+msgid ""
+"Diseñamos la solución y su experiencia de uso, integrando IA donde ayuda, no"
+" como decoración."
+msgstr ""
+"We design the solution and its user experience, integrating AI where it "
+"helps, not as decoration."
 
 #: ⁨.\templates\core\index - copia.html⁩:178 .\templates\core\index.html:178
 msgid "Desarrollo"
 msgstr "Development"
 
 #: ⁨.\templates\core\index - copia.html⁩:179 .\templates\core\index.html:179
-msgid "Construimos, probamos y desplegamos aplicaciones mantenibles, seguras y medibles."
-msgstr "We build, test and deploy applications that are maintainable, secure and measurable."
+msgid ""
+"Construimos, probamos y desplegamos aplicaciones mantenibles, seguras y "
+"medibles."
+msgstr ""
+"We build, test and deploy applications that are maintainable, secure and "
+"measurable."
 
 # =========================================================
 # templates/core/index.html — sectores
@@ -1059,8 +1329,11 @@ msgid "La misma curiosidad."
 msgstr "The same curiosity."
 
 #: ⁨.\templates\core\index - copia.html⁩:189 .\templates\core\index.html:189
-msgid "Llevamos una mentalidad de producto a los lugares donde la tecnología tiene más que desbloquear."
-msgstr "We bring a product mindset to places where technology has more to unlock."
+msgid ""
+"Llevamos una mentalidad de producto a los lugares donde la tecnología tiene "
+"más que desbloquear."
+msgstr ""
+"We bring a product mindset to places where technology has more to unlock."
 
 #: ⁨.\templates\core\index - copia.html⁩:197 .\templates\core\index.html:197
 msgid "Próximamente."
@@ -1082,16 +1355,23 @@ msgid "Responsable por defecto."
 msgstr "Responsible by default."
 
 #: ⁨.\templates\core\index - copia.html⁩:206 .\templates\core\index.html:206
-msgid "La buena tecnología no solo es inteligente. Es comprensible, responsable y está hecha para durar."
-msgstr "Good technology is not only smart. It is understandable, responsible and built to last."
+msgid ""
+"La buena tecnología no solo es inteligente. Es comprensible, responsable y "
+"está hecha para durar."
+msgstr ""
+"Good technology is not only smart. It is understandable, responsible and "
+"built to last."
 
 #: ⁨.\templates\core\index - copia.html⁩:209 .\templates\core\index.html:209
 msgid "Datos del cliente"
 msgstr "Client data"
 
 #: ⁨.\templates\core\index - copia.html⁩:209 .\templates\core\index.html:209
-msgid "Los datos pertenecen al cliente. Cada solución se diseña conforme al RGPD."
-msgstr "The data belongs to the client. Every solution is designed in line with the GDPR."
+msgid ""
+"Los datos pertenecen al cliente. Cada solución se diseña conforme al RGPD."
+msgstr ""
+"The data belongs to the client. Every solution is designed in line with the "
+"GDPR."
 
 #: ⁨.\templates\core\index - copia.html⁩:210 .\templates\core\index.html:210
 msgid "AI Act europeo"
@@ -1115,7 +1395,8 @@ msgstr "Explainable and measurable"
 
 #: ⁨.\templates\core\index - copia.html⁩:212 .\templates\core\index.html:212
 msgid "Documentamos qué hace cada modelo, con qué datos y con qué resultados."
-msgstr "We document what each model does, with which data and with what results."
+msgstr ""
+"We document what each model does, with which data and with what results."
 
 #: ⁨.\templates\core\index - copia.html⁩:220 .\templates\core\index.html:220
 msgid "Aplicaciones reales."
@@ -1157,8 +1438,12 @@ msgid "¿Tienes un reto<br><i>que merezca la pena?</i>"
 msgstr "Got a challenge<br><i>worth taking on?</i>"
 
 #: ⁨.\templates\core\index - copia.html⁩:261 .\templates\core\index.html:265
-msgid "Cuéntanos qué necesitas. Nosotros ponemos las preguntas, el oficio y un siguiente paso claro."
-msgstr "Tell us what you need. We bring the questions, the craft and a clear next step."
+msgid ""
+"Cuéntanos qué necesitas. Nosotros ponemos las preguntas, el oficio y un "
+"siguiente paso claro."
+msgstr ""
+"Tell us what you need. We bring the questions, the craft and a clear next "
+"step."
 
 #: ⁨.\templates\core\index - copia.html⁩:268 .\templates\core\index.html:272
 msgid "Gracias. Tu correo ha quedado registrado."
@@ -1178,8 +1463,12 @@ msgstr "Subscribe"
 
 #: ⁨.\templates\core\index - copia.html⁩:279 .\templates\core\index.html:283
 #, fuzzy, python-format
-#| msgid "Al suscribirte, aceptas nuestra <a href=\"#contact\">política de privacidad</a>."
-msgid "Al suscribirte, aceptas nuestra <a href=\"%(url)s\">política de privacidad</a>."
+#| msgid ""
+#| "Al suscribirte, aceptas nuestra <a href=\"#contact\">política de "
+#| "privacidad</a>."
+msgid ""
+"Al suscribirte, aceptas nuestra <a href=\"%(url)s\">política de "
+"privacidad</a>."
 msgstr "By subscribing, you accept our <a href=\"#contact\">privacy policy</a>."
 
 #: .\templates\core\index.html:223 .\templates\core\index.html:225
@@ -1269,15 +1558,31 @@ msgstr ""
 msgid "Cuadro de mando"
 msgstr ""
 
-#: .\templates\core\sidebar.html:72 .\templates\core\sidebar.html:81 .\templates\sources\applications.html:17 .\templates\sources\applications.html:37 .\templates\sources\applications.html:53
+#: .\templates\core\sidebar.html:72 .\templates\core\sidebar.html:81
+#: .\templates\sources\applications.html:17
+#: .\templates\sources\applications.html:37
+#: .\templates\sources\applications.html:53
 msgid "Aplicaciones"
 msgstr ""
 
-#: .\templates\core\sidebar.html:90 .\templates\core\sidebar.html:100 .\templates\dashboard\dashboard.html:390 .\templates\dashboard\dashboard.html:540 .\templates\dashboard\dashboard.html:548 .\templates\sources\clients.html:17 .\templates\sources\clients.html:37 .\templates\sources\clients.html:53 .\templates\sources\dashboard.html:444 .\templates\sources\dashboard.html:594 .\templates\sources\dashboard.html:602 .\templates\sources\newsletters.html:16 .\templates\sources\newsletters.html:36 .\templates\sources\newsletters.html:52
+#: .\templates\core\sidebar.html:90 .\templates\core\sidebar.html:100
+#: .\templates\dashboard\dashboard.html:390
+#: .\templates\dashboard\dashboard.html:540
+#: .\templates\dashboard\dashboard.html:548
+#: .\templates\sources\clients.html:17 .\templates\sources\clients.html:37
+#: .\templates\sources\clients.html:53 .\templates\sources\dashboard.html:444
+#: .\templates\sources\dashboard.html:594
+#: .\templates\sources\dashboard.html:602
+#: .\templates\sources\newsletters.html:16
+#: .\templates\sources\newsletters.html:36
+#: .\templates\sources\newsletters.html:52
 msgid "Clientes"
 msgstr ""
 
-#: .\templates\core\sidebar.html:109 .\templates\core\sidebar.html:117 .\templates\sources\suscribers.html:18 .\templates\sources\suscribers.html:37 .\templates\sources\suscribers.html:52
+#: .\templates\core\sidebar.html:109 .\templates\core\sidebar.html:117
+#: .\templates\sources\suscribers.html:18
+#: .\templates\sources\suscribers.html:37
+#: .\templates\sources\suscribers.html:52
 #, fuzzy
 #| msgid "Sectores"
 msgid "Suscriptores"
@@ -1303,145 +1608,201 @@ msgstr ""
 msgid "Cuadro de Mando – Fixalius"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:291 .\templates\sources\dashboard.html:345
+#: .\templates\dashboard\dashboard.html:291
+#: .\templates\sources\dashboard.html:345
 msgid "Cuadro de Mando"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:313 .\templates\sources\applications.html:97 .\templates\sources\clients.html:97 .\templates\sources\dashboard.html:367 .\templates\sources\newsletters.html:96
+#: .\templates\dashboard\dashboard.html:313
+#: .\templates\sources\applications.html:97
+#: .\templates\sources\clients.html:97 .\templates\sources\dashboard.html:367
+#: .\templates\sources\newsletters.html:96
 msgid "Todos los sectores"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:320 .\templates\sources\dashboard.html:374
+#: .\templates\dashboard\dashboard.html:320
+#: .\templates\sources\dashboard.html:374
 msgid "Limpiar filtros"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:341 .\templates\dashboard\dashboard.html:530 .\templates\sources\dashboard.html:395 .\templates\sources\dashboard.html:584
+#: .\templates\dashboard\dashboard.html:341
+#: .\templates\dashboard\dashboard.html:530
+#: .\templates\sources\dashboard.html:395
+#: .\templates\sources\dashboard.html:584
 msgid "casos"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:347 .\templates\sources\dashboard.html:401
+#: .\templates\dashboard\dashboard.html:347
+#: .\templates\sources\dashboard.html:401
 msgid "Total casos"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:347 .\templates\sources\dashboard.html:401
+#: .\templates\dashboard\dashboard.html:347
+#: .\templates\sources\dashboard.html:401
 msgid "histórico completo"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:348 .\templates\sources\applications.html:77 .\templates\sources\applications.html:109 .\templates\sources\dashboard.html:402
+#: .\templates\dashboard\dashboard.html:348
+#: .\templates\sources\applications.html:77
+#: .\templates\sources\applications.html:109
+#: .\templates\sources\dashboard.html:402
 msgid "Este año"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:349 .\templates\sources\dashboard.html:403
+#: .\templates\dashboard\dashboard.html:349
+#: .\templates\sources\dashboard.html:403
 msgid "con casos registrados"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:350 .\templates\sources\dashboard.html:404
+#: .\templates\dashboard\dashboard.html:350
+#: .\templates\sources\dashboard.html:404
 #, fuzzy
 #| msgid "Datos del cliente"
 msgid "Casos / cliente"
 msgstr "Client data"
 
-#: .\templates\dashboard\dashboard.html:350 .\templates\sources\dashboard.html:404
+#: .\templates\dashboard\dashboard.html:350
+#: .\templates\sources\dashboard.html:404
 msgid "media"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:356 .\templates\sources\dashboard.html:410
+#: .\templates\dashboard\dashboard.html:356
+#: .\templates\sources\dashboard.html:410
 #, fuzzy
 #| msgid "Responsable por defecto."
 msgid "Casos por sector"
 msgstr "Responsible by default."
 
-#: .\templates\dashboard\dashboard.html:363 .\templates\sources\dashboard.html:417
+#: .\templates\dashboard\dashboard.html:363
+#: .\templates\sources\dashboard.html:417
 msgid "Casos por año"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:370 .\templates\sources\dashboard.html:424
+#: .\templates\dashboard\dashboard.html:370
+#: .\templates\sources\dashboard.html:424
 msgid "Evolución mensual"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:377 .\templates\sources\dashboard.html:431
+#: .\templates\dashboard\dashboard.html:377
+#: .\templates\sources\dashboard.html:431
 msgid "Top 10 clientes por nº de casos"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:400 .\templates\sources\dashboard.html:454
+#: .\templates\dashboard\dashboard.html:400
+#: .\templates\sources\dashboard.html:454
 #, fuzzy
 #| msgid "Datos del cliente"
 msgid "Total clientes"
 msgstr "Client data"
 
-#: .\templates\dashboard\dashboard.html:400 .\templates\sources\dashboard.html:454
+#: .\templates\dashboard\dashboard.html:400
+#: .\templates\sources\dashboard.html:454
 msgid "en cartera"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:401 .\templates\sources\clients.html:77 .\templates\sources\dashboard.html:455 .\templates\sources\newsletters.html:76
+#: .\templates\dashboard\dashboard.html:401
+#: .\templates\sources\clients.html:77 .\templates\sources\dashboard.html:455
+#: .\templates\sources\newsletters.html:76
 msgid "Países"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:401 .\templates\sources\dashboard.html:455
+#: .\templates\dashboard\dashboard.html:401
+#: .\templates\sources\dashboard.html:455
 #, fuzzy
 #| msgid "Contextos distintos."
 msgid "distintos"
 msgstr "Different contexts."
 
-#: .\templates\dashboard\dashboard.html:402 .\templates\sources\dashboard.html:456
+#: .\templates\dashboard\dashboard.html:402
+#: .\templates\sources\dashboard.html:456
 msgid "cubiertos"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:403 .\templates\sources\dashboard.html:457 .\templates\sources\suscribers.html:60 .\templates\sources\suscribers.html:94
+#: .\templates\dashboard\dashboard.html:403
+#: .\templates\sources\dashboard.html:457
+#: .\templates\sources\suscribers.html:60
+#: .\templates\sources\suscribers.html:94
 msgid "Activos"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:403 .\templates\sources\dashboard.html:457
+#: .\templates\dashboard\dashboard.html:403
+#: .\templates\sources\dashboard.html:457
 msgid "con casos"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:409 .\templates\sources\dashboard.html:463
+#: .\templates\dashboard\dashboard.html:409
+#: .\templates\sources\dashboard.html:463
 msgid "Clientes por país"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:416 .\templates\sources\dashboard.html:470
+#: .\templates\dashboard\dashboard.html:416
+#: .\templates\sources\dashboard.html:470
 msgid "Clientes por sector"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:482 .\templates\sources\dashboard.html:536
+#: .\templates\dashboard\dashboard.html:482
+#: .\templates\sources\dashboard.html:536
 msgid "Imprimir"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:483 .\templates\sources\dashboard.html:537
+#: .\templates\dashboard\dashboard.html:483
+#: .\templates\sources\dashboard.html:537
 msgid "Descargar PNG"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:484 .\templates\sources\dashboard.html:538
+#: .\templates\dashboard\dashboard.html:484
+#: .\templates\sources\dashboard.html:538
 msgid "Descargar SVG"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:485 .\templates\sources\dashboard.html:539
+#: .\templates\dashboard\dashboard.html:485
+#: .\templates\sources\dashboard.html:539
 msgid "Descargar CSV"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:486 .\templates\sources\dashboard.html:540
+#: .\templates\dashboard\dashboard.html:486
+#: .\templates\sources\dashboard.html:540
 msgid "Descargar XLS"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:487 .\templates\sources\dashboard.html:541
+#: .\templates\dashboard\dashboard.html:487
+#: .\templates\sources\dashboard.html:541
 msgid "Ver tabla"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:488 .\templates\sources\dashboard.html:542
+#: .\templates\dashboard\dashboard.html:488
+#: .\templates\sources\dashboard.html:542
 #, fuzzy
 #| msgid "Ocultar contraseña"
 msgid "Ocultar tabla"
 msgstr "Hide password"
 
-#: .\templates\dashboard\dashboard.html:489 .\templates\sources\dashboard.html:543
+#: .\templates\dashboard\dashboard.html:489
+#: .\templates\sources\dashboard.html:543
 msgid "Menú del gráfico"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:504 .\templates\dashboard\dashboard.html:511 .\templates\dashboard\dashboard.html:512 .\templates\dashboard\dashboard.html:521 .\templates\dashboard\dashboard.html:522 .\templates\dashboard\dashboard.html:531 .\templates\sources\dashboard.html:558 .\templates\sources\dashboard.html:565 .\templates\sources\dashboard.html:566 .\templates\sources\dashboard.html:575 .\templates\sources\dashboard.html:576 .\templates\sources\dashboard.html:585
+#: .\templates\dashboard\dashboard.html:504
+#: .\templates\dashboard\dashboard.html:511
+#: .\templates\dashboard\dashboard.html:512
+#: .\templates\dashboard\dashboard.html:521
+#: .\templates\dashboard\dashboard.html:522
+#: .\templates\dashboard\dashboard.html:531
+#: .\templates\sources\dashboard.html:558
+#: .\templates\sources\dashboard.html:565
+#: .\templates\sources\dashboard.html:566
+#: .\templates\sources\dashboard.html:575
+#: .\templates\sources\dashboard.html:576
+#: .\templates\sources\dashboard.html:585
 msgid "Casos"
 msgstr ""
 
-#: .\templates\dashboard\dashboard.html:510 .\templates\dashboard\dashboard.html:519 .\templates\dashboard\dashboard.html:529 .\templates\sources\dashboard.html:564 .\templates\sources\dashboard.html:573 .\templates\sources\dashboard.html:583
+#: .\templates\dashboard\dashboard.html:510
+#: .\templates\dashboard\dashboard.html:519
+#: .\templates\dashboard\dashboard.html:529
+#: .\templates\sources\dashboard.html:564
+#: .\templates\sources\dashboard.html:573
+#: .\templates\sources\dashboard.html:583
 msgid "Nº de casos"
 msgstr ""
 
@@ -1449,15 +1810,21 @@ msgstr ""
 msgid "Casos de éxito y aplicaciones realizadas para nuestros clientes"
 msgstr ""
 
-#: .\templates\sources\applications.html:41 .\templates\sources\clients.html:41 .\templates\sources\newsletters.html:40 .\templates\sources\suscribers.html:41
+#: .\templates\sources\applications.html:41
+#: .\templates\sources\clients.html:41 .\templates\sources\newsletters.html:40
+#: .\templates\sources\suscribers.html:41
 msgid "Última actualización de los datos"
 msgstr ""
 
-#: .\templates\sources\applications.html:43 .\templates\sources\clients.html:43 .\templates\sources\newsletters.html:42 .\templates\sources\suscribers.html:43
+#: .\templates\sources\applications.html:43
+#: .\templates\sources\clients.html:43 .\templates\sources\newsletters.html:42
+#: .\templates\sources\suscribers.html:43
 msgid "Actualizado"
 msgstr ""
 
-#: .\templates\sources\applications.html:48 .\templates\sources\clients.html:48 .\templates\sources\newsletters.html:47 .\templates\sources\suscribers.html:47
+#: .\templates\sources\applications.html:48
+#: .\templates\sources\clients.html:48 .\templates\sources\newsletters.html:47
+#: .\templates\sources\suscribers.html:47
 msgid "Resumen"
 msgstr ""
 
@@ -1469,15 +1836,20 @@ msgstr ""
 msgid "Buscar por descripción, cliente o sector…"
 msgstr ""
 
-#: .\templates\sources\applications.html:89 .\templates\sources\clients.html:89 .\templates\sources\newsletters.html:88 .\templates\sources\suscribers.html:87
+#: .\templates\sources\applications.html:89
+#: .\templates\sources\clients.html:89 .\templates\sources\newsletters.html:88
+#: .\templates\sources\suscribers.html:87
 msgid "Buscar"
 msgstr ""
 
-#: .\templates\sources\applications.html:91 .\templates\sources\clients.html:91 .\templates\sources\newsletters.html:90 .\templates\sources\suscribers.html:89
+#: .\templates\sources\applications.html:91
+#: .\templates\sources\clients.html:91 .\templates\sources\newsletters.html:90
+#: .\templates\sources\suscribers.html:89
 msgid "Borrar búsqueda"
 msgstr ""
 
-#: .\templates\sources\applications.html:96 .\templates\sources\clients.html:96 .\templates\sources\newsletters.html:95
+#: .\templates\sources\applications.html:96
+#: .\templates\sources\clients.html:96 .\templates\sources\newsletters.html:95
 #, fuzzy
 #| msgid "Responsable por defecto."
 msgid "Filtrar por sector"
@@ -1495,7 +1867,10 @@ msgstr "Client data"
 msgid "Todos los clientes"
 msgstr "Client data"
 
-#: .\templates\sources\applications.html:107 .\templates\sources\clients.html:107 .\templates\sources\newsletters.html:106 .\templates\sources\suscribers.html:92
+#: .\templates\sources\applications.html:107
+#: .\templates\sources\clients.html:107
+#: .\templates\sources\newsletters.html:106
+#: .\templates\sources\suscribers.html:92
 msgid "Filtros rápidos"
 msgstr ""
 
@@ -1511,19 +1886,31 @@ msgstr ""
 msgid "Sin imagen"
 msgstr ""
 
-#: .\templates\sources\applications.html:113 .\templates\sources\clients.html:113 .\templates\sources\newsletters.html:112 .\templates\sources\suscribers.html:98
+#: .\templates\sources\applications.html:113
+#: .\templates\sources\clients.html:113
+#: .\templates\sources\newsletters.html:112
+#: .\templates\sources\suscribers.html:98
 msgid "Filtros activos"
 msgstr ""
 
-#: .\templates\sources\applications.html:116 .\templates\sources\clients.html:116 .\templates\sources\newsletters.html:115 .\templates\sources\suscribers.html:101
+#: .\templates\sources\applications.html:116
+#: .\templates\sources\clients.html:116
+#: .\templates\sources\newsletters.html:115
+#: .\templates\sources\suscribers.html:101
 msgid "Densidad de filas"
 msgstr ""
 
-#: .\templates\sources\applications.html:117 .\templates\sources\clients.html:117 .\templates\sources\newsletters.html:116 .\templates\sources\suscribers.html:102
+#: .\templates\sources\applications.html:117
+#: .\templates\sources\clients.html:117
+#: .\templates\sources\newsletters.html:116
+#: .\templates\sources\suscribers.html:102
 msgid "Compacta"
 msgstr ""
 
-#: .\templates\sources\applications.html:119 .\templates\sources\clients.html:119 .\templates\sources\newsletters.html:118 .\templates\sources\suscribers.html:104
+#: .\templates\sources\applications.html:119
+#: .\templates\sources\clients.html:119
+#: .\templates\sources\newsletters.html:118
+#: .\templates\sources\suscribers.html:104
 msgid "Cómoda"
 msgstr ""
 
@@ -1531,39 +1918,65 @@ msgstr ""
 msgid "Nueva aplicación"
 msgstr ""
 
-#: .\templates\sources\applications.html:122 .\templates\sources\clients.html:122 .\templates\sources\newsletters.html:121 .\templates\sources\suscribers.html:106
+#: .\templates\sources\applications.html:122
+#: .\templates\sources\clients.html:122
+#: .\templates\sources\newsletters.html:121
+#: .\templates\sources\suscribers.html:106
 msgid "Refrescar datos"
 msgstr ""
 
-#: .\templates\sources\applications.html:123 .\templates\sources\clients.html:123 .\templates\sources\newsletters.html:122 .\templates\sources\suscribers.html:107
+#: .\templates\sources\applications.html:123
+#: .\templates\sources\clients.html:123
+#: .\templates\sources\newsletters.html:122
+#: .\templates\sources\suscribers.html:107
 msgid "Exportar a Excel"
 msgstr ""
 
-#: .\templates\sources\applications.html:124 .\templates\sources\clients.html:124 .\templates\sources\newsletters.html:123 .\templates\sources\suscribers.html:108
+#: .\templates\sources\applications.html:124
+#: .\templates\sources\clients.html:124
+#: .\templates\sources\newsletters.html:123
+#: .\templates\sources\suscribers.html:108
 msgid "Imprimir la página actual"
 msgstr ""
 
-#: .\templates\sources\applications.html:125 .\templates\sources\clients.html:125 .\templates\sources\newsletters.html:124 .\templates\sources\suscribers.html:109
+#: .\templates\sources\applications.html:125
+#: .\templates\sources\clients.html:125
+#: .\templates\sources\newsletters.html:124
+#: .\templates\sources\suscribers.html:109
 msgid "Modo claro / oscuro"
 msgstr ""
 
-#: .\templates\sources\applications.html:136 .\templates\sources\clients.html:136 .\templates\sources\newsletters.html:135 .\templates\sources\suscribers.html:119
+#: .\templates\sources\applications.html:136
+#: .\templates\sources\clients.html:136
+#: .\templates\sources\newsletters.html:135
+#: .\templates\sources\suscribers.html:119
 msgid "Filas:"
 msgstr ""
 
-#: .\templates\sources\applications.html:145 .\templates\sources\clients.html:145 .\templates\sources\newsletters.html:144 .\templates\sources\suscribers.html:128
+#: .\templates\sources\applications.html:145
+#: .\templates\sources\clients.html:145
+#: .\templates\sources\newsletters.html:144
+#: .\templates\sources\suscribers.html:128
 msgid "Paginación"
 msgstr ""
 
-#: .\templates\sources\applications.html:153 .\templates\sources\clients.html:153 .\templates\sources\newsletters.html:152 .\templates\sources\suscribers.html:136
+#: .\templates\sources\applications.html:153
+#: .\templates\sources\clients.html:153
+#: .\templates\sources\newsletters.html:152
+#: .\templates\sources\suscribers.html:136
 msgid "Ver ficha"
 msgstr ""
 
-#: .\templates\sources\applications.html:154 .\templates\sources\clients.html:154 .\templates\sources\newsletters.html:153
+#: .\templates\sources\applications.html:154
+#: .\templates\sources\clients.html:154
+#: .\templates\sources\newsletters.html:153
 msgid "Editar"
 msgstr ""
 
-#: .\templates\sources\applications.html:156 .\templates\sources\clients.html:156 .\templates\sources\newsletters.html:155 .\templates\sources\suscribers.html:138
+#: .\templates\sources\applications.html:156
+#: .\templates\sources\clients.html:156
+#: .\templates\sources\newsletters.html:155
+#: .\templates\sources\suscribers.html:138
 msgid "Eliminar"
 msgstr ""
 
@@ -1571,7 +1984,9 @@ msgstr ""
 msgid "Empresas para las que Fixalius ha realizado aplicaciones"
 msgstr ""
 
-#: .\templates\sources\clients.html:61 .\templates\sources\clients.html:109 .\templates\sources\newsletters.html:60 .\templates\sources\newsletters.html:108
+#: .\templates\sources\clients.html:61 .\templates\sources\clients.html:109
+#: .\templates\sources\newsletters.html:60
+#: .\templates\sources\newsletters.html:108
 msgid "Con aplicaciones"
 msgstr ""
 
@@ -1579,23 +1994,28 @@ msgstr ""
 msgid "Buscar por descripción, sector, país o correo…"
 msgstr ""
 
-#: .\templates\sources\clients.html:102 .\templates\sources\newsletters.html:101
+#: .\templates\sources\clients.html:102
+#: .\templates\sources\newsletters.html:101
 msgid "Filtrar por país"
 msgstr ""
 
-#: .\templates\sources\clients.html:103 .\templates\sources\newsletters.html:102
+#: .\templates\sources\clients.html:103
+#: .\templates\sources\newsletters.html:102
 msgid "Todos los países"
 msgstr ""
 
-#: .\templates\sources\clients.html:110 .\templates\sources\newsletters.html:109
+#: .\templates\sources\clients.html:110
+#: .\templates\sources\newsletters.html:109
 msgid "Sin aplicaciones"
 msgstr ""
 
-#: .\templates\sources\clients.html:111 .\templates\sources\newsletters.html:110
+#: .\templates\sources\clients.html:111
+#: .\templates\sources\newsletters.html:110
 msgid "Sin logo"
 msgstr ""
 
-#: .\templates\sources\clients.html:121 .\templates\sources\newsletters.html:120
+#: .\templates\sources\clients.html:121
+#: .\templates\sources\newsletters.html:120
 #, fuzzy
 #| msgid "Datos del cliente"
 msgid "Nuevo cliente"
@@ -1609,11 +2029,13 @@ msgstr ""
 msgid "Personas que desean recibir noticias de Fixalius"
 msgstr ""
 
-#: .\templates\sources\suscribers.html:68 .\templates\sources\suscribers.html:95
+#: .\templates\sources\suscribers.html:68
+#: .\templates\sources\suscribers.html:95
 msgid "Pendientes"
 msgstr ""
 
-#: .\templates\sources\suscribers.html:76 .\templates\sources\suscribers.html:96
+#: .\templates\sources\suscribers.html:76
+#: .\templates\sources\suscribers.html:96
 msgid "Bajas"
 msgstr ""
 

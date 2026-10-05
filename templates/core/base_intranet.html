@@ -5,7 +5,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
+
+  {# CSRF-FIX #}
+  {# ------------------------------------------------------------------
+     El simple hecho de renderizar {{ csrf_token }} fuerza a Django a
+     emitir la cookie `csrftoken` en esta respuesta (context processor
+     `django.template.context_processors.csrf`, siempre activo).
+     Además, exponemos el token como <meta> para que el JS pueda leerlo
+     aunque la cookie esté marcada HttpOnly.
+     ------------------------------------------------------------------ #}
   <meta name="csrf-token" content="{{ csrf_token }}">
+
   <title>{% block title %}Fixalius · {% trans 'Intranet' %}{% endblock %}</title>
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23123e5a'/%3E%3Ctext x='32' y='48' font-family='Arial,Helvetica,sans-serif' font-size='44' font-weight='800' font-style='italic' fill='%23f47b36' text-anchor='middle'%3Ef%3C/text%3E%3C/svg%3E">
@@ -17,9 +27,26 @@
   {# antes del primer pintado y evita el parpadeo al cargar la página.        #}
   <script src="{% static 'core/js/intranet.js' %}"></script>
 
+  {# CSRF-FIX #}
+  {# Expone el token a window para el código AJAX (ver clients.js).
+     Evita depender de leer document.cookie, que falla si HttpOnly=True. #}
+  <script>
+    window.FIXALIUS_CSRF = "{{ csrf_token }}";
+  </script>
+
   {% block head_extra %}{% endblock %}
 </head>
 <body class="intranet-body{% if request.user.is_authenticated %} has-sidebar{% endif %} {% block body_class %}{% endblock %}">
+
+  {# CSRF-FIX #}
+  {# Formulario CSRF invisible — cinturón y tirantes.
+     Garantiza que {% csrf_token %} se renderice SIEMPRE, incluso en
+     páginas sin formularios visibles (dashboard, tablas, etc.). De esta
+     forma la cookie se emite en cada respuesta y `clients.js` puede
+     caer al input oculto si el meta no está disponible. #}
+  <form hidden aria-hidden="true" tabindex="-1">
+    {% csrf_token %}
+  </form>
 
   <a class="skip-link" href="#main">{% trans "Saltar al contenido" %}</a>
 

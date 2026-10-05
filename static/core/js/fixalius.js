@@ -67,19 +67,44 @@
     });
   }
 
-  document.querySelectorAll('form[data-ok]').forEach((form) => {
-    form.addEventListener('submit', (event) => {
+  /* ---------- Newsletter: alta real contra el servidor (doble opt-in) ---------- */
+  document.querySelectorAll('form[data-newsletter]').forEach((form) => {
+    const notice = form.querySelector('.form-notice');
+    const button = form.querySelector('button[type="submit"]');
+
+    const say = (text, isError = false) => {
+      if (!notice) return;
+      notice.textContent = text || '';
+      notice.classList.toggle('is-error', isError);
+    };
+
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const message = form.querySelector('.form-notice');
-      if (message) {
-        message.textContent = form.dataset.ok || '';
-        window.setTimeout(() => {
-          if (message.textContent === (form.dataset.ok || '')) {
-            message.textContent = '';
-          }
-        }, 6000);
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      if (button) button.disabled = true;
+      say(form.dataset.sending);
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),   // incluye csrfmiddlewaretoken y el honeypot
+          headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          credentials: 'same-origin',
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.ok) {
+          say(data.message);          // "Revisa tu correo para confirmar..." (sin temporizador)
+          form.reset();
+        } else {
+          say(data.message || form.dataset.error, true);
+        }
+      } catch (_) {
+        say(form.dataset.error, true);
+      } finally {
+        if (button) button.disabled = false;
       }
-      form.reset();
     });
   });
 

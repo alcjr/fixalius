@@ -6,10 +6,10 @@
   <meta name="description" content="{% trans 'Fixalius: análisis, diseño y desarrollo de aplicaciones impulsadas por IA.' %}">
   <title>{% trans 'Fixalius' %} — {% trans 'Inteligencia aplicada' %}</title>
 
-  <link rel="canonical" href="{{ request.build_absolute_uri }}">
-  {% for alt in alternates %}
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+  {% if alternates_distinct %}{% for alt in alternates %}
     <link rel="alternate" hreflang="{{ alt.code }}" href="{{ request.scheme }}://{{ request.get_host }}{{ alt.url }}">
-  {% endfor %}
+  {% endfor %}{% endif %}
 
   <link rel="icon" type="image/png" sizes="32x32"
         href="{% static 'core/images/fixalius-mark.png' %}">
@@ -23,7 +23,7 @@
   <meta property="og:site_name" content="Fixalius">
   <meta property="og:title" content="{% trans 'Fixalius' %} — {% trans 'Inteligencia aplicada' %}">
   <meta property="og:description" content="{% trans 'Análisis, diseño y desarrollo de aplicaciones impulsadas por IA.' %}">
-  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
   <meta property="og:locale" content="{{ LANGUAGE_CODE }}">
   {% for alt in alternates %}{% if alt.code != LANGUAGE_CODE %}<meta property="og:locale:alternate" content="{{ alt.code }}">
   {% endif %}{% endfor %}
@@ -42,7 +42,7 @@
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Fixalius",
-    "url": "{{ request.build_absolute_uri }}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{{ request.path }}",
     "email": "hello@fixalius.com",
     "areaServed": "EU",
     "knowsLanguage": [{% for alt in alternates %}"{{ alt.code }}"{% if not forloop.last %},{% endif %}{% endfor %}]
@@ -268,15 +268,22 @@
 
       <form class="newsletter"
             method="post"
-            action="#contact"
-            data-ok="{% trans 'Gracias. Tu correo ha quedado registrado.' %}">
+            action="{% url 'newsletter_subscribe' %}"
+            data-newsletter
+            data-sending="{% trans 'Enviando…' %}"
+            data-error="{% trans 'No hemos podido completar la suscripción. Inténtalo de nuevo.' %}">
         {% csrf_token %}
         <label for="newsletter-email">{% trans "Recibe ocasionalmente ideas sobre IA aplicada." %}</label>
+        {# Honeypot: invisible para personas; los bots lo rellenan #}
+        <div class="hp" aria-hidden="true">
+          <label for="newsletter-website">{% trans "No rellenes este campo" %}</label>
+          <input id="newsletter-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
         <div class="input-row">
           <input id="newsletter-email" name="email" type="email"
                  placeholder="{% trans 'Tu correo electrónico' %}"
                  autocomplete="email" inputmode="email" required>
-          <button type="submit" aria-label="{% trans 'Suscribirse' %}"><span aria-hidden="true">↗</span></button>
+          <button type="submit" aria-label="{% trans 'Suscribirse' %}"><span aria-hidden="true">→</span></button>
         </div>
         <small>
           {% url 'privacy' as privacy_url %}
@@ -284,7 +291,8 @@
           Al suscribirte, aceptas nuestra <a href="{{ url }}">política de privacidad</a>.
           {% endblocktrans %}
         </small>
-        <p class="form-notice" role="status" aria-live="polite"></p>
+        {# Sin JS el servidor redirige con ?newsletter=...; con JS el mensaje llega por fetch #}
+        <p class="form-notice{% if request.GET.newsletter == 'error' or request.GET.newsletter == 'invalid' %} is-error{% endif %}" role="status" aria-live="polite">{% if request.GET.newsletter == 'sent' %}{% trans "Revisa tu correo para confirmar la suscripción." %}{% elif request.GET.newsletter == 'invalid' %}{% trans "Introduce un correo electrónico válido." %}{% elif request.GET.newsletter == 'error' %}{% trans "No hemos podido completar la suscripción. Inténtalo de nuevo." %}{% endif %}</p>
       </form>
     </section>
 

@@ -1,0 +1,62 @@
+{% load i18n static %}{% get_current_language as LANGUAGE_CODE %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>{% trans 'Fixalius' %} — {% trans 'Newsletter' %}</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'core/images/fixalius-mark.png' %}">
+  <meta name="theme-color" content="#123e5a">
+  <link rel="stylesheet" href="{% static 'core/css/fixalius.css' %}">
+</head>
+<body>
+
+{% include 'core/_wordmark.html' %}
+{% url 'home' as home_url %}
+
+  <header class="site-header">
+    {% include 'core/_brand.html' with brand_href=home_url brand_label='Fixalius — Inicio' %}
+  </header>
+
+  <main id="top">
+    <section class="newsletter-result section-pad" aria-labelledby="nl-title">
+      <div class="section-kicker">{% trans "Newsletter" %}</div>
+
+      {% if state == "confirmed" %}
+        <h1 id="nl-title">{% trans "Suscripción confirmada." %}</h1>
+        <p>{% trans "Gracias. A partir de ahora recibirás ocasionalmente ideas sobre IA aplicada. Puedes darte de baja en cualquier momento desde cualquiera de nuestros correos." %}</p>
+
+      {% elif state == "unsubscribe_confirm" %}
+        <h1 id="nl-title">{% trans "¿Quieres darte de baja?" %}</h1>
+        <p>{% trans "Dejarás de recibir nuestras ideas sobre IA aplicada. Confirma para completar la baja." %}</p>
+        <form method="post" action="{{ request.path }}">
+          {% csrf_token %}
+          <button type="submit" class="button button-dark">{% trans "Confirmar baja" %} <span aria-hidden="true">→</span></button>
+        </form>
+
+      {% elif state == "unsubscribed" %}
+        <h1 id="nl-title">{% trans "Baja completada." %}</h1>
+        <p>{% trans "No recibirás más correos de nuestra newsletter. Si cambias de idea, puedes volver a suscribirte desde la web." %}</p>
+
+      {% elif state == "expired" %}
+        <h1 id="nl-title">{% trans "El enlace ha caducado." %}</h1>
+        <p>{% trans "Por seguridad, los enlaces de confirmación caducan. Vuelve a introducir tu correo en la web y te enviaremos uno nuevo." %}</p>
+
+      {% else %}
+        <h1 id="nl-title">{% trans "Enlace no válido." %}</h1>
+        <p>{% trans "Este enlace no es correcto o ya no está disponible. Si quieres suscribirte, hazlo de nuevo desde la web." %}</p>
+      {% endif %}
+
+      <p><a class="email-link" href="{{ home_url }}">{% trans "Volver a la web" %} <span aria-hidden="true">→</span></a></p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="logo" aria-hidden="true" style="color:#fff">
+      <svg class="wm" viewBox="222 61 543 89" style="height:1.5rem"><use href="#g-fix"/><use href="#g-alius"/></svg>
+    </div>
+    <span>© {% now "Y" %} Fixalius</span>
+  </footer>
+
+</body>
+</html>

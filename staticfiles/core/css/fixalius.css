@@ -369,10 +369,24 @@ main{
 .newsletter label{display:block;font-size:14px;margin-bottom:20px}
 .input-row{display:flex;border-bottom:1px solid var(--ink)}
 .input-row input{border:0;background:none;width:100%;padding:12px 0;font:inherit}
-.input-row button{border:0;background:none;color:var(--orange-text);font-size:22px;cursor:pointer}
+.input-row button{border:0;background:none;color:var(--orange-text);font-size:22px;cursor:pointer;min-width:44px;min-height:44px}
+.input-row button:disabled{opacity:.5;cursor:default}
 .newsletter small{color:var(--muted);display:block;font-size:11px;margin-top:13px}
 .newsletter small a{text-decoration:underline}
 .form-notice{color:var(--blue-2);font-size:13px;min-height:18px}
+.form-notice.is-error{color:var(--orange-text)}
+
+/* Honeypot de la newsletter: fuera de pantalla, no display:none (los bots lo detectan) */
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+/* Página de resultado de la newsletter (confirmación / baja) */
+.newsletter-result{background:#fff;min-height:100%;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:24px}
+.newsletter-result h1{font-size:clamp(42px,5vw,74px);line-height:.98;letter-spacing:-.065em;margin:0;text-wrap:balance}
+.newsletter-result p{color:var(--muted);line-height:1.6;font-size:16px;max-width:520px;margin:0}
+.button-dark{background:var(--blue);color:#fff;border:0;cursor:pointer;font-family:inherit}
+.button-dark:hover{background:var(--orange)}
+.button-dark span{color:var(--orange-on-dark)}
+.button-dark:hover span{color:#fff}
 
 /* Foco visible */
 :focus-visible{

@@ -1,0 +1,14 @@
+{% load i18n %}{% autoescape off %}{% trans "Hola," %}
+
+{% trans "Alguien (esperamos que tú) ha solicitado recibir con esta dirección ideas ocasionales sobre IA aplicada de Fixalius." %}
+
+{% trans "Para confirmar tu suscripción, abre este enlace:" %}
+
+{{ confirm_url }}
+
+{% blocktrans trimmed count days=ttl_days %}El enlace caduca en {{ days }} día.{% plural %}El enlace caduca en {{ days }} días.{% endblocktrans %}
+
+{% trans "Si no has sido tú, ignora este mensaje: no recibirás nada más." %}
+
+— Fixalius
+{% endautoescape %}
