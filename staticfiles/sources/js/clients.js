@@ -64,6 +64,120 @@
     return $w;
   }
 
+  /* --- CSRF (Django) ------------------------------------------------------- */
+ 
+function csrfToken() {
+  // 1) Preferido: token inyectado por el base template en <head>.
+  if (window.FIXALIUS_CSRF) return window.FIXALIUS_CSRF;
+
+  // 2) Meta tag (fallback si el inline script no corrió).
+  var meta = document.querySelector('meta[name="csrf-token"]');
+  if (meta && meta.content && meta.content !== 'NOTPROVIDED') return meta.content;
+
+  // 3) Cookie (falla si CSRF_COOKIE_HTTPONLY = True).
+  var m = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+  if (m) return decodeURIComponent(m[1]);
+
+  // 4) Input oculto (formulario defensivo del base).
+  var input = document.querySelector('input[name="csrfmiddlewaretoken"]');
+  return input ? input.value : '';
+}
+  /* --- Alta rápida de sector ---------------------------------------------- */
+  function refreshLookup(selectBox, newId) {
+    var ds = selectBox.option('dataSource');
+    if (ds && typeof ds.reload === 'function') {
+      var p = ds.reload();
+      if (p && typeof p.then === 'function') {
+        p.then(function () { if (newId) selectBox.option('value', newId); });
+      } else if (newId) {
+        selectBox.option('value', newId);
+      }
+    } else if (newId) {
+      selectBox.option('value', newId);
+    }
+  }
+
+  function openAddSectorPopup(selectBox) {
+    var $body = $('<div>').css({ padding: '16px 20px 4px' });
+    var form = $('<div>').appendTo($body).dxForm({
+      colCount: 1,
+      items: [{
+        dataField: 'nombre_sector',
+        label: { text: _('Nombre del sector') },
+        editorOptions: {
+          maxLength: 100,
+          placeholder: _('Ej. Industria, Salud, Retail…')
+        },
+        validationRules: [{ type: 'required', message: _('El nombre es obligatorio') }]
+      }]
+    }).dxForm('instance');
+
+    var popup = $('<div>').appendTo('body').dxPopup({
+      title: _('Nuevo sector'),
+      width: 440,
+      height: 'auto',
+      showTitle: true,
+      dragEnabled: false,
+      hideOnOutsideClick: false,
+      contentTemplate: function () { return $body; },
+      toolbarItems: [
+        {
+          widget: 'dxButton', toolbar: 'bottom', location: 'after',
+          options: { text: _('Cancelar'), onClick: function () { popup.hide(); } }
+        },
+        {
+          widget: 'dxButton', toolbar: 'bottom', location: 'after',
+          options: {
+            text: _('Crear sector'),
+            type: 'default',
+            onClick: function () {
+              var btn = this;
+              if (!form.validate().isValid) return;
+              var data = form.option('formData') || {};
+              btn.option('disabled', true);
+
+              $.ajax({
+                url: U.sectors_all,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                  nombre_sector: (data.nombre_sector || '').trim(),
+                  activo: true
+                }),
+                headers: { 'X-CSRFToken': csrfToken() }
+              })
+              .done(function (created) {
+                popup.hide();
+                refreshLookup(selectBox, created && created.id);
+                DevExpress.ui.notify({
+                  message: _('Sector creado correctamente'),
+                  type: 'success', displayTime: 2500,
+                  position: { my: 'top right', at: 'top right', offset: '-16 -16' }
+                });
+              })
+              .fail(function (xhr) {
+                var msg = _('No se pudo crear el sector.');
+                try {
+                  var r = JSON.parse(xhr.responseText);
+                  if (r && r.nombre_sector) msg = [].concat(r.nombre_sector).join(' ');
+                  else if (r && r.detail) msg = r.detail;
+                } catch (e) { /* ignore */ }
+                DevExpress.ui.notify({
+                  message: msg, type: 'error', displayTime: 4500,
+                  position: { my: 'top right', at: 'top right', offset: '-16 -16' }
+                });
+                btn.option('disabled', false);
+              });
+            }
+          }
+        }
+      ],
+      onHidden: function () { popup.dispose(); }
+    }).dxPopup('instance');
+
+    popup.show();
+  }
+
   FT.create({
     key: 'id',
     urls: { list: U.list, kpis: U.kpis },
@@ -211,7 +325,20 @@
                   dataSource: FT.lookupSource(U.sectors_all, 'id', { ordering: 'nombre_sector', all: true }),
                   valueExpr: 'id', displayExpr: 'nombre_sector',
                   searchEnabled: true, searchTimeout: 300, minSearchLength: 0,
-                  placeholder: _('Elige un sector…'), noDataText: _('Sin resultados')
+                  placeholder: _('Elige un sector…'), noDataText: _('Sin resultados'),
+                  buttons: [{
+                    name: 'addSector',
+                    location: 'after',
+                    options: {
+                      icon: 'plus',
+                      hint: _('Añadir nuevo sector'),
+                      elementAttr: { class: 'tp-sector-add' },     // ← activa el CSS ya definido
+                      onClick: function (e) {
+                        if (e && e.event) e.event.stopPropagation(); // que no se abra el desplegable
+                        openAddSectorPopup(e.component);
+                      }
+                    }
+                  }]
                 },
                 validationRules: [{ type: 'required', message: _('El sector es obligatorio') }]
               },
@@ -245,30 +372,6 @@
         ];
       }
     },
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     exportColumns: [
       { header: _('ID'),                 width: 8,  value: function (r) { return r.id; } },

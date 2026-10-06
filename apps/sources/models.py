@@ -1,5 +1,12 @@
+import os
+import uuid
+
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -263,3 +270,114 @@ class Subscriber(models.Model):
         if self.email:
             self.email = self.email.lower()
         super().save(*args, **kwargs)
+
+
+# --- Documentos ----------------------------------------------------------------
+
+def get_private_storage():
+    """Almacén PRIVADO: fuera de MEDIA_ROOT y sin URL pública.
+
+    Los ficheros solo se sirven a través de vistas que comprueban permisos
+    (colaboradores autenticados o suscriptores con enlace personal).
+    Callable para que la migración no incruste la ruta del servidor.
+    """
+    root = getattr(settings, "PRIVATE_MEDIA_ROOT", settings.BASE_DIR / "private_media")
+    return FileSystemStorage(location=root)
+
+
+def document_upload_to(instance, filename):
+    # Nombre aleatorio en disco; el nombre original se guarda aparte.
+    ext = os.path.splitext(filename)[1].lower()
+    return f"documents/{timezone.now():%Y/%m}/{uuid.uuid4().hex}{ext}"
+
+
+class Document(TimeStampedModel):
+    """Documento de Fixalius (plantilla, manual…) descargable por colaboradores
+    y, mediante enlace personal, por los suscriptores a quienes se envíe."""
+
+    class Categoria(models.TextChoices):
+        PLANTILLA = "plantilla", _("Plantilla")
+        MANUAL = "manual", _("Manual")
+        GUIA = "guia", _("Guía")
+        OTRO = "otro", _("Otro")
+
+    titulo = models.CharField(_("título"), max_length=200)
+    descripcion = models.TextField(_("descripción"), blank=True)
+    categoria = models.CharField(
+        _("categoría"),
+        max_length=20,
+        choices=Categoria.choices,
+        default=Categoria.OTRO,
+        db_index=True,
+    )
+    archivo = models.FileField(
+        _("archivo"),
+        upload_to=document_upload_to,
+        storage=get_private_storage,
+    )
+    nombre_original = models.CharField(_("nombre original"), max_length=255, blank=True, editable=False)
+    tamano = models.PositiveBigIntegerField(_("tamaño (bytes)"), default=0, editable=False)
+    descargas = models.PositiveIntegerField(
+        _("descargas de colaboradores"), default=0, editable=False,
+    )
+    subido_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True, blank=True, editable=False,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name=_("subido por"),
+    )
+
+    class Meta:
+        db_table = "documents"
+        verbose_name = _("documento")
+        verbose_name_plural = _("documentos")
+        ordering = ["-alta", "-id"]
+
+    def __str__(self):
+        return self.titulo
+
+    @property
+    def extension(self):
+        name = self.nombre_original or self.archivo.name or ""
+        return os.path.splitext(name)[1].lower().lstrip(".")
+
+
+@receiver(post_delete, sender=Document)
+def _borrar_fichero_de_documento(sender, instance, **kwargs):
+    if instance.archivo:
+        instance.archivo.delete(save=False)
+
+
+class DocumentShare(models.Model):
+    """Envío de un documento a un suscriptor (con su contador de descargas)."""
+
+    documento = models.ForeignKey(
+        Document, on_delete=models.CASCADE, related_name="envios",
+        verbose_name=_("documento"),
+    )
+    suscriptor = models.ForeignKey(
+        Subscriber, on_delete=models.CASCADE, related_name="documentos_enviados",
+        verbose_name=_("suscriptor"),
+    )
+    enviado = models.DateTimeField(_("enviado"), default=timezone.now, editable=False)
+    enviado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True, blank=True, editable=False,
+        on_delete=models.SET_NULL, related_name="+",
+        verbose_name=_("enviado por"),
+    )
+    descargas = models.PositiveIntegerField(_("descargas"), default=0, editable=False)
+    ultima_descarga = models.DateTimeField(_("última descarga"), null=True, blank=True, editable=False)
+
+    class Meta:
+        db_table = "document_shares"
+        verbose_name = _("envío de documento")
+        verbose_name_plural = _("envíos de documentos")
+        ordering = ["-enviado"]
+        constraints = [
+            models.UniqueConstraint(fields=["documento", "suscriptor"], name="uniq_document_subscriber"),
+        ]
+
+    def __str__(self):
+        return f"{self.documento} → {self.suscriptor}"

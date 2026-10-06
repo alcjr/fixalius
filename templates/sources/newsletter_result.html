@@ -42,6 +42,14 @@
         <h1 id="nl-title">{% trans "El enlace ha caducado." %}</h1>
         <p>{% trans "Por seguridad, los enlaces de confirmación caducan. Vuelve a introducir tu correo en la web y te enviaremos uno nuevo." %}</p>
 
+      {% elif state == "doc_expired" %}
+        <h1 id="nl-title">{% trans "El enlace de descarga ha caducado." %}</h1>
+        <p>{% trans "Por seguridad, los enlaces de descarga caducan. Escríbenos a hello@fixalius.com y te enviaremos uno nuevo." %}</p>
+
+      {% elif state == "doc_invalid" %}
+        <h1 id="nl-title">{% trans "Descarga no disponible." %}</h1>
+        <p>{% trans "Este enlace no es correcto, el documento ya no está disponible o tu suscripción no está activa." %}</p>
+
       {% else %}
         <h1 id="nl-title">{% trans "Enlace no válido." %}</h1>
         <p>{% trans "Este enlace no es correcto o ya no está disponible. Si quieres suscribirte, hazlo de nuevo desde la web." %}</p>

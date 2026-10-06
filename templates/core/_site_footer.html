@@ -1,0 +1,22 @@
+{% comment %}
+  Pie común de Fixalius (idéntico al de index.html).
+  Parámetro opcional: minimal=True -> solo logotipo y "© año Fixalius" (sin Privacidad, Aviso legal ni Volver arriba), p. ej. en el login.
+  Las ventanas modales están en core/_legal_modals.html (inclúyelas donde haya botones data-modal-open).
+{% endcomment %}{% load i18n %}
+<footer>
+  <div class="logo" aria-hidden="true" style="color:#fff">
+    <svg class="wm" viewBox="222 61 543 89" style="height:1.5rem"><use href="#g-fix"/><use href="#g-alius"/></svg>
+  </div>
+  <span>© {% now "Y" %} Fixalius</span>
+  {% if not minimal %}
+  <div>
+    <button type="button" class="link-button" data-modal-open="modal-privacy">
+      {% trans "Privacidad" %}
+    </button>
+    <button type="button" class="link-button" data-modal-open="modal-legal">
+      {% trans "Aviso legal" %}
+    </button>
+    <a href="#top" data-scroll-top>{% trans "Volver arriba" %} <span aria-hidden="true">↑</span></a>
+  </div>
+  {% endif %}
+</footer>

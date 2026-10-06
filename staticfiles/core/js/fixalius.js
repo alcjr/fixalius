@@ -1,4 +1,8 @@
 (() => {
+  // Evita enlazar los eventos dos veces si el script llega por base.html y por la plantilla hija
+  if (window.__fixaliusInit) return;
+  window.__fixaliusInit = true;
+
   const menuButton = document.querySelector('.menu-toggle');
   const nav = document.querySelector('#site-nav');
   const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';

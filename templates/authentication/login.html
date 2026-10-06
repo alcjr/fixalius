@@ -1,24 +1,24 @@
 {% extends 'core/base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Iniciar sesión" %} · Fixalius{% endblock %}
 {% block meta_description %}{% trans "Acceso a la intranet de Fixalius." %}{% endblock %}
 {% block body_class %}login-page{% endblock %}
 
 {% comment %}
-  Override de la cabecera solo para el login:
-  - sin selector de banderas (el idioma se hereda de index.html vía sesión)
-  - wordmark "fixalius" a la izquierda (mismo asset y altura que el footer)
-  - fecha + hora a la derecha, en el idioma activo
-  Los <defs> del wordmark ya están cargados en base.html.
+  Cabecera del login:
+  - a la izquierda, la MISMA marca que index.html (símbolo + wordmark, parcial core/_brand.html)
+  - a la derecha, fecha + hora en el idioma activo
+  - sin menú ni selector de banderas (el idioma se hereda de index.html vía sesión)
+  Los <defs> de marca (#g-mark, #g-fix, #g-alius) deben estar cargados en base.html.
+  El pie es el parcial común del sitio en versión mínima: solo logotipo y "© año Fixalius".
 {% endcomment %}
 {% block header %}
+{# Sprite de marca: wordmark (#g-fix / #g-alius) + símbolo (#g-mark), igual que index.html #}
+{% include 'core/_wordmark.html' %}
 <header class="site-header site-header--minimal">
-  <a class="brand" href="/" aria-label="Fixalius — {% trans 'Inicio' %}">
-    <svg class="wm wm--sm" viewBox="222 61 543 89" aria-hidden="true">
-      <use href="#g-fix"/><use href="#g-alius"/>
-    </svg>
-  </a>
+  {% trans 'Fixalius — Inicio' as brand_label_t %}
+  {% include 'core/_brand.html' with brand_href='/' brand_label=brand_label_t %}
 
   <time class="header-clock"
         id="headerClock"
@@ -27,6 +27,7 @@
   </time>
 </header>
 {% endblock %}
+{% block footer %}{% include 'core/_site_footer.html' with minimal=True %}{% endblock %}
 
 {% block head_extra %}
 <style>
@@ -37,16 +38,12 @@
 
   .login-page main { padding: 0; }
 
+  /* Pie del login: solo "© año Fixalius". Red de seguridad por si base.html
+     pinta su propio pie con Privacidad / Aviso legal / Volver arriba. */
+  .login-page footer a,
+  .login-page footer button { display: none; }
+
   /* --- Cabecera mínima -------------------------------------- */
-  .login-page .site-header--minimal {
-    padding: 22px clamp(20px, 5vw, 72px);
-    gap: 16px;
-  }
-  .login-page .site-header--minimal .wm--sm {
-    height: 1.5rem;      /* idéntico al wordmark del footer */
-    width: auto;
-    display: block;
-  }
   .login-page .header-clock {
     font-size: 12px;
     font-weight: 700;
@@ -62,7 +59,7 @@
     min-height: 100%;
     display: grid;
     place-items: center;
-    padding: 48px 24px;
+    padding: clamp(12px, 3vh, 40px) 24px;
   }
 
   .login-page .auth-card {
@@ -70,7 +67,8 @@
     grid-template-columns: 5fr 6fr;
     width: 100%;
     max-width: 940px;
-    min-height: 580px;
+    /* usa el alto disponible, pero nunca fuerza scroll */
+    min-height: clamp(0px, calc(100dvh - 260px), 560px);
     background: #fff;
     border-radius: 20px;
     overflow: hidden;
@@ -84,7 +82,7 @@
      ========================================================= */
   .login-page .auth-brand {
     position: relative;
-    padding: 40px 44px 32px;
+    padding: 32px 40px 24px;
     color: #fff;
     background: linear-gradient(160deg,
       var(--marengo-dark) 0%,
@@ -115,7 +113,7 @@
     letter-spacing: .18em;
     text-transform: uppercase;
     color: rgba(255,255,255,.82);
-    margin-bottom: 22px;
+    margin-bottom: 16px;
   }
   .login-page .brand-tag::before {
     content: '';
@@ -145,18 +143,18 @@
   }
 
   .login-page .brand-visual {
+    position: relative;
     flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 200px;
-    padding: 12px 0;
+    min-height: 120px;     /* el dibujo se escala al espacio sobrante */
+    margin: 8px 0;
   }
   .login-page .brand-visual svg {
-    display: block;
+    position: absolute;
+    inset: 0;
+    margin: auto;
     width: 100%;
     max-width: 260px;
-    height: auto;
+    height: 100%;
     overflow: visible;
   }
 
@@ -170,7 +168,7 @@
     text-transform: uppercase;
     color: rgba(255,255,255,.5);
     border-top: 1px solid rgba(255,255,255,.14);
-    padding-top: 18px;
+    padding-top: 14px;
   }
   .login-page .brand-foot svg { width: 14px; height: 14px; flex: 0 0 auto; }
 
@@ -212,7 +210,7 @@
      Panel derecho · formulario
      ========================================================= */
   .login-page .auth-form {
-    padding: 48px 48px 40px;
+    padding: 32px 44px 28px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -225,7 +223,7 @@
     letter-spacing: .18em;
     text-transform: uppercase;
     color: var(--orange-text);
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
   .login-page .form-kicker span {
     color: var(--muted);
@@ -233,11 +231,11 @@
   }
 
   .login-page .auth-form h1 {
-    font-size: clamp(28px, 3.2vw, 36px);
+    font-size: clamp(26px, 2.6vw, 32px);
     font-weight: 700;
     letter-spacing: -.045em;
     line-height: 1.08;
-    margin: 0 0 8px;
+    margin: 0 0 6px;
   }
   .login-page .auth-form h1 i {
     font-style: normal;
@@ -247,7 +245,7 @@
     font-size: 14px;
     line-height: 1.55;
     color: var(--muted);
-    margin: 0 0 28px;
+    margin: 0 0 18px;
   }
 
   .login-page .login-errors {
@@ -261,13 +259,13 @@
     border: 1px solid #e9bdbd;
   }
 
-  .login-page .field { margin-bottom: 16px; }
+  .login-page .field { margin-bottom: 12px; }
   .login-page .field label {
     display: block;
     font-size: 13px;
     font-weight: 700;
     color: var(--ink);
-    margin: 0 0 7px;
+    margin: 0 0 5px;
     letter-spacing: -.005em;
   }
 
@@ -287,7 +285,7 @@
   .login-page .auth-form input[type="password"],
   .login-page .auth-form input[type="email"] {
     width: 100%;
-    padding: 13px 14px 13px 42px;
+    padding: 11px 14px 11px 42px;
     border: 1px solid var(--line);
     border-radius: 10px;
     font: inherit;
@@ -328,7 +326,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin: 6px 0 22px;
+    margin: 4px 0 16px;
     font-size: 13px;
     flex-wrap: wrap;
   }
@@ -377,7 +375,7 @@
 
   .login-page .auth-form button[type="submit"] {
     width: 100%;
-    padding: 15px 20px;
+    padding: 13px 20px;
     background: var(--blue);
     color: #fff;
     border: 0;
@@ -407,7 +405,7 @@
   }
 
   .login-page .form-foot {
-    margin-top: 22px;
+    margin-top: 16px;
     font-size: 12px;
     line-height: 1.6;
     color: var(--muted);
@@ -433,7 +431,6 @@
      Responsive
      ========================================================= */
   @media (max-width: 760px) {
-    .login-page .site-header--minimal { padding: 18px 20px; }
     .login-page .header-clock {
       font-size: 10.5px;
       letter-spacing: .10em;
@@ -459,6 +456,24 @@
     .login-page .auth-form { padding: 32px 24px 28px; }
     .login-page .auth-form h1 { font-size: 26px; }
     .login-page .auth-form .lede { margin-bottom: 22px; }
+  }
+
+  @media (max-height: 640px) and (min-width: 761px) {
+    .login-page .auth-stage { padding: 10px 24px; }
+    .login-page .auth-brand { padding: 24px 36px 18px; }
+    .login-page .brand-tag { margin-bottom: 12px; }
+    .login-page .brand-title { font-size: 24px; }
+    .login-page .brand-foot { padding-top: 10px; }
+    .login-page .auth-form { padding: 22px 40px 18px; }
+    .login-page .form-kicker { margin-bottom: 6px; }
+    .login-page .auth-form h1 { font-size: 26px; }
+    .login-page .auth-form .lede { margin-bottom: 12px; }
+    .login-page .field { margin-bottom: 9px; }
+    .login-page .form-row { margin: 2px 0 12px; }
+    .login-page .form-foot { margin-top: 12px; }
+    .login-page .auth-form input[type="text"],
+    .login-page .auth-form input[type="password"],
+    .login-page .auth-form input[type="email"] { padding-top: 9px; padding-bottom: 9px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -626,16 +641,23 @@
 
       <p class="form-foot">
         {% trans "Al acceder aceptas nuestra" %}
-        <a href="#">{% trans "política de privacidad" %}</a>
+        {% url 'privacy' as privacy_url %}
+        <a href="{{ privacy_url|default:'#' }}" data-modal-open="modal-privacy">{% trans "política de privacidad" %}</a>
         <span class="sep" aria-hidden="true">·</span>
-        <a href="#">{% trans "aviso legal" %}</a>.
+        {% url 'legal' as legal_url %}
+        <a href="{{ legal_url|default:'#' }}" data-modal-open="modal-legal">{% trans "aviso legal" %}</a>.
       </p>
     </section>
   </article>
 </div>
+
+{# Modales legales: los abren los enlaces del formulario (data-modal-open) #}
+{% include 'core/_legal_modals.html' %}
 {% endblock %}
 
 {% block scripts %}
+{{ block.super }}
+<script src="{% static 'core/js/fixalius.js' %}" defer></script>
 <script>
   /* ------------------------------------------------------------------
      1) Reloj de cabecera — refresco cada 30 s en el idioma activo

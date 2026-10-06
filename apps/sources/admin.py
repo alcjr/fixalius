@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Client, Sector, SuccessCase, Subscriber
+from .models import Client, Document, DocumentShare, Sector, SuccessCase, Subscriber
 
 
 @admin.register(Sector)
@@ -91,3 +91,31 @@ class SubscriberAdmin(admin.ModelAdmin):
     readonly_fields = ("alta", "token_confirmacion")
     list_per_page = 25
     save_on_top = True
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ("titulo", "categoria", "nombre_original", "tamano", "descargas", "alta")
+    list_filter = ("categoria",)
+    search_fields = ("titulo", "descripcion", "nombre_original")
+    readonly_fields = ("nombre_original", "tamano", "descargas", "subido_por", "alta", "update")
+    list_per_page = 25
+    save_on_top = True
+
+    def save_model(self, request, obj, form, change):
+        if "archivo" in form.changed_data and obj.archivo:
+            obj.nombre_original = obj.archivo.name.rsplit("/", 1)[-1][:255]
+            obj.tamano = obj.archivo.size
+        if not change:
+            obj.subido_por = request.user
+        super().save_model(request, obj, form, change)
+
+
+@admin.register(DocumentShare)
+class DocumentShareAdmin(admin.ModelAdmin):
+    list_display = ("documento", "suscriptor", "enviado", "descargas", "ultima_descarga")
+    list_filter = ("documento",)
+    search_fields = ("suscriptor__email", "documento__titulo")
+    readonly_fields = ("enviado", "enviado_por", "descargas", "ultima_descarga")
+    list_select_related = ("documento", "suscriptor")
+    list_per_page = 25

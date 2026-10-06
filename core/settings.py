@@ -147,3 +147,35 @@ EMAIL_USE_TLS = False                                                       # so
 EMAIL_TIMEOUT = 15
 DEFAULT_FROM_EMAIL = decouple_config('DEFAULT_FROM_EMAIL', default='no-reply@fixalius.com')
 SERVER_EMAIL = decouple_config('SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
+
+# === LOGS ===
+LOG_DIR = BASE_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+# === LOGS ===
+# Un único archivo (logs/app.log). Las líneas de auditoría se identifican
+# por el nombre del logger: "fixalius.audit".
+LOG_DIR = BASE_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "std": {"format": "{asctime} {levelname} {name} {message}", "style": "{"},
+    },
+    "handlers": {
+        "console": {"class": "logging.StreamHandler", "formatter": "std"},
+        "app_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": LOG_DIR / "app.log",
+            "maxBytes": 10 * 1024 * 1024, "backupCount": 10,
+            "encoding": "utf-8", "formatter": "std",
+        },
+    },
+    "loggers": {
+        "apps": {"handlers": ["console", "app_file"], "level": "INFO"},
+        "fixalius.audit": {"handlers": ["console", "app_file"], "level": "INFO", "propagate": False},
+        "django.request": {"handlers": ["app_file"], "level": "ERROR", "propagate": True},
+    },
+}

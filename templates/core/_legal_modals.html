@@ -1,0 +1,25 @@
+{% comment %}
+  Modales legales (Privacidad / Aviso legal). Los abre core/js/fixalius.js
+  con cualquier elemento que lleve data-modal-open="modal-privacy" | "modal-legal".
+{% endcomment %}{% load i18n %}
+<dialog id="modal-privacy" class="modal" aria-labelledby="privacy-title">
+  <div class="modal-panel">
+    <button type="button" class="modal-close" aria-label="{% trans 'Cerrar' %}">
+      <span aria-hidden="true">×</span>
+    </button>
+    <div class="modal-scroll">
+      {% include 'core/_privacy_content.html' %}
+    </div>
+  </div>
+</dialog>
+
+<dialog id="modal-legal" class="modal" aria-labelledby="legal-title">
+  <div class="modal-panel">
+    <button type="button" class="modal-close" aria-label="{% trans 'Cerrar' %}">
+      <span aria-hidden="true">×</span>
+    </button>
+    <div class="modal-scroll">
+      {% include 'core/_legal_content.html' %}
+    </div>
+  </div>
+</dialog>

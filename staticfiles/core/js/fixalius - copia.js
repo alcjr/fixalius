@@ -67,19 +67,44 @@
     });
   }
 
-  document.querySelectorAll('form[data-ok]').forEach((form) => {
-    form.addEventListener('submit', (event) => {
+  /* ---------- Newsletter: alta real contra el servidor (doble opt-in) ---------- */
+  document.querySelectorAll('form[data-newsletter]').forEach((form) => {
+    const notice = form.querySelector('.form-notice');
+    const button = form.querySelector('button[type="submit"]');
+
+    const say = (text, isError = false) => {
+      if (!notice) return;
+      notice.textContent = text || '';
+      notice.classList.toggle('is-error', isError);
+    };
+
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const message = form.querySelector('.form-notice');
-      if (message) {
-        message.textContent = form.dataset.ok || '';
-        window.setTimeout(() => {
-          if (message.textContent === (form.dataset.ok || '')) {
-            message.textContent = '';
-          }
-        }, 6000);
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      if (button) button.disabled = true;
+      say(form.dataset.sending);
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),   // incluye csrfmiddlewaretoken y el honeypot
+          headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          credentials: 'same-origin',
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.ok) {
+          say(data.message);          // "Revisa tu correo para confirmar..." (sin temporizador)
+          form.reset();
+        } else {
+          say(data.message || form.dataset.error, true);
+        }
+      } catch (_) {
+        say(form.dataset.error, true);
+      } finally {
+        if (button) button.disabled = false;
       }
-      form.reset();
     });
   });
 
@@ -106,19 +131,56 @@
       }
     }
   });
-    /* ---------- Volver arriba ---------- */
-  document.querySelectorAll('[data-scroll-top]').forEach((el) => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Limpia el hash de la URL sin provocar un salto
-      if (history.replaceState) {
-        history.replaceState(null, '', window.location.pathname + window.location.search);
-      }
-    });
+  /* ---------- Navegación interna: el único scroll es el de <main> ---------- */
+  const scroller = document.querySelector('main');
+  const reduceMotionNav = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const goToHash = (hash, { smooth = true, push = true } = {}) => {
+    if (!scroller) return false;
+    let id = hash.slice(1);
+    try { id = decodeURIComponent(id); } catch (_) { /* hash mal codificado */ }
+    const target = id ? document.getElementById(id) : scroller;
+    if (!target || (target !== scroller && !scroller.contains(target))) return false;
+
+    const top = target === scroller
+      ? 0
+      : scroller.scrollTop + target.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
+    scroller.scrollTo({ top, behavior: smooth && !reduceMotionNav.matches ? 'smooth' : 'auto' });
+
+    if (push && history.replaceState) {
+      const clean = window.location.pathname + window.location.search;
+      history.replaceState(null, '', target === scroller ? clean : hash);
+    }
+
+    // Accesibilidad: el foco sigue al destino, sin que el navegador mueva nada
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+    return true;
+  };
+
+  // Enlaces internos (menú, "Hablemos", "Volver arriba", skip-link...)
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    const hash = link.getAttribute('href');
+    if (hash.length < 2) return;
+    if (goToHash(hash)) e.preventDefault();
   });
 
-  /* ---------- Carrusel de casos de éxito (bucle infinito + autoplay) ---------- */
+  window.addEventListener('hashchange', () => {
+    if (window.location.hash) goToHash(window.location.hash, { push: false });
+  });
+  if (window.location.hash) {
+    requestAnimationFrame(() => goToHash(window.location.hash, { smooth: false, push: false }));
+  }
+
+  // Red de seguridad: si algo llegase a desplazar la ventana, se devuelve a su sitio
+  window.addEventListener('scroll', () => {
+    const se = document.scrollingElement;
+    if (se && (se.scrollTop || se.scrollLeft)) se.scrollTo(0, 0);
+  }, { passive: true });
+
+  /* ---------- Carrusel de casos de éxito (bucle infinito, movimiento continuo) ---------- */
   const casesTrack = document.querySelector('[data-cases-track]');
   if (casesTrack) {
     const zone      = casesTrack.closest('.cases') || casesTrack;
@@ -127,11 +189,14 @@
     const toggleBtn = document.querySelector('[data-cases-toggle]');
     const originals = [...casesTrack.querySelectorAll('.case-card')];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const INTERVAL = 4500;
+    const SPEED  = 45;     // píxeles por segundo
+    const RESUME = 3000;   // ms tras soltar el dedo antes de reanudar
 
     const loop = originals.length > 1;
     let setWidth   = 0;
-    let timer      = null;
+    let raf        = 0;
+    let last       = 0;
+    let pos        = 0;
     let userPaused = false;   // pausa pedida con el botón
     let hovering   = false;   // ratón, foco o dedo dentro del carrusel
     let visible    = true;    // la sección está en pantalla
@@ -157,34 +222,39 @@
       }
     };
 
-    // Salto instantáneo (sin animación ni snap) para cerrar el bucle sin que se note.
-    const jump = (delta, done) => {
-      casesTrack.style.scrollSnapType = 'none';
-      casesTrack.style.scrollBehavior = 'auto';
-      casesTrack.scrollLeft += delta;
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        casesTrack.style.scrollSnapType = '';
-        casesTrack.style.scrollBehavior = '';
-        if (done) done();
-      }));
-    };
-
-    const normalize = () => {
-      if (loop && casesTrack.scrollLeft >= setWidth - 1) jump(-setWidth);
-    };
-
-    const go = (dir) => {
-      const move = () => casesTrack.scrollBy({ left: dir * step(), behavior: 'smooth' });
-      if (loop && dir < 0 && casesTrack.scrollLeft < 1) jump(setWidth, move);
-      else move();
+    // Movimiento continuo: se acumula la posición con el tiempo real entre frames
+    // y, al llegar al final del primer juego de cards, se vuelve al inicio sin salto.
+    const tick = (ts) => {
+      if (!last) last = ts;
+      const dt = Math.min(ts - last, 64);
+      last = ts;
+      pos += SPEED * dt / 1000;
+      if (pos >= setWidth) pos -= setWidth;
+      casesTrack.scrollLeft = pos;
+      raf = requestAnimationFrame(tick);
     };
 
     const shouldPlay = () =>
       loop && !userPaused && !hovering && visible && !document.hidden && !reduceMotion.matches;
 
     const sync = () => {
-      clearInterval(timer);
-      timer = shouldPlay() ? setInterval(() => go(1), INTERVAL) : null;
+      cancelAnimationFrame(raf);
+      raf = 0;
+      last = 0;
+      if (shouldPlay()) {
+        pos = casesTrack.scrollLeft;   // retoma desde donde esté
+        raf = requestAnimationFrame(tick);
+      }
+    };
+
+    // Flechas: un paso de una card con animación; el bucle se cierra por ambos lados.
+    const go = (dir) => {
+      if (loop && dir < 0 && casesTrack.scrollLeft < step()) casesTrack.scrollLeft += setWidth;
+      casesTrack.scrollBy({ left: dir * step(), behavior: 'smooth' });
+    };
+
+    const normalize = () => {
+      if (loop && casesTrack.scrollLeft >= setWidth) casesTrack.scrollLeft -= setWidth;
     };
 
     const paintToggle = () => {
@@ -200,8 +270,8 @@
       if (prevBtn) prevBtn.disabled = true;
       if (nextBtn) nextBtn.disabled = true;
     }
-    if (prevBtn) prevBtn.addEventListener('click', () => { go(-1); sync(); });
-    if (nextBtn) nextBtn.addEventListener('click', () => { go(1);  sync(); });
+    if (prevBtn) prevBtn.addEventListener('click', () => go(-1));
+    if (nextBtn) nextBtn.addEventListener('click', () => go(1));
     if (toggleBtn) toggleBtn.addEventListener('click', () => {
       userPaused = !userPaused;
       paintToggle();
@@ -209,13 +279,14 @@
     });
 
     casesTrack.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); go(1);  sync(); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); sync(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
     });
 
-    // Cierra el bucle cuando el scroll se detiene
+    // Cierra el bucle cuando el scroll manual se detiene
     let idle;
     casesTrack.addEventListener('scroll', () => {
+      if (raf) return;               // durante el autoplay ya lo gestiona tick()
       clearTimeout(idle);
       idle = setTimeout(normalize, 160);
     }, { passive: true });
@@ -233,7 +304,7 @@
     }, { passive: true });
     zone.addEventListener('touchend', () => {
       clearTimeout(touchTimer);
-      touchTimer = setTimeout(() => { hovering = false; sync(); }, INTERVAL);
+      touchTimer = setTimeout(() => { hovering = false; sync(); }, RESUME);
     }, { passive: true });
 
     // Pausa si la sección no se ve o la pestaña está en segundo plano
@@ -254,6 +325,7 @@
       resizeTimer = setTimeout(() => {
         build();
         casesTrack.scrollLeft = 0;
+        sync();
       }, 200);
     });
 

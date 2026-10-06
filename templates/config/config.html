@@ -1,190 +1,183 @@
-{% extends 'core/base.html' %}
+{% extends 'core/base_intranet.html' %}
 {% load static i18n %}
+{% comment %}
+  Configuración — editor de config.ini. Mismo patrón de página que clients.html / visor.html (tp-*).
 
-{% block title %}{% trans "Configuración del sistema · Fixalius" %}{% endblock %}
-{% block meta_description %}{% trans "Edición de parámetros del sistema Fixalius." %}{% endblock %}
+  API (apps/config/urls.py):
+      config:api-get     GET   JSON con secciones/claves/valores
+      config:api-save    POST  guarda solo lo modificado
+      config:api-reload  POST  recarga desde disco
+  Solo superusuarios. Las claves secretas (password, token…) llegan enmascaradas.
+  Estáticos: core/css/table_page.css · config/css/config.css · config/js/config.js
+{% endcomment %}
 
-{% block extra_css %}
+{% block title %}Fixalius · {% trans "Configuración" %}{% endblock %}
+{% block main_class %}intranet-main--flush{% endblock %}
+
+{% block head_extra %}
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap">
+  <link rel="stylesheet" href="{% static 'core/css/table_page.css' %}">
   <link rel="stylesheet" href="{% static 'config/css/config.css' %}">
 {% endblock %}
 
-{% block content %}
-<div class="theme-config" style="height:100%">
+{% block intranet_content %}
+<section class="tp cfg" id="tablePage" data-density="compact" aria-labelledby="tp-title">
 
-  {# ================= CABECERA ================= #}
-  <header class="cfg-header">
-    <div>
-      <h1><i class="fas fa-gears"></i> {% trans "Configuración del sistema" %}</h1>
-      <p>
-        {% trans "Parámetros de Fixalius" %}
-        <span class="cfg-path" id="cfg-path"></span>
-      </p>
+  {# ------------------------------ Cabecera ------------------------------ #}
+  <header class="tp-header">
+    <div class="tp-title-wrap">
+      <span class="tp-title-icon" aria-hidden="true"><i class="fas fa-gears"></i></span>
+      <div>
+        <h1 id="tp-title">{% trans "Configuración" %}</h1>
+        <p>{% trans "Parámetros de Fixalius (config.ini)" %} <span class="cfg-path" id="cfg-path"></span></p>
+      </div>
     </div>
-    <div class="cfg-header-right">
-      <span class="cfg-last-update" id="last-update-label">
-        <i class="far fa-clock"></i>
-        <span id="last-update-text">—</span>
-      </span>
-    </div>
+    <span class="tp-updated" title="{% trans 'Última actualización de los datos' %}">
+      <i class="far fa-clock" aria-hidden="true"></i>
+      {% trans "Actualizado" %} <span id="last-update-text">—</span>
+    </span>
   </header>
 
-  {# ================= KPIs ================= #}
-  <section class="cfg-kpi-strip">
-    <div class="cfg-kpi" style="--kpi-color:var(--fx-cyan)">
-      <div class="cfg-kpi-icon"><i class="fas fa-layer-group"></i></div>
-      <div style="flex:1;min-width:0">
-        <div class="cfg-kpi-value loading" id="kpi-secciones">–</div>
-        <div class="cfg-kpi-label">{% trans "Secciones" %}</div>
+  {# -------------------------------- KPIs -------------------------------- #}
+  <div class="tp-kpis" aria-label="{% trans 'Resumen' %}">
+    <div class="tp-kpi">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-layer-group"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value loading" id="kpi-secciones">&nbsp;</div>
+        <div class="tp-kpi-label">{% trans "Secciones" %}</div>
       </div>
     </div>
-    <div class="cfg-kpi" style="--kpi-color:var(--fx-blue)">
-      <div class="cfg-kpi-icon"><i class="fas fa-key"></i></div>
-      <div style="flex:1;min-width:0">
-        <div class="cfg-kpi-value loading" id="kpi-parametros">–</div>
-        <div class="cfg-kpi-label">{% trans "Parámetros" %}</div>
+    <div class="tp-kpi tp-kpi--info">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-key"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value loading" id="kpi-parametros">&nbsp;</div>
+        <div class="tp-kpi-label">{% trans "Parámetros" %}</div>
       </div>
     </div>
-    <div class="cfg-kpi" style="--kpi-color:var(--fx-amber)">
-      <div class="cfg-kpi-icon"><i class="fas fa-pen"></i></div>
-      <div style="flex:1;min-width:0">
-        <div class="cfg-kpi-value loading" id="kpi-modificados">–</div>
-        <div class="cfg-kpi-label">{% trans "Cambios sin guardar" %}</div>
+    <div class="tp-kpi tp-kpi--warning">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-pen"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value loading" id="kpi-modificados">&nbsp;</div>
+        <div class="tp-kpi-label">{% trans "Cambios sin guardar" %}</div>
       </div>
     </div>
-    <div class="cfg-kpi" style="--kpi-color:var(--success)">
-      <div class="cfg-kpi-icon"><i class="fas fa-file-circle-check"></i></div>
-      <div style="flex:1;min-width:0">
-        <div class="cfg-kpi-value loading" id="kpi-estado">–</div>
-        <div class="cfg-kpi-label">{% trans "Estado del archivo" %}</div>
+    <div class="tp-kpi tp-kpi--success">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-file-circle-check"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value loading" id="kpi-estado">&nbsp;</div>
+        <div class="tp-kpi-label">{% trans "Estado del archivo" %}</div>
       </div>
     </div>
-  </section>
+  </div>
 
-  {# ================= BARRA DE FILTROS ================= #}
-  <section class="cfg-filters">
-    <div class="cfg-filter-input">
-      <i class="fas fa-magnifying-glass"></i>
-      <input type="text" id="filter-search"
-             placeholder="{% trans 'Buscar sección o parámetro…' %}" autocomplete="off">
-      <button type="button" class="cfg-clear-btn" id="clear-search"
-              title="{% trans 'Limpiar búsqueda' %}">
-        <i class="fas fa-xmark"></i>
-      </button>
+  {# ------------------------------- Filtros ------------------------------ #}
+  <div class="tp-filters" role="search">
+    <div class="tp-search">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <input type="text" id="filter-search" autocomplete="off"
+             placeholder="{% trans 'Buscar sección o parámetro…' %}" aria-label="{% trans 'Buscar' %}">
+      <button type="button" class="tp-search-clear" id="clear-search" hidden
+              aria-label="{% trans 'Borrar búsqueda' %}"><i class="fas fa-times-circle" aria-hidden="true"></i></button>
     </div>
 
-    <div class="cfg-filter-select">
-      <i class="fas fa-layer-group"></i>
-      <select id="filter-seccion" title="{% trans 'Filtrar por sección' %}">
-        <option value="">{% trans 'Todas las secciones' %}</option>
+    <div class="tp-select-wrap">
+      <i class="fas fa-layer-group" aria-hidden="true"></i>
+      <select id="filter-seccion" aria-label="{% trans 'Filtrar por sección' %}">
+        <option value="">{% trans "Todas las secciones" %}</option>
       </select>
     </div>
 
-    <div class="cfg-chips">
-      <button type="button" class="cfg-chip active" data-filter="all">
-        <i class="fas fa-border-all"></i> {% trans "Todos" %}
-      </button>
-      <button type="button" class="cfg-chip cfg-chip--warn" data-filter="modificados">
-        <i class="fas fa-pen"></i> {% trans "Modificados" %}
-      </button>
-      <button type="button" class="cfg-chip cfg-chip--danger" data-filter="vacios">
-        <i class="fas fa-circle-exclamation"></i> {% trans "Vacíos" %}
-      </button>
+    <div class="tp-chips" role="group" aria-label="{% trans 'Filtros rápidos' %}">
+      <button type="button" class="tp-chip is-active" data-filter="all" aria-pressed="true">{% trans "Todos" %}</button>
+      <button type="button" class="tp-chip" data-filter="modificados" aria-pressed="false">{% trans "Modificados" %}</button>
+      <button type="button" class="tp-chip" data-filter="vacios" aria-pressed="false">{% trans "Vacíos" %}</button>
     </div>
+    <span class="tp-filter-count" id="filter-count" hidden title="{% trans 'Filtros activos' %}">0</span>
 
-    <span class="cfg-filter-badge hidden" id="active-filter-badge">
-      <i class="fas fa-filter"></i>
-      <span id="active-filter-count">0</span> {% trans "filtros activos" %}
-    </span>
-
-    <div class="cfg-filters-right">
-      <div class="cfg-density" title="{% trans 'Densidad' %}">
-        <button type="button" class="cfg-density-btn active" data-d="density-compact"
-                title="{% trans 'Compacto' %}"><i class="fas fa-grip-lines"></i></button>
-        <button type="button" class="cfg-density-btn" data-d=""
-                title="{% trans 'Normal' %}"><i class="fas fa-list"></i></button>
-        <button type="button" class="cfg-density-btn" data-d="density-comfortable"
-                title="{% trans 'Cómodo' %}"><i class="fas fa-align-justify"></i></button>
+    <div class="tp-tools">
+      <div class="tp-density" role="group" aria-label="{% trans 'Densidad de filas' %}">
+        <button type="button" data-density-set="compact" title="{% trans 'Compacta' %}" aria-label="{% trans 'Compacta' %}"><i class="fas fa-grip-lines" aria-hidden="true"></i></button>
+        <button type="button" data-density-set="normal" title="{% trans 'Normal' %}" aria-label="{% trans 'Normal' %}"><i class="fas fa-list" aria-hidden="true"></i></button>
+        <button type="button" data-density-set="comfortable" title="{% trans 'Cómoda' %}" aria-label="{% trans 'Cómoda' %}"><i class="fas fa-align-justify" aria-hidden="true"></i></button>
       </div>
-
-      <button type="button" class="cfg-icon-btn" id="btn-reload"
-              title="{% trans 'Recargar desde disco (descarta cambios)' %}">
-        <i class="fas fa-rotate-left"></i>
-      </button>
-
-      <button type="button" class="cfg-icon-btn cfg-icon-btn--success" id="btn-guardar"
-              title="{% trans 'Guardar cambios' %}">
-        <i class="fas fa-floppy-disk"></i>
-      </button>
-
-      <button type="button" class="cfg-icon-btn" id="btn-darkmode"
-              title="{% trans 'Modo oscuro' %}">
-        <i class="fas fa-moon" id="darkmode-icon"></i>
-      </button>
+      <button type="button" class="tp-btn-new" id="btn-guardar"><i class="fas fa-floppy-disk" aria-hidden="true"></i> {% trans "Guardar" %}</button>
+      <button type="button" class="tp-iconbtn" id="btn-reload" title="{% trans 'Recargar desde disco (descarta cambios)' %}" aria-label="{% trans 'Recargar desde disco' %}"><i class="fas fa-rotate-right" aria-hidden="true"></i></button>
+      <button type="button" class="tp-iconbtn" id="btn-theme" title="{% trans 'Modo claro / oscuro' %}" aria-label="{% trans 'Modo claro / oscuro' %}"><i class="fas fa-moon" aria-hidden="true"></i></button>
     </div>
-  </section>
+  </div>
 
-  {# ================= ÁREA PRINCIPAL ================= #}
-  <section class="cfg-main">
-    <div class="cfg-container">
-      <div id="configSectionsContainer" class="cfg-sections">
+  {# ---------------------- Secciones + panel de detalle ------------------- #}
+  <div class="tp-main cfg-main">
+    <div class="tp-grid cfg-container">
+      <div class="tp-grid-body cfg-sections" id="configSectionsContainer">
         <div class="cfg-empty-state" id="config-loading-state">
-          <i class="fas fa-spinner fa-pulse"></i>
+          <i class="fas fa-spinner fa-pulse" aria-hidden="true"></i>
           <span>{% trans "Cargando config.ini…" %}</span>
         </div>
       </div>
-      <div class="cfg-pager" id="pager">
-        <span class="cfg-pager-info" id="pager-info">{% trans "Cargando…" %}</span>
-        <div class="cfg-pager-controls" id="pager-controls"></div>
+      <div class="tp-pager" id="pager">
+        <div class="tp-pager-left">
+          <span class="tp-pager-info" id="pager-info" aria-live="polite">{% trans "Cargando…" %}</span>
+        </div>
+        <nav class="tp-pager-controls" id="pager-controls" aria-label="{% trans 'Paginación' %}"></nav>
       </div>
     </div>
 
-    {# -------- Panel de detalle -------- #}
     <aside class="cfg-detail" id="detail-panel" aria-hidden="true">
       <header class="cfg-detail-header">
-        <button type="button" class="cfg-detail-close" id="detail-close"
-                title="{% trans 'Cerrar panel' %}">
-          <i class="fas fa-xmark"></i>
+        <button type="button" class="cfg-detail-close" id="detail-close" title="{% trans 'Cerrar panel' %}" aria-label="{% trans 'Cerrar panel' %}">
+          <i class="fas fa-xmark" aria-hidden="true"></i>
         </button>
-        <div class="cfg-detail-avatar" id="dp-avatar"><i class="fas fa-key"></i></div>
+        <div class="cfg-detail-avatar" id="dp-avatar"><i class="fas fa-key" aria-hidden="true"></i></div>
         <div class="cfg-detail-name" id="dp-name">–</div>
         <div class="cfg-detail-ref">
-          <span class="cfg-ref-badge" id="dp-codigo">–</span>
-          <span class="cfg-detail-sub" id="dp-ciudad">–</span>
+          <span class="cfg-ref-badge" id="dp-section">–</span>
+          <span class="cfg-detail-sub" id="dp-type">–</span>
         </div>
       </header>
       <div class="cfg-detail-kpis">
         <div class="cfg-detail-kpi">
-          <div class="cfg-detail-kpi-val" id="dp-kpi-inm">–</div>
+          <div class="cfg-detail-kpi-val" id="dp-kpi-type">–</div>
           <div class="cfg-detail-kpi-lbl">{% trans "Tipo" %}</div>
         </div>
         <div class="cfg-detail-kpi">
-          <div class="cfg-detail-kpi-val" id="dp-kpi-inc">–</div>
+          <div class="cfg-detail-kpi-val" id="dp-kpi-state">–</div>
           <div class="cfg-detail-kpi-lbl">{% trans "Estado" %}</div>
         </div>
       </div>
       <div class="cfg-detail-tabs">
-        <button type="button" class="cfg-detail-tab active" data-tab="info">
-          <i class="fas fa-circle-info"></i> {% trans "Valor" %}
-        </button>
-        <button type="button" class="cfg-detail-tab" data-tab="raw">
-          <i class="fas fa-code"></i> Raw .ini
-        </button>
+        <button type="button" class="cfg-detail-tab active" data-tab="info"><i class="fas fa-circle-info" aria-hidden="true"></i> {% trans "Valor" %}</button>
+        <button type="button" class="cfg-detail-tab" data-tab="raw"><i class="fas fa-code" aria-hidden="true"></i> Raw .ini</button>
       </div>
       <div class="cfg-detail-body" id="dp-body"></div>
     </aside>
-  </section>
+  </div>
+</section>
 
+{# Indicador de carga #}
+<div class="tp-loading" id="tp-loading" hidden>
+  <div class="tp-loading-box" role="status">
+    <i class="fas fa-spinner fa-pulse" aria-hidden="true"></i>
+    <span>{% trans "Cargando…" %}</span>
+  </div>
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-  window.FIXALIUS_URLS = {
-    config:       "{% url 'config:api-get' %}",
-    configSave:   "{% url 'config:api-save' %}",
-    configReload: "{% url 'config:api-reload' %}"
-  };
-</script>
-<script src="{% static 'config/js/config.js' %}" defer></script>
+{% block scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  {% url 'config:api-get'    as api_get %}
+  {% url 'config:api-save'   as api_save %}
+  {% url 'config:api-reload' as api_reload %}
+  <script>
+    window.FIXALIUS_URLS = {
+      config:       "{{ api_get|escapejs }}",
+      configSave:   "{{ api_save|escapejs }}",
+      configReload: "{{ api_reload|escapejs }}"
+    };
+  </script>
+  <script src="{% static 'config/js/config.js' %}"></script>
 {% endblock %}

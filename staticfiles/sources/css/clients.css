@@ -611,6 +611,38 @@ body.density-comfortable .kpi-card { padding: 18px 22px; }
     margin-left: 2px;
 }
 
+/* ============================================================
+   GESTOR DE SECTORES (popup con dxDataGrid CRUD)
+   ============================================================ */
+
+/* Contenedor del grid dentro del popup */
+.tp-sector-manager {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+.tp-sector-manager .dx-datagrid { border: none !important; }
+.tp-sector-manager .dx-datagrid-header-panel .dx-toolbar {
+    background: var(--bg-subtle) !important;
+    border-bottom: 1px solid var(--border) !important;
+    padding: 8px 12px !important;
+}
+
+/* Estado "inactivo" atenuado */
+.tp-sector-manager .dx-data-row.sector-inactive > td { opacity: .55; }
+
+/* Iconos de acción en la columna buttons */
+.tp-sector-manager .dx-link { font-size: 13px; }
+.tp-sector-manager .dx-link-delete { color: var(--danger) !important; }
+.tp-sector-manager .dx-link-edit   { color: var(--success) !important; }
+
+/* Popup de edición de fila */
+.dx-overlay-content .dx-toolbar-label { font-weight: 600; }
+
+/* Refuerzo del wrapper del popup de edición dentro del gestor */
+.tp-sector-manager .dx-overlay-content .cli-edit-popup { background: var(--bg-subtle); }
+
 @media print {
     .dx-toolbar, .row-actions, .rbtn, .dx-button,
     .filters-bar, .kpi-strip, .pager, .ctx-menu { display: none !important; }

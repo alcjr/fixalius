@@ -1,0 +1,57 @@
+{% comment %}
+  Cabecera común de Fixalius (idéntica a la de index.html).
+  Uso:
+    {% include 'core/_site_header.html' %}                       -> en la portada (anclas locales: #approach…)
+    {% include 'core/_site_header.html' with home_prefix='/' %}  -> en cualquier otra página (anclas: /#approach…)
+  Requiere el sprite de marca (core/_wordmark.html) cargado en la página y core/js/fixalius.js.
+{% endcomment %}{% load i18n sources_tags %}{% get_success_cases as success_cases %}{% get_current_language as LANGUAGE_CODE %}{% get_available_languages as LANGUAGES %}{% with prefix=home_prefix|default:'' %}{% trans 'Fixalius — Inicio' as brand_label_t %}
+<header class="site-header">
+  {% include 'core/_brand.html' with brand_href=prefix|add:'#top' brand_label=brand_label_t %}
+
+  <nav id="site-nav" aria-label="{% trans 'Navegación principal' %}">
+    <a href="{{ prefix }}#approach">{% trans "Enfoque" %}</a>
+    <a href="{{ prefix }}#sectors">{% trans "Sectores" %}</a>
+    <a href="{{ prefix }}#principles">{% trans "Principios" %}</a>
+    {% if success_cases %}<a href="{{ prefix }}#success">{% trans "Casos de éxito" %}</a>{% endif %}
+    <a class="nav-cta" href="{{ prefix }}#contact">{% trans "Hablemos" %} <span aria-hidden="true">↗</span></a>
+    {% url 'login' as login_url %}
+    <a class="nav-login" href="{{ login_url|default:'/accounts/login/' }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      {% trans "Acceso intranet" %}
+    </a>
+
+    <form class="lang" action="{% url 'set_language' %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      {% for code, name in LANGUAGES %}
+        <button type="submit" name="language" value="{{ code }}" lang="{{ code }}"
+                title="{{ name }}" aria-label="{{ name }}"
+                aria-current="{% if code == LANGUAGE_CODE %}true{% else %}false{% endif %}">
+          {% if code == 'es' %}
+            <svg viewBox="0 0 24 16" aria-hidden="true" focusable="false">
+              <rect width="24" height="16" fill="#c60b1e"/>
+              <rect y="4" width="24" height="8" fill="#ffc400"/>
+            </svg>
+          {% elif code == 'en' %}
+            <svg viewBox="0 0 60 30" aria-hidden="true" focusable="false">
+              <clipPath id="gb-flag-clip-{{ code }}"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+              <rect width="60" height="30" fill="#012169"/>
+              <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+              <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#gb-flag-clip-{{ code }})" stroke="#c8102e" stroke-width="4"/>
+              <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+              <path d="M30,0 v30 M0,15 h60" stroke="#c8102e" stroke-width="6"/>
+            </svg>
+          {% endif %}
+        </button>
+      {% endfor %}
+    </form>
+  </nav>
+
+  <button class="menu-toggle" type="button"
+          aria-label="{% trans 'Abrir menú' %}"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          data-label-open="{% trans 'Abrir menú' %}"
+          data-label-close="{% trans 'Cerrar menú' %}"><span></span><span></span></button>
+</header>
+{% endwith %}

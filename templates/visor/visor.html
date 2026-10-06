@@ -1,0 +1,683 @@
+{% extends 'core/base_intranet.html' %}
+{% load static i18n %}
+{% comment %}
+  Visor de trazas — mismo patrón de página que clients.html (tp-*).
+
+  API:
+      visor:visor_read   GET   -> {"success": true, "content": "..."}   (personal)
+      visor:visor_clear  POST  -> {"success": true}                     (superusuario)
+  Estáticos: core/css/table_page.css
+  El log se muestra en un visor propio (no es un DataGrid), con los mismos
+  contenedores: cabecera, KPIs, filtros, cuerpo y pie.
+{% endcomment %}
+
+{% block title %}Fixalius · {% trans "Visor de trazas" %}{% endblock %}
+{% block main_class %}intranet-main--flush{% endblock %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap">
+  <link rel="stylesheet" href="{% static 'core/css/table_page.css' %}">
+  <style>
+    /* Solo lo propio del visor; el resto lo aporta table_page.css */
+    .vz .tp-grid-body { min-height: 0; overflow: hidden; }
+    .vz-log {
+      height: 100%; overflow: auto; padding: 10px 16px;
+      font-family: var(--font-mono, ui-monospace, SFMono-Regular, Consolas, monospace);
+      font-size: 12px; line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+      background: #1e293b; color: #e2e8f0;
+    }
+    [data-theme="dark"] .vz-log { background: #0d1117; color: #e6edf3; }
+    .vz[data-density="compact"]     .log-line { padding-top: 0;   padding-bottom: 0; }
+    .vz[data-density="normal"]      .log-line { padding-top: 2px; padding-bottom: 2px; }
+    .vz[data-density="comfortable"] .log-line { padding-top: 5px; padding-bottom: 5px; }
+    .log-line { border-left: 3px solid transparent; padding-left: 8px; margin-left: -8px; }
+    .log-line:hover { background: rgba(255,255,255,.05); }
+    .log-line.level-info    { border-left-color: #3b82f6; }
+    .log-line.level-warning { border-left-color: #d97706; }
+    .log-line.level-error   { border-left-color: #e11d48; }
+    .log-line.level-debug   { border-left-color: #7c3aed; }
+    .log-line.level-audit   { border-left-color: #6366f1; }
+    .log-line.level-success { border-left-color: #059669; }
+    .text-info { color: #60a5fa; } .text-warning { color: #fbbf24; } .text-error { color: #f87171; }
+    .text-debug { color: #c084fc; } .text-audit { color: #818cf8; } .text-success { color: #4ade80; }
+    .text-timestamp { color: #94a3b8; }
+    .highlight { background: #fbbf24; color: #1e293b; padding: 0 2px; border-radius: 2px; }
+    .log-empty { display: flex; flex-direction: column; align-items: center; justify-content: center;
+                 height: 100%; min-height: 160px; color: #94a3b8; text-align: center; }
+    .log-empty i { font-size: 40px; margin-bottom: 12px; opacity: .6; }
+    #btn-tail.active { background: var(--success, #059669); color: #fff; }
+    #btn-clear:hover { color: var(--danger, #e11d48); }
+
+    .vz-modal { position: fixed; inset: 0; z-index: 10000; display: none; align-items: center;
+                justify-content: center; background: rgba(0,0,0,.4); }
+    .vz-modal.active { display: flex; }
+    .vz-modal-box { width: min(420px, 92vw); padding: 22px; border-radius: 14px;
+                    background: var(--bg-card, #fff); color: var(--text-700, #1e293b);
+                    border: 1px solid var(--border, #e2e8f0); box-shadow: 0 12px 32px rgba(15,23,42,.25); }
+    .vz-modal-box h3 { margin: 0 0 10px; font-size: 1rem; display: flex; gap: 8px; align-items: center; }
+    .vz-modal-box p { margin: 0 0 18px; font-size: .9em; opacity: .85; }
+    .vz-modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .vz-btn { padding: 8px 14px; border-radius: 8px; font: inherit; font-weight: 600; font-size: .85em; cursor: pointer;
+              border: 1px solid var(--border-strong, #cbd5e1); background: var(--bg-card, #fff); color: inherit; }
+    .vz-btn--danger { background: var(--danger, #e11d48); border-color: var(--danger, #e11d48); color: #fff; }
+
+    .notification { position: fixed; right: 24px; bottom: 24px; z-index: 10001; padding: 12px 18px;
+                    border-radius: 12px; font-size: 12px; font-weight: 500; color: #fff; background: #0c111b;
+                    box-shadow: 0 12px 32px rgba(15,23,42,.25); transform: translateY(150%); opacity: 0;
+                    transition: transform .22s, opacity .22s; }
+    .notification.show { transform: none; opacity: 1; }
+    .notification.success { background: var(--success, #059669); }
+    .notification.error   { background: var(--danger, #e11d48); }
+    .notification.warning { background: var(--warning, #d97706); }
+
+    @media print {
+      .tp-filters, .tp-kpis, .tp-pager, .tp-updated, .vz-modal, .notification { display: none !important; }
+      .vz-log { background: #fff !important; color: #000 !important; font-size: 9pt; padding: 0; overflow: visible; }
+      .highlight { background: #ff0 !important; color: #000 !important; }
+    }
+  </style>
+{% endblock %}
+
+{% block intranet_content %}
+<section class="tp vz" id="tablePage" data-density="compact" aria-labelledby="tp-title">
+
+  {# ------------------------------ Cabecera ------------------------------ #}
+  <header class="tp-header">
+    <div class="tp-title-wrap">
+      <span class="tp-title-icon" aria-hidden="true"><i class="fas fa-terminal"></i></span>
+      <div>
+        <h1 id="tp-title">{% trans "Visor de trazas" %}</h1>
+        <p>{% trans "Registro de actividad y auditoría de la aplicación" %}</p>
+      </div>
+    </div>
+    <span class="tp-updated" title="{% trans 'Última actualización de los datos' %}">
+      <i class="far fa-clock" aria-hidden="true"></i>
+      {% trans "Actualizado" %} <span id="last-update-text">—</span>
+    </span>
+  </header>
+
+  {# -------------------------------- KPIs -------------------------------- #}
+  <div class="tp-kpis" aria-label="{% trans 'Resumen' %}">
+    <div class="tp-kpi">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-list"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value" id="stat-total">0</div>
+        <div class="tp-kpi-label">{% trans "Líneas" %}</div>
+      </div>
+    </div>
+    <div class="tp-kpi tp-kpi--info">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-circle-info"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value" id="stat-info">0</div>
+        <div class="tp-kpi-label">INFO</div>
+      </div>
+    </div>
+    <div class="tp-kpi tp-kpi--warning">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-triangle-exclamation"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value" id="stat-warning">0</div>
+        <div class="tp-kpi-label">WARNING</div>
+      </div>
+    </div>
+    <div class="tp-kpi tp-kpi--danger">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-circle-xmark"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value" id="stat-error">0</div>
+        <div class="tp-kpi-label">ERROR</div>
+      </div>
+    </div>
+    <div class="tp-kpi tp-kpi--success">
+      <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-shield-halved"></i></span>
+      <div class="tp-kpi-text">
+        <div class="tp-kpi-value" id="stat-audit">0</div>
+        <div class="tp-kpi-label">AUDIT</div>
+      </div>
+    </div>
+  </div>
+
+  {# ------------------------------- Filtros ------------------------------ #}
+  <div class="tp-filters" role="search">
+    <div class="tp-search">
+      <i class="fas fa-search" aria-hidden="true"></i>
+      <input type="text" id="search-input" autocomplete="off"
+             placeholder="{% trans 'Buscar en el log (Ctrl+F)…' %}" aria-label="{% trans 'Buscar' %}">
+      <button type="button" class="tp-search-clear" id="clear-search" hidden
+              aria-label="{% trans 'Borrar búsqueda' %}"><i class="fas fa-times-circle" aria-hidden="true"></i></button>
+    </div>
+
+    <div class="tp-select-wrap">
+      <i class="fas fa-filter" aria-hidden="true"></i>
+      <select id="filter-level" aria-label="{% trans 'Filtrar por nivel' %}">
+        <option value="">{% trans "Todos los niveles" %}</option>
+        <option value="INFO">INFO</option>
+        <option value="WARNING">WARNING</option>
+        <option value="ERROR">ERROR</option>
+        <option value="DEBUG">DEBUG</option>
+        <option value="AUDIT">AUDIT</option>
+        <option value="SUCCESS">SUCCESS</option>
+      </select>
+    </div>
+    <div class="tp-select-wrap">
+      <i class="fas fa-list-ol" aria-hidden="true"></i>
+      <select id="limit-lines" aria-label="{% trans 'Líneas a mostrar' %}">
+        <option value="500">{% trans "Últimas 500" %}</option>
+        <option value="1000" selected>{% trans "Últimas 1.000" %}</option>
+        <option value="2000">{% trans "Últimas 2.000" %}</option>
+        <option value="5000">{% trans "Últimas 5.000" %}</option>
+        <option value="all">{% trans "Todas" %}</option>
+      </select>
+    </div>
+
+    <div class="tp-tools">
+      <div class="tp-density" role="group" aria-label="{% trans 'Densidad de filas' %}">
+        <button type="button" data-density-set="compact" title="{% trans 'Compacta' %}" aria-label="{% trans 'Compacta' %}"><i class="fas fa-grip-lines" aria-hidden="true"></i></button>
+        <button type="button" data-density-set="normal" title="{% trans 'Normal' %}" aria-label="{% trans 'Normal' %}"><i class="fas fa-list" aria-hidden="true"></i></button>
+        <button type="button" data-density-set="comfortable" title="{% trans 'Cómoda' %}" aria-label="{% trans 'Cómoda' %}"><i class="fas fa-align-justify" aria-hidden="true"></i></button>
+      </div>
+      <button type="button" class="tp-btn-new" id="btn-tail"><i class="fas fa-stream" aria-hidden="true"></i> <span id="tail-text">Live tail</span></button>
+      <button type="button" class="tp-iconbtn" id="btn-refresh" title="{% trans 'Refrescar datos' %}" aria-label="{% trans 'Refrescar datos' %}"><i class="fas fa-rotate-right" aria-hidden="true"></i></button>
+      <button type="button" class="tp-iconbtn" id="btn-download" title="{% trans 'Descargar log' %}" aria-label="{% trans 'Descargar log' %}"><i class="fas fa-download" aria-hidden="true"></i></button>
+      <button type="button" class="tp-iconbtn" id="btn-print" title="{% trans 'Imprimir' %}" aria-label="{% trans 'Imprimir' %}"><i class="fas fa-print" aria-hidden="true"></i></button>
+      {% if request.user.is_superuser %}
+      <button type="button" class="tp-iconbtn" id="btn-clear" title="{% trans 'Borrar trazas' %}" aria-label="{% trans 'Borrar trazas' %}"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+      {% endif %}
+      <button type="button" class="tp-iconbtn" id="btn-theme" title="{% trans 'Modo claro / oscuro' %}" aria-label="{% trans 'Modo claro / oscuro' %}"><i class="fas fa-moon" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  {# -------------------------------- Log --------------------------------- #}
+  <div class="tp-main">
+    <div class="tp-grid">
+      <div class="tp-grid-body">
+        <div class="vz-log" id="log-content" tabindex="0" aria-label="{% trans 'Contenido del archivo de trazas' %}">
+          <div class="log-empty">
+            <i class="fas fa-file-lines" aria-hidden="true"></i>
+            <p>{% trans "Cargando archivo de trazas…" %}</p>
+          </div>
+        </div>
+      </div>
+      <div class="tp-pager">
+        <div class="tp-pager-left">
+          <span class="tp-pager-info" id="pager-info" aria-live="polite">{% trans "Cargando…" %}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# Confirmación de borrado (solo superusuarios) #}
+{% if request.user.is_superuser %}
+<div class="vz-modal" id="modal-confirm" role="dialog" aria-modal="true" aria-labelledby="vz-modal-title">
+  <div class="vz-modal-box">
+    <h3 id="vz-modal-title"><i class="fas fa-triangle-exclamation" style="color:#d97706" aria-hidden="true"></i> {% trans "Confirmar borrado" %}</h3>
+    <p>{% trans "Esta acción eliminará permanentemente todo el contenido del archivo de trazas. No se puede deshacer." %}</p>
+    <div class="vz-modal-actions">
+      <button type="button" class="vz-btn" onclick="closeClearModal()">{% trans "Cancelar" %}</button>
+      <button type="button" class="vz-btn vz-btn--danger" id="modal-confirm-btn"><i class="fas fa-trash-can" aria-hidden="true"></i> {% trans "Borrar todo" %}</button>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div class="notification" id="notification" role="status" aria-live="polite"></div>
+
+{# Indicador de carga #}
+<div class="tp-loading" id="tp-loading" hidden>
+  <div class="tp-loading-box" role="status">
+    <i class="fas fa-spinner fa-pulse" aria-hidden="true"></i>
+    <span>{% trans "Cargando…" %}</span>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    'use strict';
+
+    // ── Configuración ────────────────────────────────────────────────────────
+    const CONFIG = {
+        readUrl:  '{% url "visor:visor_read" %}',
+        clearUrl: '{% url "visor:visor_clear" %}',
+        csrfToken: '{{ csrf_token }}',
+    };
+
+    const MAX_RENDER_LINES_DEFAULT = 1800;
+    const TAIL_INTERVAL_MS = 5000;
+
+    // ── Elementos ────────────────────────────────────────────────────────────
+    const els = {
+        logContent:    document.getElementById('log-content'),
+        searchInput:   document.getElementById('search-input'),
+        clearSearch:   document.getElementById('clear-search'),
+        filterLevel:   document.getElementById('filter-level'),
+        limitLines:    document.getElementById('limit-lines'),
+        btnRefresh:    document.getElementById('btn-refresh'),
+        btnClear:      document.getElementById('btn-clear'),
+        btnDownload:   document.getElementById('btn-download'),
+        btnPrint:      document.getElementById('btn-print'),
+        btnTheme:      document.getElementById('btn-theme'),
+        btnTail:       document.getElementById('btn-tail'),
+        tailText:      document.getElementById('tail-text'),
+        modal:         document.getElementById('modal-confirm'),
+        modalConfirm:  document.getElementById('modal-confirm-btn'),
+        notification:  document.getElementById('notification'),
+        stats: {
+            total:   document.getElementById('stat-total'),
+            info:    document.getElementById('stat-info'),
+            warning: document.getElementById('stat-warning'),
+            error:   document.getElementById('stat-error'),
+            debug:   document.getElementById('stat-debug'),
+            audit:   document.getElementById('stat-audit'),
+            success: document.getElementById('stat-success')
+        }
+    };
+
+    // ── Estado ───────────────────────────────────────────────────────────────
+    let state = {
+        rawLines:        [],
+        displayedLines:  [],
+        searchTerm:      '',
+        filterLevel:     '',
+        maxDisplay:      1000,
+        tailEnabled:     false,
+        tailTimer:       null,
+        wasAtBottom:     true
+    };
+
+    // ── Loading overlay ──────────────────────────────────────────────────────
+    let activeRequests = 0;
+    const loadingOverlay = document.getElementById('tp-loading');
+
+    function showLoading(message) {
+        activeRequests++;
+        if (loadingOverlay) {
+            loadingOverlay.hidden = false;
+            const span = loadingOverlay.querySelector('span');
+            if (span && message) span.textContent = message;
+        }
+    }
+
+    function hideLoading() {
+        activeRequests--;
+        if (activeRequests <= 0 && loadingOverlay) {
+            activeRequests = 0;
+            loadingOverlay.hidden = true;
+            const span = loadingOverlay.querySelector('span');
+            if (span) span.textContent = 'Cargando...';
+        }
+    }
+
+    // ── Utilidades ───────────────────────────────────────────────────────────
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function showNotification(msg, type) {
+        type = type || 'info';
+        if (!els.notification) return;
+        els.notification.textContent = msg;
+        els.notification.className = 'notification ' + type + ' show';
+        setTimeout(function() {
+            els.notification.className = 'notification';
+        }, 4500);
+    }
+
+    function updateTimestamp() {
+        var el = document.getElementById('last-update-text');
+        if (el) el.textContent = new Date().toLocaleTimeString(document.documentElement.lang || 'es');
+    }
+
+    function detectLevel(line) {
+        line = line || '';
+        var u = line.toUpperCase();
+        if (u.includes('| ERROR'))   return 'error';
+        if (u.includes('| WARNING')) return 'warning';
+        if (u.includes('| DEBUG'))   return 'debug';
+        if (u.includes('| AUDIT') || u.includes('| FIXALIUS.AUDIT')) return 'audit';
+        if (u.includes('| SUCCESS')) return 'success';
+        if (u.includes('| INFO'))    return 'info';
+        return 'info';
+    }
+
+    function formatLine(line, term) {
+        term = term || '';
+        var html = escapeHtml(line);
+        html = html.replace(/^(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2},\d{3})/, '<span class="text-timestamp">$1</span>');
+        html = html.replace(/\|\s*(INFO|WARNING|ERROR|DEBUG|AUDIT|SUCCESS)\s*\|/g, function(m, lvl) {
+            return '| <span class="text-' + lvl.toLowerCase() + '">' + lvl + '</span> |';
+        });
+        if (term) {
+            var esc = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            html = html.replace(new RegExp('(' + esc + ')', 'gi'), '<span class="highlight">$1</span>');
+        }
+        return html;
+    }
+
+    function updateStats(lines) {
+        var counts = { total: lines.length, info: 0, warning: 0, error: 0, debug: 0, audit: 0, success: 0 };
+        lines.forEach(function(l) {
+            var lv = detectLevel(l);
+            counts[lv] = (counts[lv] || 0) + 1;
+        });
+        for (var k in counts) {
+            if (els.stats[k]) els.stats[k].textContent = counts[k];
+        }
+    }
+
+    function updatePager() {
+        var el = document.getElementById('pager-info');
+        if (!el) return;
+        el.textContent = 'Mostrando ' + state.displayedLines.length + ' de ' + state.rawLines.length + ' líneas';
+    }
+
+    function shouldBeAtBottom() {
+        var c = els.logContent;
+        if (!c) return true;
+        return (c.scrollHeight - c.scrollTop - c.clientHeight) < 140;
+    }
+
+    function renderLog(preserveScroll) {
+        preserveScroll = (preserveScroll !== undefined) ? preserveScroll : true;
+        var lines = state.rawLines.slice();
+
+        if (state.filterLevel) {
+            lines = lines.filter(function(l) { return detectLevel(l) === state.filterLevel.toLowerCase(); });
+        }
+        if (state.searchTerm) {
+            var term = state.searchTerm.toLowerCase();
+            lines = lines.filter(function(l) { return l.toLowerCase().includes(term); });
+        }
+        if (state.maxDisplay !== 'all') {
+            var n = parseInt(state.maxDisplay, 10);
+            if (!isNaN(n) && n > 0) lines = lines.slice(-n);
+        }
+
+        state.displayedLines = lines;
+        updatePager();
+
+        var wasAtBottomBefore = shouldBeAtBottom();
+        var oldScroll = els.logContent.scrollTop;
+        var oldHeight = els.logContent.scrollHeight;
+
+        if (lines.length === 0) {
+            var icon = state.rawLines.length ? 'search' : 'file-alt';
+            var msg = state.rawLines.length ? 'Sin coincidencias' : 'Archivo vacío';
+            els.logContent.innerHTML = '<div class="log-empty"><i class="fas fa-' + icon + '"></i><p>' + msg + '</p></div>';
+            return;
+        }
+
+        var toRender = lines.slice(-MAX_RENDER_LINES_DEFAULT);
+        var html = '';
+        for (var i = 0; i < toRender.length; i++) {
+            var l = toRender[i];
+            html += '<div class="log-line level-' + detectLevel(l) + '">' + formatLine(l, state.searchTerm) + '</div>';
+        }
+        els.logContent.innerHTML = html;
+
+        if (preserveScroll) {
+            if (state.tailEnabled || wasAtBottomBefore) {
+                els.logContent.scrollTop = els.logContent.scrollHeight;
+            } else {
+                var ratio = oldHeight > 0 ? oldScroll / oldHeight : 0;
+                els.logContent.scrollTop = Math.round(ratio * els.logContent.scrollHeight);
+            }
+        }
+        updateTimestamp();
+    }
+
+    async function loadLog(silent) {
+        silent = silent || false;
+        if (!silent) showLoading('Cargando logs...');
+        try {
+            var r = await fetch(CONFIG.readUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            if (!r.ok) throw new Error('HTTP ' + r.status + ' - ' + r.statusText);
+
+            var data = await r.json();
+            if (!data.success) throw new Error(data.error || 'Respuesta no exitosa');
+
+            var content = data.content || '';
+            if (Array.isArray(content)) content = content.join('\n');
+            var newLines = content.split('\n').filter(function(l) { return l.trim(); });
+
+            var added = newLines.length - state.rawLines.length;
+            state.rawLines = newLines;
+
+            if (!silent && added > 0) showNotification('+' + added + ' líneas', 'success');
+
+            updateStats(state.rawLines);
+            renderLog(true);
+
+        } catch (err) {
+            console.error('[loadLog]', err);
+            if (!silent) showNotification('Error al cargar: ' + err.message, 'error');
+        } finally {
+            if (!silent) hideLoading();
+        }
+    }
+
+    async function clearLog() {
+        showLoading('Borrando logs...');
+        try {
+            var r = await fetch(CONFIG.clearUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': CONFIG.csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            });
+
+            if (!r.ok) {
+                var errorText = '';
+                try { errorText = await r.text(); } catch (_) {}
+                throw new Error('HTTP ' + r.status + ' - ' + (errorText || r.statusText));
+            }
+
+            var data = await r.json();
+            if (!data.success) throw new Error(data.error || 'El servidor reportó fallo');
+
+            state.rawLines = [];
+            state.displayedLines = [];
+            updateStats([]);
+            renderLog(false);
+            showNotification('Registros borrados correctamente', 'success');
+            closeClearModal();
+
+        } catch (err) {
+            console.error('[clearLog] ERROR:', err);
+            showNotification('No se pudo borrar: ' + err.message, 'error');
+        } finally {
+            hideLoading();
+        }
+    }
+
+    function toggleTail() {
+        var wantEnable = !state.tailEnabled;
+        if (wantEnable === state.tailEnabled) return;
+        state.tailEnabled = wantEnable;
+
+        if (state.tailEnabled) {
+            if (!state.tailTimer) {
+                state.tailTimer = setInterval(function() { loadLog(true); }, TAIL_INTERVAL_MS);
+            }
+            if (els.tailText) els.tailText.textContent = 'Live tail 🔴';
+            els.btnTail.classList.add('active');
+            els.btnTail.style.background = 'var(--success)';
+            els.btnTail.style.color = 'white';
+            els.btnTail.style.borderColor = 'var(--success)';
+            els.logContent.scrollTop = els.logContent.scrollHeight;
+            showNotification('Seguimiento en tiempo real activado', 'success');
+        } else {
+            if (state.tailTimer) { clearInterval(state.tailTimer); state.tailTimer = null; }
+            if (els.tailText) els.tailText.textContent = 'Live tail';
+            els.btnTail.classList.remove('active');
+            els.btnTail.style.background = '';
+            els.btnTail.style.color = '';
+            els.btnTail.style.borderColor = '';
+            showNotification('Seguimiento en tiempo real detenido', 'warning');
+        }
+    }
+
+    function downloadLog() {
+        var lines = state.displayedLines.length ? state.displayedLines : state.rawLines;
+        if (!lines.length) return showNotification('Nada para descargar', 'warning');
+
+        var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        var now = new Date();
+        a.download = 'fingest_log_' + now.toISOString().slice(0,19).replace(/[:T]/g,'-') + '.log';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showNotification('Descarga iniciada', 'success');
+    }
+
+    // Modal
+    function openClearModal() { if (els.modal) els.modal.classList.add('active'); }
+    function closeClearModal() { if (els.modal) els.modal.classList.remove('active'); }
+    window.openClearModal = openClearModal;
+    window.closeClearModal = closeClearModal;
+
+    function refreshLog() { loadLog(false); }
+    window.refreshLog = refreshLog;
+
+    function clearSearch() {
+        if (els.searchInput) els.searchInput.value = '';
+        state.searchTerm = '';
+        if (els.clearSearch) els.clearSearch.hidden = true;
+        renderLog();
+        if (els.searchInput) els.searchInput.focus();
+    }
+    window.clearSearch = clearSearch;
+
+    // ── Eventos ──────────────────────────────────────────────────────────────
+    function bindEvents() {
+        if (els.btnPrint) els.btnPrint.onclick = function() { window.print(); };
+        if (els.btnTheme) els.btnTheme.onclick = toggleDarkMode;
+        if (els.clearSearch) els.clearSearch.onclick = clearSearch;
+        document.querySelectorAll('[data-density-set]').forEach(function(b) {
+            b.onclick = function() { setDensity(b.getAttribute('data-density-set')); };
+        });
+        if (els.btnRefresh) els.btnRefresh.onclick = function() { refreshLog(); };
+        if (els.btnClear) els.btnClear.onclick = function() { openClearModal(); };
+        if (els.btnDownload) els.btnDownload.onclick = function() { downloadLog(); };
+        if (els.btnTail) els.btnTail.onclick = function() { toggleTail(); };
+        if (els.modalConfirm) els.modalConfirm.onclick = function() { clearLog(); };
+        if (els.modal) {
+            els.modal.onclick = function(e) {
+                if (e.target === els.modal) closeClearModal();
+            };
+        }
+
+        var searchDebounce;
+        if (els.searchInput) {
+            els.searchInput.oninput = function(e) {
+                clearTimeout(searchDebounce);
+                state.searchTerm = e.target.value.trim();
+                if (els.clearSearch) {
+                    els.clearSearch.hidden = !state.searchTerm;
+                }
+                searchDebounce = setTimeout(function() { renderLog(); }, 300);
+            };
+        }
+
+        if (els.filterLevel) {
+            els.filterLevel.onchange = function(e) {
+                state.filterLevel = e.target.value;
+                renderLog();
+            };
+        }
+        if (els.limitLines) {
+            els.limitLines.onchange = function(e) {
+                state.maxDisplay = e.target.value;
+                renderLog();
+            };
+        }
+
+        document.onkeydown = function(e) {
+            if (e.key === 'Escape' && els.modal && els.modal.classList.contains('active')) {
+                closeClearModal();
+            }
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                if (els.searchInput) els.searchInput.focus();
+            }
+            if (e.key === 'F5') {
+                e.preventDefault();
+                refreshLog();
+            }
+        };
+
+        if (els.logContent) {
+            els.logContent.onscroll = function() {
+                var atBottom = shouldBeAtBottom();
+                if (state.tailEnabled && !atBottom) toggleTail();
+            };
+        }
+    }
+
+    // ── Tema claro / oscuro ──────────────────────────────────────────────────
+    function applyTheme(t) {
+        document.documentElement.setAttribute('data-theme', t);
+        var i = document.querySelector('#btn-theme i');
+        if (i) i.className = t === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    function toggleDarkMode() {
+        var t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(t);
+        try { localStorage.setItem('visor_theme', t); } catch (_) {}
+    }
+    window.toggleDarkMode = toggleDarkMode;
+    function initTheme() {
+        try { if (localStorage.getItem('visor_theme') === 'dark') applyTheme('dark'); } catch (_) {}
+    }
+
+    // ── Densidad de filas (atributo data-density, como en las tablas) ────────
+    function setDensity(d) {
+        var page = document.getElementById('tablePage');
+        if (page) page.setAttribute('data-density', d);
+        document.querySelectorAll('[data-density-set]').forEach(function(b) {
+            var on = b.getAttribute('data-density-set') === d;
+            b.classList.toggle('is-active', on);
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        try { localStorage.setItem('visor_density', d); } catch (_) {}
+    }
+    function initDensity() {
+        var d = 'compact';
+        try { d = localStorage.getItem('visor_density') || 'compact'; } catch (_) {}
+        if (['compact', 'normal', 'comfortable'].indexOf(d) < 0) d = 'compact';
+        setDensity(d);
+    }
+
+    // ── Inicio ───────────────────────────────────────────────────────────────
+    function start() {
+        if (!CONFIG.csrfToken) {
+            console.warn('¡ATENCIÓN! CSRF token no encontrado en la plantilla');
+            showNotification('Error de configuración: falta token CSRF', 'error');
+        }
+        initTheme();
+        initDensity();
+        bindEvents();
+        loadLog();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+    } else {
+        start();
+    }
+})();
+</script>
+{% endblock %}

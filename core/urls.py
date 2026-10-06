@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
 
-from apps.sources import newsletter_views
+from apps.sources import document_views, newsletter_views
 from core import views as core_views
 
 
@@ -28,11 +28,15 @@ urlpatterns = [
     path('sources/',   include('apps.sources.urls',   namespace='sources')),
     path('dashboard/', include('apps.dashboard.urls', namespace='dashboard')),
     path('config/',    include('apps.config.urls',    namespace='config')),
+    path('visor/',     include('apps.visor.urls',     namespace='visor')),
 
     # Newsletter (doble opt-in)
     path('newsletter/subscribe/',                newsletter_views.subscribe,   name='newsletter_subscribe'),
     path('newsletter/confirm/<uuid:token>/',     newsletter_views.confirm,     name='newsletter_confirm'),
     path('newsletter/unsubscribe/<str:token>/',  newsletter_views.unsubscribe, name='newsletter_unsubscribe'),
+
+    # Descarga de documentos con enlace personal (suscriptores)
+    path('documentos/descarga/<str:token>/', document_views.public_download, name='document_public_download'),
 
     # Legal
     path('legal/',      TemplateView.as_view(template_name='core/legal.html'),   name='legal'),
