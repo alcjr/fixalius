@@ -1,432 +1,272 @@
-{% extends 'core/base_d.html' %}
+{% extends 'core/base_intranet.html' %}
 {% load static i18n %}
+{% comment %}
+  Cuadro de Mando — alineado con el patrón de páginas de la intranet (clients.html).
 
-{% block title %}{% trans "Cuadro de Mando – Fixalius" %}{% endblock %}
+  Ruta de la página:  sources:dashboard
+  Contexto esperado de la vista (sin cambios respecto a la versión anterior):
+      years, selected_year, sectors, selected_sector, months,
+      kpis_cases{total,this_year,sectors,avg_per_client},
+      kpis_clients{total,countries,sectors,active},
+      chart_cases_by_sector, chart_cases_by_year, chart_cases_by_month,
+      chart_top_clients, chart_clients_by_country, chart_clients_by_sector
+  Estáticos: core/css/table_page.css (tokens --tp-*, cabecera, KPIs, filtros)
+  Los estilos propios del cuadro de mando (secciones y tarjetas de gráfico)
+  están en el bloque <style> de head_extra y usan solo variables --tp-*.
+{% endcomment %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'core/css/core.css' %}" />
-<link rel="stylesheet" href="{% static 'core/css/themes.css' %}" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% block title %}Fixalius · {% trans "Cuadro de Mando" %}{% endblock %}
+{% block main_class %}intranet-main--flush{% endblock %}
 
-<style>
-/* ============================================================
-   TOKENS LOCALES DEL DASHBOARD FIXALIUS
-   ============================================================ */
-.theme-fixalius {
-    --dash-gap: 24px;
-    --dash-radius: var(--r-lg, 16px);
-    --dash-card-bg: var(--bg-card, #ffffff);
-    --dash-border: var(--border, #e5e7eb);
-    --dash-shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
-    --dash-shadow-hover: 0 10px 24px rgba(16,24,40,.10), 0 2px 6px rgba(16,24,40,.06);
+{% block head_extra %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap">
+  <link rel="stylesheet" href="{% static 'core/css/table_page.css' %}">
 
-    /* Paleta Fixalius */
-    --fx-blue:      #123e5a;
-    --fx-blue-soft: color-mix(in srgb, #123e5a 10%, transparent);
-    --fx-cyan:      #00b8c9;
-    --fx-cyan-soft: color-mix(in srgb, #00b8c9 12%, transparent);
-    --fx-orange:    #e55b2c;
-    --fx-orange-soft: color-mix(in srgb, #e55b2c 12%, transparent);
-    --fx-amber:     #f99e45;
-}
+  <style>
+    /* ---- Cuadro de mando: complementos al patrón .tp ------------------- */
 
-/* ============================================================
-   SECCIONES
-   ============================================================ */
-.dash-section {
-    margin-bottom: 28px;
-    background: var(--dash-card-bg);
-    border: 1px solid var(--dash-border);
-    border-radius: var(--dash-radius);
-    box-shadow: var(--dash-shadow);
-    overflow: hidden;
-}
+    /* Enlace con aspecto de botón de icono (el patrón define .tp-iconbtn para <button>) */
+    .tp a.tp-iconbtn { display: inline-grid; place-items: center; text-decoration: none; }
 
-.dash-section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 16px 22px;
-    border-bottom: 1px solid var(--dash-border);
-    border-left: 4px solid var(--sec-color, var(--fx-cyan));
-    background: var(--sec-soft, var(--bg-subtle));
-}
+    /* KPI: línea de referencia bajo la etiqueta */
+    .tp-kpi-ref { margin-top: 1px; color: var(--tp-t4); font-size: 11px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.dash-section-header .sec-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 0;
-    font-family: var(--font-display, 'Inter', sans-serif);
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--text-900, #111827);
-}
+    /* Secciones */
+    .tp-section { display: flex; flex-direction: column; gap: 12px; }
+    .tp-section + .tp-section { margin-top: 12px; }
+    .tp-section-head { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .tp-section-ico {
+      flex: none; width: 36px; height: 36px;
+      display: grid; place-items: center;
+      border-radius: 10px; font-size: 15px;
+      background: var(--tp-accent-dim); color: var(--tp-accent-dark);
+    }
+    [data-theme="dark"] .tp-section-ico { color: var(--tp-accent); }
+    .tp-section-head h2 {
+      margin: 0;
+      font-family: var(--tp-display);
+      font-size: 18px; font-weight: 700; letter-spacing: -.01em; line-height: 1.2;
+      color: var(--tp-t9);
+    }
+    .tp-section-head .tp-badge { margin-left: 2px; }
 
-.dash-section-header .sec-title .sec-ico {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    background: var(--sec-color, var(--fx-cyan));
-    color: #fff;
-    font-size: 15px;
-    flex-shrink: 0;
-}
+    /* Tarjetas de gráfico */
+    .tp-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); gap: 12px; }
+    .tp-chart-card {
+      min-width: 0; overflow: hidden;
+      background: var(--tp-card);
+      border: 1px solid var(--tp-border);
+      border-radius: var(--tp-r-lg);
+      box-shadow: var(--tp-shadow);
+    }
+    .tp-chart-card--wide { grid-column: span 2; }
+    .tp-chart-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 16px;
+      background: var(--tp-subtle);
+      border-bottom: 1px solid var(--tp-border);
+    }
+    .tp-chart-title { display: flex; align-items: center; gap: 10px; min-width: 0; margin: 0; font-size: 13px; font-weight: 700; color: var(--tp-t9); }
+    .tp-chart-title i { flex: none; width: 16px; text-align: center; color: var(--tp-accent-dark); }
+    [data-theme="dark"] .tp-chart-title i { color: var(--tp-accent); }
+    .tp-chart-title span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tp-chart-body { height: 280px; padding: 8px; }
+    .tp-chart-body--large { height: 340px; }
 
-.dash-section-header .sec-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 14px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--sec-color, var(--fx-cyan));
-    background: var(--sec-soft, var(--bg-subtle));
-    border: 1px solid color-mix(in srgb, var(--sec-color, var(--fx-cyan)) 25%, transparent);
-}
-
-.dash-section-body { padding: 24px; }
-
-.dash-section.is-cases   { --sec-color: var(--fx-orange); --sec-soft: var(--fx-orange-soft); }
-.dash-section.is-clients { --sec-color: var(--fx-blue);   --sec-soft: var(--fx-blue-soft); }
-
-/* ============================================================
-   FILTROS
-   ============================================================ */
-.filters-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 18px;
-    background: var(--dash-card-bg);
-    border: 1px solid var(--dash-border);
-    border-radius: var(--dash-radius);
-    box-shadow: var(--dash-shadow);
-    margin-bottom: 20px;
-}
-.filter-select-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    background: var(--bg-subtle, #f3f4f6);
-    border: 1px solid var(--dash-border);
-    border-radius: 10px;
-    color: var(--text-500, #6b7280);
-}
-.filter-select-wrap i { color: var(--fx-cyan); }
-.filter-select-wrap select {
-    border: 0;
-    background: transparent;
-    font: inherit;
-    color: var(--text-800, #1f2937);
-    outline: none;
-    cursor: pointer;
-    min-width: 120px;
-}
-.filters-spacer { flex: 1; }
-.btn-icon, .header-btn {
-    width: 38px; height: 38px;
-    border: 1px solid var(--dash-border);
-    background: var(--bg-subtle, #f3f4f6);
-    border-radius: 10px;
-    cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    color: var(--text-600, #4b5563);
-    transition: all .2s ease;
-}
-.btn-icon:hover, .header-btn:hover {
-    background: var(--fx-cyan-soft);
-    color: var(--fx-cyan);
-    border-color: var(--fx-cyan);
-}
-
-/* ============================================================
-   KPI DONUTS
-   ============================================================ */
-.dash-donut-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--dash-gap);
-    margin-bottom: 28px;
-}
-
-.dash-donut-card {
-    background: var(--dash-card-bg);
-    border: 1px solid var(--dash-border);
-    border-radius: var(--dash-radius);
-    padding: 18px 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: var(--dash-shadow);
-    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-    min-width: 0;
-}
-.dash-donut-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--dash-shadow-hover);
-    border-color: var(--kpi-color, var(--fx-cyan));
-}
-
-.dash-donut-card .donut-ring {
-    flex-shrink: 0;
-    width: 68px; height: 68px;
-    position: relative;
-}
-.dash-donut-card .donut-ring svg { transform: rotate(-90deg); width: 100%; height: 100%; }
-.dash-donut-card .donut-ring circle:last-child {
-    transition: stroke-dashoffset 1.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.dash-donut-card .donut-ring .ring-pct {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 700;
-    color: var(--text-500, #6b7280);
-    pointer-events: none;
-}
-
-.dash-donut-card .donut-info {
-    flex: 1; min-width: 0;
-    display: flex; flex-direction: column; gap: 2px;
-}
-.donut-info .kpi-label {
-    font-size: 11px; font-weight: 800;
-    color: var(--text-600, #4b5563);
-    text-transform: uppercase;
-    letter-spacing: .09em;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.donut-info .kpi-value {
-    font-family: var(--font-display, 'Inter', sans-serif);
-    font-size: 32px; font-weight: 800;
-    letter-spacing: -.03em; line-height: 1.05;
-    color: var(--kpi-color, var(--text-900, #111827));
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.donut-info .kpi-ref {
-    font-size: 11px; font-weight: 500;
-    color: var(--text-500, #6b7280);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-
-/* ============================================================
-   CHART CARDS
-   ============================================================ */
-.dash-charts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    gap: var(--dash-gap);
-}
-.dash-chart-card {
-    background: var(--dash-card-bg);
-    border: 1px solid var(--dash-border);
-    border-radius: var(--dash-radius);
-    overflow: hidden;
-    box-shadow: var(--dash-shadow);
-    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-}
-.dash-chart-card:hover {
-    box-shadow: var(--dash-shadow-hover);
-    border-color: var(--sec-color, var(--fx-cyan));
-    transform: translateY(-2px);
-}
-.dash-chart-card.wide { grid-column: span 2; }
-
-.dash-chart-card .chart-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--dash-border);
-}
-.dash-chart-card .chart-title {
-    display: flex; align-items: center; gap: 10px;
-    font-weight: 600; font-size: 14px;
-    color: var(--text-700, #374151);
-}
-.dash-chart-card .chart-title i { color: var(--sec-color, var(--fx-cyan)); font-size: 14px; }
-.dash-chart-card .chart-container        { height: 280px; padding: 8px; }
-.dash-chart-card .chart-container.large  { height: 340px; }
-
-.dash-empty {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 8px; height: 100%;
-    color: var(--text-400, #9ca3af);
-    font-size: 13px;
-}
-.dash-empty i { font-size: 26px; opacity: .5; }
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-@media (max-width: 1200px) { .dash-donut-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 1024px) { .dash-chart-card.wide { grid-column: span 1; } }
-@media (max-width: 768px) {
-    .dash-donut-grid  { grid-template-columns: 1fr; }
-    .dash-charts-grid { grid-template-columns: 1fr; }
-    .dash-chart-card .chart-container { height: 240px; }
-    .dash-section-body { padding: 16px; }
-}
-
-/* Dark mode */
-[data-theme="dark"] .theme-fixalius {
-    --dash-shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.4);
-    --dash-shadow-hover: 0 10px 28px rgba(0,0,0,.45);
-}
-</style>
+    @media (max-width: 1024px) { .tp-chart-card--wide { grid-column: span 1; } }
+    @media (max-width: 768px)  { .tp-chart-body { height: 240px; } .tp-chart-body--large { height: 300px; } }
+  </style>
 {% endblock %}
 
-{% block content %}
-<div class="theme-fixalius" style="height:100%; display:flex; flex-direction:column;">
+{% block intranet_content %}
+<section class="tp" id="tablePage" aria-labelledby="tp-title">
 
-    <!-- Cabecera -->
-    <div class="com-header">
-        <div class="header-left">
-            <h1><i class="fas fa-chart-line"></i> {% trans "Cuadro de Mando" %}</h1>
-        </div>
-        <div class="header-right">
-            <span class="last-update" id="last-update-label">
-                <i class="far fa-clock"></i> {% now "j F Y, H:i" %}
-            </span>
-        </div>
+  {# ------------------------------ Cabecera ------------------------------ #}
+  <header class="tp-header">
+    <div class="tp-title-wrap">
+      <span class="tp-title-icon" aria-hidden="true"><i class="fas fa-chart-line"></i></span>
+      <div>
+        <h1 id="tp-title">{% trans "Cuadro de Mando" %}</h1>
+        <p>{% trans "Casos de éxito y cartera de clientes de Fixalius" %}</p>
+      </div>
+    </div>
+    <span class="tp-updated" title="{% trans 'Fecha y hora de carga' %}">
+      <i class="far fa-clock" aria-hidden="true"></i>
+      {% trans "Actualizado" %} <span id="last-update-text">{% now "j F Y, H:i" %}</span>
+    </span>
+  </header>
+
+  {# ------------------------------- Filtros ------------------------------ #}
+  <form method="get" class="tp-filters" id="filtersForm" role="search">
+    <div class="tp-select-wrap">
+      <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+      <select name="year" id="yearFilter" onchange="this.form.submit()" aria-label="{% trans 'Filtrar por año' %}">
+        {% for y in years %}
+          <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="tp-select-wrap">
+      <i class="fas fa-industry" aria-hidden="true"></i>
+      <select name="sector" id="sectorFilter" onchange="this.form.submit()" aria-label="{% trans 'Filtrar por sector' %}">
+        <option value="">{% trans "Todos los sectores" %}</option>
+        {% for s in sectors %}
+          <option value="{{ s }}" {% if s == selected_sector %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
     </div>
 
-    <!-- Filtros -->
-    <form method="get" class="filters-bar" id="filtersForm">
-        <div class="filter-select-wrap">
-            <i class="fas fa-calendar-alt"></i>
-            <select name="year" id="yearFilter" onchange="this.form.submit()">
-                {% for y in years %}
-                    <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="filter-select-wrap">
-            <i class="fas fa-tag"></i>
-            <select name="sector" id="sectorFilter" onchange="this.form.submit()">
-                <option value="">{% trans "Todos los sectores" %}</option>
-                {% for s in sectors %}
-                    <option value="{{ s }}" {% if s == selected_sector %}selected{% endif %}>{{ s }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="filters-spacer"></div>
-        <a class="btn-icon" href="{% url 'sources:dashboard' %}" title="{% trans 'Limpiar filtros' %}">
-            <i class="fas fa-sync-alt"></i>
-        </a>
-        <button type="button" class="header-btn" id="btn-darkmode" title="{% trans 'Modo oscuro' %}">
-            <i class="fas fa-moon" id="darkmode-icon"></i>
-        </button>
-    </form>
-
-    <!-- Área principal -->
-    <div class="main-area" style="flex:1; overflow-y:auto; padding-bottom:12px;">
-        <div style="width:100%;">
-
-            <!-- ===================== SECCIÓN CASOS DE ÉXITO ===================== -->
-            <section class="dash-section is-cases">
-                <header class="dash-section-header">
-                    <h3 class="sec-title">
-                        <span class="sec-ico"><i class="fas fa-briefcase"></i></span>
-                        {% trans "Casos de éxito" %}
-                    </h3>
-                    <span class="sec-badge">
-                        <i class="fas fa-hashtag"></i>
-                        {{ kpis_cases.total }} {% trans "casos" %}
-                    </span>
-                </header>
-                <div class="dash-section-body">
-
-                    <div class="dash-donut-grid">
-                        {% include 'sources/_kpi_donut.html' with label=_("Total casos") value=kpis_cases.total ref=_("histórico completo") color="#e55b2c" pct=100 %}
-                        {% include 'sources/_kpi_donut.html' with label=_("Este año") value=kpis_cases.this_year ref=selected_year color="#f99e45" pct=100 %}
-                        {% include 'sources/_kpi_donut.html' with label=_("Sectores") value=kpis_cases.sectors ref=_("con casos registrados") color="#123e5a" pct=100 %}
-                        {% include 'sources/_kpi_donut.html' with label=_("Casos / cliente") value=kpis_cases.avg_per_client ref=_("media") color="#00b8c9" pct=100 %}
-                    </div>
-
-                    <div class="dash-charts-grid">
-                        <div class="dash-chart-card">
-                            <div class="chart-header">
-                                <div class="chart-title"><i class="fas fa-chart-pie"></i><span>{% trans "Casos por sector" %}</span></div>
-                            </div>
-                            <div id="chartCasesBySector" class="chart-container"></div>
-                        </div>
-
-                        <div class="dash-chart-card">
-                            <div class="chart-header">
-                                <div class="chart-title"><i class="fas fa-chart-column"></i><span>{% trans "Casos por año" %}</span></div>
-                            </div>
-                            <div id="chartCasesByYear" class="chart-container"></div>
-                        </div>
-
-                        <div class="dash-chart-card wide">
-                            <div class="chart-header">
-                                <div class="chart-title"><i class="fas fa-chart-line"></i><span>{% trans "Evolución mensual" %} · {{ selected_year }}</span></div>
-                            </div>
-                            <div id="chartCasesByMonth" class="chart-container large"></div>
-                        </div>
-
-                        <div class="dash-chart-card wide">
-                            <div class="chart-header">
-                                <div class="chart-title"><i class="fas fa-ranking-star"></i><span>{% trans "Top 10 clientes por nº de casos" %}</span></div>
-                            </div>
-                            <div id="chartTopClients" class="chart-container large"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ===================== SECCIÓN CLIENTES ===================== -->
-            <section class="dash-section is-clients">
-                <header class="dash-section-header">
-                    <h3 class="sec-title">
-                        <span class="sec-ico"><i class="fas fa-users"></i></span>
-                        {% trans "Clientes" %}
-                    </h3>
-                    <span class="sec-badge">
-                        <i class="fas fa-hashtag"></i>
-                        {{ kpis_clients.total }} {% trans "clientes" %}
-                    </span>
-                </header>
-                <div class="dash-section-body">
-
-                    <div class="dash-donut-grid">
-                        {% include 'sources/_kpi_donut.html' with label=_("Total clientes") value=kpis_clients.total ref=_("en cartera") color="#123e5a" pct=100 %}
-                        {% include 'sources/_kpi_donut.html' with label=_("Países") value=kpis_clients.countries ref=_("distintos") color="#00b8c9" pct=100 %}
-                        {% include 'sources/_kpi_donut.html' with label=_("Sectores") value=kpis_clients.sectors ref=_("cubiertos") color="#f99e45" pct=100 %}
-                        {% include 'sources/_kpi_donut.html' with label=_("Activos") value=kpis_clients.active ref=_("con casos") color="#e55b2c" pct=100 %}
-                    </div>
-
-                    <div class="dash-charts-grid">
-                        <div class="dash-chart-card">
-                            <div class="chart-header">
-                                <div class="chart-title"><i class="fas fa-flag"></i><span>{% trans "Clientes por país" %}</span></div>
-                            </div>
-                            <div id="chartClientsByCountry" class="chart-container"></div>
-                        </div>
-
-                        <div class="dash-chart-card">
-                            <div class="chart-header">
-                                <div class="chart-title"><i class="fas fa-chart-pie"></i><span>{% trans "Clientes por sector" %}</span></div>
-                            </div>
-                            <div id="chartClientsBySector" class="chart-container"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        </div>
+    <div class="tp-tools">
+      <a class="tp-iconbtn" href="{% url 'sources:dashboard' %}" title="{% trans 'Limpiar filtros' %}" aria-label="{% trans 'Limpiar filtros' %}">
+        <i class="fas fa-rotate-right" aria-hidden="true"></i>
+      </a>
+      <button type="button" class="tp-iconbtn" id="btn-darkmode" title="{% trans 'Modo claro / oscuro' %}" aria-label="{% trans 'Modo claro / oscuro' %}">
+        <i class="fas fa-moon" id="darkmode-icon" aria-hidden="true"></i>
+      </button>
     </div>
-</div>
+  </form>
+
+  {# ===================== SECCIÓN CASOS DE ÉXITO ===================== #}
+  <section class="tp-section" aria-labelledby="sec-cases-title">
+    <div class="tp-section-head">
+      <span class="tp-section-ico" aria-hidden="true"><i class="fas fa-trophy"></i></span>
+      <h2 id="sec-cases-title">{% trans "Casos de éxito" %}</h2>
+      <span class="tp-badge">{{ kpis_cases.total }} {% trans "casos" %}</span>
+    </div>
+
+    <div class="tp-kpis" aria-label="{% trans 'Resumen de casos de éxito' %}">
+      <div class="tp-kpi">
+        <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-briefcase"></i></span>
+        <div class="tp-kpi-text">
+          <div class="tp-kpi-value">{{ kpis_cases.total }}</div>
+          <div class="tp-kpi-label">{% trans "Total casos" %}</div>
+          <div class="tp-kpi-ref">{% trans "histórico completo" %}</div>
+        </div>
+      </div>
+      <div class="tp-kpi tp-kpi--warning">
+        <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-calendar-check"></i></span>
+        <div class="tp-kpi-text">
+          <div class="tp-kpi-value">{{ kpis_cases.this_year }}</div>
+          <div class="tp-kpi-label">{% trans "Este año" %}</div>
+          <div class="tp-kpi-ref">{{ selected_year }}</div>
+        </div>
+      </div>
+      <div class="tp-kpi tp-kpi--info">
+        <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-industry"></i></span>
+        <div class="tp-kpi-text">
+          <div class="tp-kpi-value">{{ kpis_cases.sectors }}</div>
+          <div class="tp-kpi-label">{% trans "Sectores" %}</div>
+          <div class="tp-kpi-ref">{% trans "con casos registrados" %}</div>
+        </div>
+      </div>
+      <div class="tp-kpi tp-kpi--success">
+        <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-scale-balanced"></i></span>
+        <div class="tp-kpi-text">
+          <div class="tp-kpi-value">{{ kpis_cases.avg_per_client }}</div>
+          <div class="tp-kpi-label">{% trans "Casos / cliente" %}</div>
+          <div class="tp-kpi-ref">{% trans "media" %}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tp-charts">
+      <article class="tp-chart-card">
+        <header class="tp-chart-head">
+          <h3 class="tp-chart-title"><i class="fas fa-chart-pie" aria-hidden="true"></i><span>{% trans "Casos por sector" %}</span></h3>
+        </header>
+        <div id="chartCasesBySector" class="tp-chart-body"></div>
+      </article>
+
+      <article class="tp-chart-card">
+        <header class="tp-chart-head">
+          <h3 class="tp-chart-title"><i class="fas fa-chart-column" aria-hidden="true"></i><span>{% trans "Casos por año" %}</span></h3>
+        </header>
+        <div id="chartCasesByYear" class="tp-chart-body"></div>
+      </article>
+
+      <article class="tp-chart-card tp-chart-card--wide">
+        <header class="tp-chart-head">
+          <h3 class="tp-chart-title"><i class="fas fa-chart-line" aria-hidden="true"></i><span>{% trans "Evolución mensual" %} · {{ selected_year }}</span></h3>
+        </header>
+        <div id="chartCasesByMonth" class="tp-chart-body tp-chart-body--large"></div>
+      </article>
+
+      <article class="tp-chart-card tp-chart-card--wide">
+        <header class="tp-chart-head">
+          <h3 class="tp-chart-title"><i class="fas fa-ranking-star" aria-hidden="true"></i><span>{% trans "Top 10 clientes por nº de casos" %}</span></h3>
+        </header>
+        <div id="chartTopClients" class="tp-chart-body tp-chart-body--large"></div>
+      </article>
+    </div>
+  </section>
+
+  {# ===================== SECCIÓN CLIENTES ===================== #}
+  <section class="tp-section" aria-labelledby="sec-clients-title">
+    <div class="tp-section-head">
+      <span class="tp-section-ico" aria-hidden="true"><i class="fas fa-building"></i></span>
+      <h2 id="sec-clients-title">{% trans "Clientes" %}</h2>
+      <span class="tp-badge">{{ kpis_clients.total }} {% trans "clientes" %}</span>
+    </div>
+
+    <div class="tp-kpis" aria-label="{% trans 'Resumen de clientes' %}">
+      <div class="tp-kpi">
+        <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-building"></i></span>
+        <div class="tp-kpi-text">
+          <div class="tp-kpi-value">{{ kpis_clients.total }}</div>
+          <div class="tp-kpi-label">{% trans "Total clientes" %}</div>
+          <div class="tp-kpi-ref">{% trans "en cartera" %}</div>
+        </div>
+      </div>
+      <div class="tp-kpi tp-kpi--warning">
+        <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-globe"></i></span>
+        <div class="tp-kpi-text">
+          <div class="tp-kpi-value">{{ kpis_clients.countries }}</div>
+          <div class="tp-kpi-label">{% trans "Países" %}</div>
+          <div class="tp-kpi-ref">{% trans "distintos" %}</div>
+        </div>
+      </div>
+      <div class="tp-kpi tp-kpi--info">
+        <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-industry"></i></span>
+        <div class="tp-kpi-text">
+          <div class="tp-kpi-value">{{ kpis_clients.sectors }}</div>
+          <div class="tp-kpi-label">{% trans "Sectores" %}</div>
+          <div class="tp-kpi-ref">{% trans "cubiertos" %}</div>
+        </div>
+      </div>
+      <div class="tp-kpi tp-kpi--success">
+        <span class="tp-kpi-icon" aria-hidden="true"><i class="fas fa-trophy"></i></span>
+        <div class="tp-kpi-text">
+          <div class="tp-kpi-value">{{ kpis_clients.active }}</div>
+          <div class="tp-kpi-label">{% trans "Activos" %}</div>
+          <div class="tp-kpi-ref">{% trans "con casos" %}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tp-charts">
+      <article class="tp-chart-card">
+        <header class="tp-chart-head">
+          <h3 class="tp-chart-title"><i class="fas fa-flag" aria-hidden="true"></i><span>{% trans "Clientes por país" %}</span></h3>
+        </header>
+        <div id="chartClientsByCountry" class="tp-chart-body"></div>
+      </article>
+
+      <article class="tp-chart-card">
+        <header class="tp-chart-head">
+          <h3 class="tp-chart-title"><i class="fas fa-chart-pie" aria-hidden="true"></i><span>{% trans "Clientes por sector" %}</span></h3>
+        </header>
+        <div id="chartClientsBySector" class="tp-chart-body"></div>
+      </article>
+    </div>
+  </section>
+
+</section>
 {% endblock %}
 
-{% block extra_js %}
+{% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/highcharts@11.4.8/highcharts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/highcharts@11.4.8/highcharts-more.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/highcharts@11.4.8/modules/exporting.js"></script>
@@ -458,22 +298,50 @@
     };
 
     const months = {{ months|safe }};
-    const PALETTE = ['#123e5a', '#00b8c9', '#e55b2c', '#f99e45', '#369ac0',
-                     '#8b5cf6', '#059669', '#e11d48', '#64748b', '#10b981'];
 
-    if (typeof Highcharts !== 'undefined') {
+    /* Paleta de datos. En oscuro, el azul corporativo se aclara para mantener contraste. */
+    const PALETTE_LIGHT = ['#123e5a', '#00b8c9', '#e55b2c', '#f99e45', '#369ac0',
+                           '#8b5cf6', '#059669', '#e11d48', '#64748b', '#10b981'];
+    const PALETTE_DARK  = ['#4a9fd1', '#00b8c9', '#e55b2c', '#f99e45', '#7cc4e8',
+                           '#a78bfa', '#34d399', '#fb7185', '#94a3b8', '#10b981'];
+
+    const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+
+    /* Lee los tokens --tp-* vigentes (claro u oscuro) para que los gráficos sigan el tema. */
+    function tokens() {
+        const cs = getComputedStyle(document.documentElement);
+        const v = (n, fb) => (cs.getPropertyValue(n).trim() || fb);
+        return {
+            card:   v('--tp-card',   '#ffffff'),
+            border: v('--tp-border', '#e2e8f0'),
+            t9:     v('--tp-t9',     '#0c111b'),
+            t7:     v('--tp-t7',     '#1e293b'),
+            t5:     v('--tp-t5',     '#475569'),
+            t4:     v('--tp-t4',     '#64748b'),
+            font:   v('--tp-font',   "'DM Sans', system-ui, sans-serif")
+        };
+    }
+
+    function applyHighchartsTheme() {
+        if (typeof Highcharts === 'undefined') return;
+        const t = tokens();
+        const colors = isDark() ? PALETTE_DARK : PALETTE_LIGHT;
         Highcharts.setOptions({
-            colors: PALETTE,
-            chart: { backgroundColor: 'transparent', style: { fontFamily: "'Inter', system-ui, sans-serif" }, spacing: [12,12,12,12] },
+            colors: colors,
+            chart: { backgroundColor: 'transparent', style: { fontFamily: t.font }, spacing: [12, 12, 12, 12] },
             title: { text: undefined },
-            xAxis: { lineColor: '#e5e7eb', tickColor: '#e5e7eb', labels: { style: { color: '#6b7280', fontSize: '11px' } } },
-            yAxis: { gridLineColor: '#e5e7eb', gridLineDashStyle: 'Dash', lineColor: 'transparent',
-                     labels: { style: { color: '#6b7280', fontSize: '11px' } } },
-            tooltip: { backgroundColor: '#fff', borderColor: '#e5e7eb', borderRadius: 10, borderWidth: 1, style: { color: '#111827', fontSize: '12px' } },
-            legend: { itemStyle: { color: '#374151', fontWeight: '500', fontSize: '12px' } },
+            xAxis: { lineColor: t.border, tickColor: t.border, labels: { style: { color: t.t4, fontSize: '11px' } },
+                     title: { style: { color: t.t4 } } },
+            yAxis: { gridLineColor: t.border, gridLineDashStyle: 'Dash', lineColor: 'transparent',
+                     labels: { style: { color: t.t4, fontSize: '11px' } }, title: { style: { color: t.t4 } } },
+            tooltip: { backgroundColor: t.card, borderColor: t.border, borderRadius: 10, borderWidth: 1,
+                       style: { color: t.t9, fontSize: '12px' } },
+            legend: { itemStyle: { color: t.t5, fontWeight: '500', fontSize: '12px' },
+                      itemHoverStyle: { color: t.t9 } },
             plotOptions: {
                 series: { animation: { duration: 700 } },
-                pie: { borderWidth: 2, borderColor: '#fff', dataLabels: { style: { color: '#374151', textOutline: 'none', fontWeight: '500' } } },
+                pie: { borderWidth: 2, borderColor: t.card,
+                       dataLabels: { style: { color: t.t7, textOutline: 'none', fontWeight: '500' } } },
                 column: { borderRadius: 6, borderWidth: 0 },
                 bar:    { borderRadius: 6, borderWidth: 0 }
             },
@@ -495,6 +363,8 @@
 
     function initCharts() {
         if (typeof Highcharts === 'undefined') return;
+        applyHighchartsTheme();
+        const colors = isDark() ? PALETTE_DARK : PALETTE_LIGHT;
 
         Highcharts.chart('chartCasesBySector', {
             chart: { type: 'pie' },
@@ -509,7 +379,7 @@
             xAxis: { categories: data.casesByYear.map(d => String(d.year)) },
             yAxis: { title: { text: '{% trans "Nº de casos" %}' }, allowDecimals: false },
             tooltip: { pointFormat: '{% trans "Casos" %}: <b>{point.y}</b>' },
-            series: [{ name: '{% trans "Casos" %}', color: '#e55b2c',
+            series: [{ name: '{% trans "Casos" %}', color: colors[2],
                        data: data.casesByYear.map(d => d.count) }]
         });
 
@@ -519,7 +389,7 @@
             yAxis: { title: { text: '{% trans "Nº de casos" %}' }, allowDecimals: false },
             plotOptions: { area: { fillOpacity: 0.25 } },
             tooltip: { pointFormat: '{% trans "Casos" %}: <b>{point.y}</b>' },
-            series: [{ name: '{% trans "Casos" %}', data: data.casesByMonth, color: '#e55b2c', lineWidth: 3 }]
+            series: [{ name: '{% trans "Casos" %}', data: data.casesByMonth, color: colors[2], lineWidth: 3 }]
         });
 
         Highcharts.chart('chartTopClients', {
@@ -528,7 +398,7 @@
                      labels: { style: { fontSize: '11px' } } },
             yAxis: { title: { text: '{% trans "Nº de casos" %}' }, allowDecimals: false },
             tooltip: { pointFormat: '<b>{point.y}</b> {% trans "casos" %}' },
-            series: [{ name: '{% trans "Casos" %}', color: '#123e5a',
+            series: [{ name: '{% trans "Casos" %}', color: colors[0],
                        data: data.topClients.map(c => c.y) }]
         });
 
@@ -541,7 +411,7 @@
         });
 
         Highcharts.chart('chartClientsBySector', {
-            chart: { type: 'pie', options3d: { enabled: false } },
+            chart: { type: 'pie' },
             tooltip: { pointFormat: '{point.name}: <b>{point.y}</b> ({point.percentage:.1f}%)' },
             plotOptions: { pie: { innerSize: '50%', allowPointSelect: true, cursor: 'pointer',
                 dataLabels: { enabled: true, format: '<b>{point.name}</b>: {point.y}' } } },
@@ -549,31 +419,47 @@
         });
     }
 
-    function reflowCharts() {
-        Object.values(Highcharts.charts || {}).forEach(c => c && c.reflow && c.reflow());
+    function rebuildCharts() {
+        if (typeof Highcharts === 'undefined') return;
+        (Highcharts.charts || []).slice().forEach(c => c && c.destroy());
+        initCharts();
     }
 
-    /* ---------- Modo oscuro ---------- */
+    function reflowCharts() {
+        (Highcharts.charts || []).forEach(c => c && c.reflow && c.reflow());
+    }
+
+    /* ---------- Modo claro / oscuro ---------- */
+    function syncThemeIcon() {
+        const i = $('darkmode-icon');
+        if (i) i.className = isDark() ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
     (function initTheme() {
-        var saved = localStorage.getItem('fixalius_theme');
-        if (saved === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            var i = document.getElementById('darkmode-icon');
-            if (i) i.className = 'fas fa-sun';
-        }
+        try {
+            if (localStorage.getItem('fixalius_theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        } catch (e) { /* sin almacenamiento */ }
+        syncThemeIcon();
     })();
 
-    document.getElementById('btn-darkmode')?.addEventListener('click', function () {
-        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        var next = isDark ? 'light' : 'dark';
+    $('btn-darkmode')?.addEventListener('click', function () {
+        const next = isDark() ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('fixalius_theme', next);
-        var i = document.getElementById('darkmode-icon');
-        if (i) i.className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        try { localStorage.setItem('fixalius_theme', next); } catch (e) { /* ignore */ }
     });
 
+    /* Cualquier cambio de tema (este botón o el de la intranet) repinta iconos y gráficos. */
+    let themeTimer;
+    new MutationObserver(function () {
+        syncThemeIcon();
+        clearTimeout(themeTimer);
+        themeTimer = setTimeout(rebuildCharts, 60);
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
     window.addEventListener('resize', (() => {
-        var t;
+        let t;
         return () => { clearTimeout(t); t = setTimeout(reflowCharts, 250); };
     })());
 

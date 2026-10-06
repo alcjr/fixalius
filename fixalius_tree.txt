@@ -7,6 +7,7 @@ C:.
 │   env.example
 │   fixalius.bat
 │   fixalius_git.bat
+│   fixalius_tree.html
 │   fixalius_tree.txt
 │   manage.py
 │   True
@@ -7313,14 +7314,20 @@ C:.
 │   │       │   │   │   │   __init__.py
 │   │       │   │   │   │   
 │   │       │   │   │   ├───backends
-│   │       │   │   │   │       base.py
-│   │       │   │   │   │       console.py
-│   │       │   │   │   │       dummy.py
-│   │       │   │   │   │       filebased.py
-│   │       │   │   │   │       locmem.py
-│   │       │   │   │   │       smtp.py
-│   │       │   │   │   │       __init__.py
-│   │       │   │   │   │       
+│   │       │   │   │   │   │   base.py
+│   │       │   │   │   │   │   console.py
+│   │       │   │   │   │   │   dummy.py
+│   │       │   │   │   │   │   filebased.py
+│   │       │   │   │   │   │   locmem.py
+│   │       │   │   │   │   │   smtp.py
+│   │       │   │   │   │   │   __init__.py
+│   │       │   │   │   │   │   
+│   │       │   │   │   │   └───__pycache__
+│   │       │   │   │   │           base.cpython-312.pyc
+│   │       │   │   │   │           console.cpython-312.pyc
+│   │       │   │   │   │           smtp.cpython-312.pyc
+│   │       │   │   │   │           __init__.cpython-312.pyc
+│   │       │   │   │   │           
 │   │       │   │   │   └───__pycache__
 │   │       │   │   │           deprecation.cpython-312.pyc
 │   │       │   │   │           exceptions.cpython-312.pyc
@@ -7960,15 +7967,23 @@ C:.
 │   │       │   │           __init__.cpython-312.pyc
 │   │       │   │           
 │   │       │   ├───test
-│   │       │   │       client.py
-│   │       │   │       html.py
-│   │       │   │       runner.py
-│   │       │   │       selenium.py
-│   │       │   │       signals.py
-│   │       │   │       testcases.py
-│   │       │   │       utils.py
-│   │       │   │       __init__.py
-│   │       │   │       
+│   │       │   │   │   client.py
+│   │       │   │   │   html.py
+│   │       │   │   │   runner.py
+│   │       │   │   │   selenium.py
+│   │       │   │   │   signals.py
+│   │       │   │   │   testcases.py
+│   │       │   │   │   utils.py
+│   │       │   │   │   __init__.py
+│   │       │   │   │   
+│   │       │   │   └───__pycache__
+│   │       │   │           client.cpython-312.pyc
+│   │       │   │           html.cpython-312.pyc
+│   │       │   │           signals.cpython-312.pyc
+│   │       │   │           testcases.cpython-312.pyc
+│   │       │   │           utils.cpython-312.pyc
+│   │       │   │           __init__.cpython-312.pyc
+│   │       │   │           
 │   │       │   ├───urls
 │   │       │   │   │   base.py
 │   │       │   │   │   conf.py
@@ -11043,7 +11058,6 @@ C:.
 │   │   │   models.py
 │   │   │   signals.py
 │   │   │   tests.py
-│   │   │   urls - copia.py
 │   │   │   urls.py
 │   │   │   views.py
 │   │   │   __init__.py
@@ -11115,8 +11129,11 @@ C:.
 │   ├───sources
 │   │   │   admin.py
 │   │   │   api.py
+│   │   │   api_documents.py
+│   │   │   api_newsletters.py
 │   │   │   api_subscribers.py
 │   │   │   apps.py
+│   │   │   document_views.py
 │   │   │   models.py
 │   │   │   newsletter_views.py
 │   │   │   tests.py
@@ -11126,10 +11143,12 @@ C:.
 │   │   │   
 │   │   ├───migrations
 │   │   │   │   0001_initial.py
+│   │   │   │   0002_document_documentshare.py
 │   │   │   │   __init__.py
 │   │   │   │   
 │   │   │   └───__pycache__
 │   │   │           0001_initial.cpython-312.pyc
+│   │   │           0002_document_documentshare.cpython-312.pyc
 │   │   │           __init__.cpython-312.pyc
 │   │   │           
 │   │   ├───templatetags
@@ -11143,8 +11162,11 @@ C:.
 │   │   └───__pycache__
 │   │           admin.cpython-312.pyc
 │   │           api.cpython-312.pyc
+│   │           api_documents.cpython-312.pyc
+│   │           api_newsletters.cpython-312.pyc
 │   │           api_subscribers.cpython-312.pyc
 │   │           apps.cpython-312.pyc
+│   │           document_views.cpython-312.pyc
 │   │           models.cpython-312.pyc
 │   │           newsletter_views.cpython-312.pyc
 │   │           urls.cpython-312.pyc
@@ -11156,6 +11178,7 @@ C:.
 │   │   │   apps.py
 │   │   │   models.py
 │   │   │   tests.py
+│   │   │   urls.py
 │   │   │   views.py
 │   │   │   __init__.py
 │   │   │   
@@ -11169,6 +11192,8 @@ C:.
 │   │           admin.cpython-312.pyc
 │   │           apps.cpython-312.pyc
 │   │           models.cpython-312.pyc
+│   │           urls.cpython-312.pyc
+│   │           views.cpython-312.pyc
 │   │           __init__.cpython-312.pyc
 │   │           
 │   └───__pycache__
@@ -11182,7 +11207,6 @@ C:.
 │   │   wsgi.py
 │   │   __init__.py
 │   │   
-│   ├───email
 │   ├───templatetags
 │   │       i18n_urls.py
 │   │       sources_tags.py
@@ -11206,6 +11230,9 @@ C:.
 │               django.mo
 │               django.po
 │               
+├───logs
+│       app.log
+│       
 ├───media
 │   ├───cases
 │   │   └───images
@@ -11221,6 +11248,12 @@ C:.
 │       └───logos
 │               fixalius_logo.png
 │               
+├───private_media
+│   └───documents
+│       └───2026
+│           └───10
+│                   357570208f5a4c2d9ba5e36ead549473.pdf
+│                   
 ├───static
 │   ├───authentication
 │   │   ├───css
@@ -11238,7 +11271,6 @@ C:.
 │   │           
 │   ├───core
 │   │   ├───css
-│   │   │       fixalius - copia.css
 │   │   │       fixalius.css
 │   │   │       intranet.css
 │   │   │       table_page.css
@@ -11268,6 +11300,7 @@ C:.
 │   │   ├───css
 │   │   │       applications.css
 │   │   │       clients.css
+│   │   │       newsletters.css
 │   │   │       source-bases.css
 │   │   │       table_page.css
 │   │   │       
@@ -11275,7 +11308,8 @@ C:.
 │   │   └───js
 │   │           applications.js
 │   │           clients.js
-│   │           suscribers
+│   │           docs.js
+│   │           newsletters.js
 │   │           suscribers.js
 │   │           table_page.js
 │   │           
@@ -11474,12 +11508,15 @@ C:.
 │       ├───css
 │       │       applications.css
 │       │       clients.css
+│       │       newsletters.css
 │       │       source-bases.css
 │       │       table_page.css
 │       │       
 │       └───js
 │               applications.js
 │               clients.js
+│               docs.js
+│               newsletters.js
 │               suscribers
 │               suscribers.js
 │               table_page.js
@@ -11507,7 +11544,6 @@ C:.
     │   │   footbar.html
     │   │   footer.html
     │   │   header.html
-    │   │   index - copia.html
     │   │   index.html
     │   │   legal.html
     │   │   legal_base.html
@@ -11517,23 +11553,43 @@ C:.
     │   │   sidebar.html
     │   │   _brand.html
     │   │   _favicons.html
+    │   │   _kpi_donut.html
     │   │   _legal_content.html
+    │   │   _legal_modals.html
     │   │   _privacy_content.html
+    │   │   _site_footer.html
+    │   │   _site_header.html
     │   │   _wordmark.html
     │   │   
     │   └───email
+    │           document_share.txt
     │           newsletter_confirm.txt
+    │           newsletter_documents.txt
     │           
     ├───dashboard
+    │       dashboard - copia.html
     │       dashboard.html
     │       
     ├───sources
     │       applications.html
     │       clients.html
     │       dashboard.html
+    │       docs.html
+    │       newsletters.html
+    │       newsletter_result.html
+    │       suscribers.html
+    │       _kpi_donut.html
+    │       
+    ├───sources copy
+    │       applications.html
+    │       clients.html
+    │       dashboard.html
+    │       docs.html
     │       newsletters.html
     │       newsletter_result.html
     │       suscribers.html
     │       _kpi_donut.html
     │       
     └───visor
+            visor.html
+            
