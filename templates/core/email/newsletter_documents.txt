@@ -1,0 +1,14 @@
+{% load i18n %}{% autoescape off %}{% if mensaje %}{{ mensaje }}
+
+{% endif %}{% trans "Documentos disponibles para ti:" %}
+{% for d in documentos %}- {{ d.titulo }}{% if d.size %} ({{ d.size }}){% endif %}
+  {{ d.url }}
+{% empty %}{% trans "Por ahora no hay documentos disponibles." %}
+{% endfor %}
+{% trans "Cada enlace es personal y funciona mientras sigas suscrito. No lo compartas." %}
+
+-- 
+Fixalius
+{% trans "Si no quieres recibir más correos, puedes darte de baja aquí:" %}
+{{ unsubscribe_url }}
+{% endautoescape %}

@@ -1462,14 +1462,12 @@ msgid "Suscribirse"
 msgstr "Subscribe"
 
 #: ⁨.\templates\core\index - copia.html⁩:279 .\templates\core\index.html:283
-#, fuzzy, python-format
-#| msgid ""
-#| "Al suscribirte, aceptas nuestra <a href=\"#contact\">política de "
-#| "privacidad</a>."
+#, python-format
 msgid ""
 "Al suscribirte, aceptas nuestra <a href=\"%(url)s\">política de "
 "privacidad</a>."
-msgstr "By subscribing, you accept our <a href=\"#contact\">privacy policy</a>."
+msgstr ""
+"By subscribing, you accept our <a href=\"%(url)s\">privacy policy</a>."
 
 #: .\templates\core\index.html:223 .\templates\core\index.html:225
 msgid "Pausar carrusel"

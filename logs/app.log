@@ -1,3 +1,17 @@
 2026-10-06 12:11:07,736 INFO fixalius.audit visor.clear by_user=1
 2026-10-06 12:13:21,074 INFO fixalius.audit newsletter.send docs=[1] sent=2 failed=0 by_user=1
 2026-10-06 12:22:53,928 INFO fixalius.audit document.public_download share=5 doc=1 sub=2
+2026-10-06 13:39:47,856 ERROR apps.sources.newsletter_views No se pudo enviar la confirmación al suscriptor 3
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\apps\sources\newsletter_views.py", line 142, in subscribe
+    _send_confirmation(request, subscriber)
+  File "C:\00_projects\fixalius\apps\sources\newsletter_views.py", line 77, in _send_confirmation
+    body = render_to_string(
+           ^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: core/email/newsletter_confirm.txt
+2026-10-06 13:39:47,881 ERROR django.request Internal Server Error: /newsletter/subscribe/

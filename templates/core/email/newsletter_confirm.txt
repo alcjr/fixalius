@@ -1,0 +1,12 @@
+{% load i18n %}{% autoescape off %}{% trans "Hola," %}
+
+{% trans "Hemos recibido una solicitud para suscribir este correo a las novedades de Fixalius." %}
+{% trans "Para confirmar tu suscripción, abre este enlace:" %}
+
+{{ confirm_url }}
+
+{% trans "Si no has sido tú, ignora este mensaje: no se te suscribirá y no recibirás nada más." %}
+
+-- 
+Fixalius
+{% endautoescape %}
