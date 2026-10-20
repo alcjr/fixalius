@@ -1,8 +1,12 @@
 :root{
+  /* Colores EXACTOS del logotipo: cambiarlos aquí los propaga a toda la plantilla */
+  --logo-blue:#123e5a;      /* azul del logotipo (Fix / hojas) */
+  --logo-orange:#f47b36;    /* naranja del anillo del logotipo */
+
   --ink:#101820;
-  --blue:#123e5a;
+  --blue:var(--logo-blue);
   --blue-2:#1c6b8d;
-  --orange:#f47b36;          /* decoración / formas / iconos grandes */
+  --orange:var(--logo-orange);  /* decoración / formas / texto de gran tamaño */
   --orange-text:#b23f00;     /* texto naranja sobre fondo claro   ≈ 5.8:1 sobre blanco */
   --orange-on-dark:#f5a35f;  /* texto naranja sobre azul oscuro   ≈ 5.5:1 sobre #123e5a */
   --cream:#f5f1ea;
@@ -11,7 +15,7 @@
 
   /* Azul marengo — degradado para cabecera y pie de página */
   --marengo-dark:#0a2c45;
-  --marengo:#123e5a;
+  --marengo:var(--logo-blue);
   --marengo-light:#1c5573;
   --gradient-marengo:linear-gradient(135deg,var(--marengo-dark) 0%,var(--marengo) 50%,var(--marengo-light) 100%);
 }
@@ -145,15 +149,24 @@ main{
 /* Hero                                                                */
 /* ------------------------------------------------------------------ */
 .hero{
+  /* Azul atenuado: deja de competir con el logotipo (azul marino + naranja) */
+  --hero-bg:linear-gradient(135deg,#edf3f9 0%,#dbe7f3 55%,#c9dcee 100%);
+  --hero-ink:var(--logo-blue);
+  --hero-muted:#3f4d5a;
+  --hero-accent:#b23f00;       /* naranja de texto, ≥4.5:1 sobre el fondo claro */
   min-height:100%;
-  background:var(--blue);color:#fff;position:relative;overflow:hidden;
-  display:flex;align-items:center;
-  padding:70px clamp(24px,10vw,150px);
+  background:var(--hero-bg);color:var(--hero-ink);position:relative;overflow:hidden;
+  /* Dos columnas: texto a la izquierda, logotipo ocupando toda la derecha */
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
+  align-items:center;
+  column-gap:clamp(24px,4vw,72px);
+  padding:70px clamp(24px,7vw,140px);
 }
-.hero-copy{position:relative;z-index:2;max-width:690px}
+.hero-copy{position:relative;z-index:2;max-width:720px}
 .eyebrow,.section-kicker{font-size:14px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
-.eyebrow{color:var(--orange-on-dark)}
-.eyebrow span{color:rgba(255,255,255,.45);margin:0 8px}
+.eyebrow{color:var(--hero-accent)}
+.eyebrow span{color:rgba(15,53,80,.45);margin:0 8px}
 .section-kicker{color:var(--orange-text)}
 .section-kicker span{color:var(--muted);margin:0 8px}
 .light-kicker{color:var(--orange-on-dark)}
@@ -161,12 +174,13 @@ main{
 .name-section .section-kicker{color:var(--ink)}
 .name-section .section-kicker span{color:rgba(16,24,32,.45)}
 
-.hero h1{font-size:clamp(58px,8vw,122px);line-height:.91;letter-spacing:-.075em;margin:25px 0 32px;font-weight:700;text-wrap:balance}
-.hero h1 em{color:var(--orange-on-dark);font-style:normal}
-.sector-heading i{color:var(--orange-on-dark);font-style:normal}
-.contact h2 i{color:var(--orange-text);font-style:normal}
-.orange-dot{color:var(--orange-on-dark)}
-.hero-lead{max-width:370px;color:rgba(255,255,255,.72);line-height:1.5;font-size:17px;margin-bottom:34px}
+.hero h1{font-size:clamp(50px,6.4vw,112px);line-height:.91;letter-spacing:-.075em;margin:25px 0 32px;font-weight:700;text-wrap:balance}
+.hero h1{color:var(--hero-ink)}
+.hero h1 em{color:var(--logo-orange);font-style:normal}
+.sector-heading i{color:var(--logo-orange);font-style:normal}
+.contact h2 i{color:var(--logo-orange);font-style:normal}
+.orange-dot{color:var(--logo-orange)}
+.hero-lead{max-width:420px;color:var(--hero-muted);line-height:1.5;font-size:17px;margin-bottom:34px}
 
 .button{display:inline-flex;gap:25px;align-items:center;border-radius:999px;padding:15px 19px;font-size:13px;font-weight:700;transition:background .2s,color .2s}
 .button-light{background:#fff;color:var(--blue)}
@@ -174,83 +188,71 @@ main{
 .button-light:hover span{color:#fff}
 .button span{color:var(--orange-on-dark);font-size:18px}
 .button-light span{color:var(--orange-text)}
+.hero .button-light{background:var(--blue);color:#fff}
+.hero .button-light span{color:var(--orange-on-dark)}
+.hero .button-light:hover{background:var(--blue-2);color:#fff}
+.hero .button-light:hover span{color:#fff}
 
-.hero-orbit{position:absolute;border:1px solid rgba(255,255,255,.15);border-radius:50%}
-.orbit-one{width:720px;height:720px;right:-100px;top:-80px}
-.orbit-two{width:440px;height:440px;right:40px;top:60px}
 
 /* ------------------------------------------------------------------ */
-/* Hero mark — animación SVG (heredada de 00_fixalius)                 */
+/* Hero mark — logotipo en piezas (composición / descomposición)       */
+/* Colores de la versión invertida para fondo azul marengo.            */
 /* ------------------------------------------------------------------ */
 .hero-mark{
-  position:absolute;
+  position:relative;
   z-index:1;
-  width:min(40vw,480px);
-  right:6%;
-  top:50%;
-  transform:translateY(-50%);
+  /* Llena la columna derecha (hasta 980 px) manteniendo la proporción 128 × 86 */
+  width:100%;
+  max-width:980px;
+  justify-self:center;
+  aspect-ratio:128/86;
   pointer-events:none;
 }
-.hero-mark .iso{
-  display:block;
-  width:100%;
-  height:auto;
-  overflow:visible;   /* el círculo rebota fuera del viewBox en la entrada */
+/* Órbitas: dos anillos concéntricos con un satélite naranja que gira muy despacio */
+.hero-mark::before,.hero-mark::after{
+  content:"";position:absolute;left:50%;top:50%;
+  border-radius:50%;transform:translate(-50%,-50%);z-index:-1;
 }
+.hero-mark::before{            /* exterior: continuo, con halo claro */
+  width:158%;aspect-ratio:1;
+  border:1px solid rgba(18,62,90,.16);
+  background:
+    radial-gradient(circle at 50% 8px,var(--logo-orange) 0 5px,transparent 6px),
+    radial-gradient(circle,rgba(255,255,255,.6) 0%,rgba(255,255,255,0) 60%);
+  animation:orbit-spin 120s linear infinite;
+}
+.hero-mark::after{             /* interior: punteado, sentido contrario */
+  width:112%;aspect-ratio:1;
+  border:1.5px dashed rgba(18,62,90,.28);
+  background:radial-gradient(circle at 50% calc(100% - 7px),var(--logo-blue) 0 4px,transparent 5px);
+  animation:orbit-spin 80s linear infinite reverse;
+}
+@keyframes orbit-spin{to{rotate:360deg}}
+.hero.is-paused .hero-mark::before,.hero.is-paused .hero-mark::after{animation-play-state:paused}
 
-/* Coreografía: ciclo único de 10 s compartido por todas las capas */
-.hero-mark .anim{
-  animation-duration:10s;
-  animation-iteration-count:infinite;
-  animation-timing-function:ease-in-out;
+/* Textura de puntos que se desvanece hacia los bordes */
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:radial-gradient(rgba(18,62,90,.22) 1.2px,transparent 1.6px);
+  background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(ellipse 55% 75% at 72% 50%,#000 0%,transparent 100%);
+  mask-image:radial-gradient(ellipse 55% 75% at 72% 50%,#000 0%,transparent 100%);
 }
-.hero-mark .anim-tri{
-  stroke:var(--orange-on-dark);
-  stroke-width:1.5;
-  stroke-linejoin:round;
-  stroke-dasharray:1;          /* junto a pathLength="1" en el SVG */
-  animation-name:hero-draw,hero-fill;
-}
-.hero-mark .anim-wedge{animation-name:hero-wedge}
-.hero-mark .anim-dot{
-  transform-box:fill-box;      /* los translate del keyframe se miden desde el propio círculo */
-  animation-name:hero-dot;
-}
+.hero-mark .logo-compose{display:block;width:100%;height:100%;overflow:visible}  /* las piezas dispersas salen del viewBox */
+.hero-mark .p{transform-box:fill-box;transform-origin:center;will-change:transform,opacity}
 
-@keyframes hero-draw{
-  0%{stroke-dashoffset:1}
-  20%,88%{stroke-dashoffset:0}
-  100%{stroke-dashoffset:1}
+.hero-pause{
+  position:absolute;z-index:3;right:clamp(24px,5vw,72px);bottom:22px;
+  min-width:44px;min-height:44px;padding:0 14px;
+  background:none;color:rgba(15,53,80,.8);
+  border:1px solid rgba(15,53,80,.4);border-radius:999px;
+  font-size:12px;cursor:pointer;
 }
-@keyframes hero-fill{
-  0%,20%{fill-opacity:0}
-  30%,80%{fill-opacity:1}
-  88%,100%{fill-opacity:0}
-}
-@keyframes hero-wedge{
-  0%,30%{opacity:0}
-  38%,76%{opacity:.92}
-  84%,100%{opacity:0}
-}
-@keyframes hero-dot{
-  0%,34%{
-    transform:translate(150px,-80px);
-    opacity:0;
-    animation-timing-function:cubic-bezier(.34,1.56,.64,1);   /* rebote */
-  }
-  48%,72%{
-    transform:none;
-    opacity:1;
-    animation-timing-function:ease-in;
-  }
-  82%,100%{
-    transform:translate(150px,-80px);
-    opacity:0;
-  }
-}
+.hero-pause:hover{color:var(--hero-ink);border-color:var(--hero-ink)}
+.hero-pause[hidden]{display:none}
 
-.scroll-hint{position:absolute;bottom:34px;left:clamp(24px,10vw,150px);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65)}
-.scroll-hint span{color:var(--orange-on-dark);font-size:20px;margin-left:12px}
+.scroll-hint{position:absolute;bottom:34px;left:clamp(24px,7vw,140px);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(15,53,80,.7)}
+.scroll-hint span{color:var(--hero-accent);font-size:20px;margin-left:12px}
 
 /* ------------------------------------------------------------------ */
 /* Secciones                                                           */
@@ -261,6 +263,10 @@ main{
 .intro h2,.sector-heading h2,.principle-heading h2,.contact h2{font-size:clamp(42px,5vw,74px);line-height:.98;letter-spacing:-.065em;margin:0;text-wrap:balance}
 .intro h2 span,.principle-heading h2 span{color:var(--blue-2)}
 .intro-grid p,.sector-heading p,.principle-heading p,.contact-copy>p{color:var(--muted);line-height:1.6;font-size:16px;max-width:370px;margin:0}
+
+/* Titulares en el azul del logotipo */
+.intro h2,.principle-heading h2,.service-card h3,.principle-grid h3,
+.case-body h3,.newsletter-result h1,.contact h2{color:var(--logo-blue)}
 
 /* Servicios */
 .service-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);margin-top:100px}
@@ -443,14 +449,19 @@ footer a:hover{color:#fff}
   .lang button[aria-current="true"]{border-color:var(--orange-text)}
   .menu-toggle{display:flex}
 
-  .hero{padding:60px 24px}
+  .hero{display:flex;padding:60px 24px}
   .hero h1{font-size:60px}
   /* La animación se atenúa y se ancla al fondo para no competir con el titular */
   .hero-mark{
-    width:80vw;
-    right:-25%;
-    opacity:.32;
+    position:absolute;
+    width:100vw;max-width:none;
+    right:0;top:50%;
+    transform:translateY(-50%);
+    opacity:.22;
   }
+  .hero-mark::before,.hero-mark::after,.hero::before{display:none}
+  .hero-copy{max-width:none}
+  .hero-mark .wm{display:none}   /* el wordmark chocaría con el texto: en móvil quedan hojas y anillo */
   .section-pad{padding:80px 24px}
   .intro-grid,.sector-heading,.principle-heading,.name-section,.contact{display:block}
   .intro-grid p,.sector-heading p,.principle-heading p{margin-top:28px}
@@ -473,10 +484,6 @@ footer a:hover{color:#fff}
   main{scroll-behavior:auto}
   .cases-track{scroll-behavior:auto}
   *,*::before,*::after{transition:none!important;animation:none!important}
-  /* Estado final estático de la animación del hero */
-  .hero-mark .anim-tri{stroke-dasharray:none;fill-opacity:1}
-  .hero-mark .anim-wedge{opacity:.92}
-  .hero-mark .anim-dot{opacity:1;transform:none}
 }
 
   .brand-mark    { height:1.6rem; }

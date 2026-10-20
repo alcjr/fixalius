@@ -337,4 +337,46 @@
     paintToggle();
     sync();
   }
+
+  /* ---------- Logotipo del hero: composición / descomposición ---------- */
+  const logoEl = document.querySelector('[data-logo-compose]');
+  if (logoEl && logoEl.animate) {
+    const reduceLogo = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const logoToggle = document.querySelector('[data-logo-toggle]');
+    const T = 10000, D = 1000, HOLD = 6200;   // ciclo, duración de cada fase y tiempo con el logo formado (ms)
+    const logoAnims = reduceLogo.matches ? [] : [...logoEl.querySelectorAll('.p')].map((el) => {
+      const s = +el.dataset.s, from = el.dataset.from;
+      return el.animate([
+        { transform: from,   opacity: 0, offset: 0,                   easing: 'linear' },
+        { transform: from,   opacity: 0, offset: s / T,               easing: 'cubic-bezier(.2,.9,.3,1.12)' },
+        { transform: 'none', opacity: 1, offset: (s + D) / T,         easing: 'linear' },
+        { transform: 'none', opacity: 1, offset: (HOLD + s) / T,      easing: 'cubic-bezier(.6,0,.9,.4)' },
+        { transform: from,   opacity: 0, offset: (HOLD + s + D) / T,  easing: 'linear' },
+        { transform: from,   opacity: 0, offset: 1 },
+      ], { duration: T, iterations: Infinity });
+    });
+
+    if (logoToggle) logoToggle.hidden = logoAnims.length === 0;
+    if (logoAnims.length) {
+      let logoPaused = false, logoVisible = true;
+      const logoSync = () => {
+        const run = !logoPaused && logoVisible && !document.hidden;
+        logoAnims.forEach((a) => (run ? a.play() : a.pause()));
+      };
+      if (logoToggle) logoToggle.addEventListener('click', () => {
+        logoPaused = !logoPaused;
+        logoEl.closest('.hero')?.classList.toggle('is-paused', logoPaused);
+        if (logoPaused) logoAnims.forEach((a) => { a.currentTime = 3200; });   // se queda con el logo formado
+        logoToggle.textContent = logoPaused ? '▶' : '❚❚';
+        logoToggle.setAttribute('aria-label',
+          (logoPaused ? logoToggle.dataset.labelPlay : logoToggle.dataset.labelPause) || '');
+        logoSync();
+      });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([entry]) => { logoVisible = entry.isIntersecting; logoSync(); },
+          { threshold: 0.1 }).observe(logoEl);
+      }
+      document.addEventListener('visibilitychange', logoSync);
+    }
+  }
 })();

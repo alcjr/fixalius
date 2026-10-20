@@ -109,8 +109,6 @@
   <main id="top">
 
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-orbit orbit-one" aria-hidden="true"></div>
-      <div class="hero-orbit orbit-two" aria-hidden="true"></div>
       <div class="hero-copy">
         <p class="eyebrow">{% trans "Inteligencia aplicada" %} <span aria-hidden="true">—</span></p>
         <h1 id="hero-title">{% blocktrans trimmed %}Otra forma<br>de <em>arreglar</em> las cosas{% endblocktrans %}<span class="orange-dot" aria-hidden="true">.</span></h1>
@@ -118,38 +116,14 @@
         <a class="button button-light" href="#contact">{% trans "Hablemos" %} <span aria-hidden="true">↗</span></a>
       </div>
 
-      <!-- Animación heredada de 00_fixalius: triángulo + cuña + punto naranja.
-           Aria-hidden: es decorativa; el logotipo real está en la cabecera. -->
+      {# Logotipo en piezas: se componen y descomponen (fixalius.js). Decorativo; la marca real está en la cabecera. #}
       <div class="hero-mark" aria-hidden="true">
-        <div class="hero-stage">
-          <svg class="iso" viewBox="20 20 170 135">
-            <defs>
-              <linearGradient id="hero-az" gradientUnits="userSpaceOnUse" x1="30" y1="150" x2="115" y2="30">
-                <stop offset="0" stop-color="#369ac0"/>
-                <stop offset="1" stop-color="#0a5272"/>
-              </linearGradient>
-              <linearGradient id="hero-na" gradientUnits="userSpaceOnUse" x1="100" y1="20" x2="180" y2="150">
-                <stop offset="0" stop-color="#f99e45"/>
-                <stop offset="1" stop-color="#e55b2c"/>
-              </linearGradient>
-              <clipPath id="hero-tri">
-                <path d="M101.21,27.52 L27.43,136.07 A7,7 0 0 0 33.22,147 L112.27,147 A5,5 0 0 0 116.19,138.89 A40,40 0 0 1 137.24,75.34 A5,5 0 0 0 140.1,67.69 L112.79,27.52 A7,7 0 0 0 101.21,27.52 Z"/>
-              </clipPath>
-            </defs>
-
-            <!-- Triángulo: se dibuja (trazo), se rellena (degradado azul) y se vacía -->
-            <path class="anim anim-tri" pathLength="1" fill="url(#hero-az)"
-                  d="M101.21,27.52 L27.43,136.07 A7,7 0 0 0 33.22,147 L112.27,147 A5,5 0 0 0 116.19,138.89 A40,40 0 0 1 137.24,75.34 A5,5 0 0 0 140.1,67.69 L112.79,27.52 A7,7 0 0 0 101.21,27.52 Z"/>
-
-            <!-- Cuña naranja: aparece dentro del triángulo, recortada por #hero-tri -->
-            <path class="anim anim-wedge" clip-path="url(#hero-tri)" fill="url(#hero-na)"
-                  d="M98,30 C88,60 98,90 110.4,99 L110.4,115 L220,115 L220,0 L107,0 Z"/>
-
-            <!-- Punto naranja: entra con rebote desde arriba-derecha, sostiene y sale -->
-            <circle class="anim anim-dot" cx="147.5" cy="114" r="33" fill="url(#hero-na)"/>
-          </svg>
-        </div>
+        {% include 'core/_hero_logo.html' %}
       </div>
+      <button type="button" class="hero-pause" data-logo-toggle hidden
+              data-label-pause="{% trans 'Pausar animación del logotipo' %}"
+              data-label-play="{% trans 'Reanudar animación del logotipo' %}"
+              aria-label="{% trans 'Pausar animación del logotipo' %}">❚❚</button>
 
       <p class="scroll-hint">{% trans "Desplázate para explorar" %} <span aria-hidden="true">↓</span></p>
     </section>

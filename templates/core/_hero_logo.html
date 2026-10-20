@@ -1,0 +1,38 @@
+{% load static %}
+{# Logotipo Fixalius en piezas. fixalius.js anima cada .p (data-s = retardo en ms, data-from = posición dispersa). #}
+{# Coordenadas en unidades del viewBox 128 × 86, que reproduce la proporción del logotipo completo. #}
+{# Cada PNG (silueta de un solo color) se usa como MÁSCARA y se rellena con --logo-blue / --logo-orange: #}
+{# así el logotipo sigue los colores definidos en fixalius.css. Imágenes en static/core/images/ #}
+<svg class="logo-compose" data-logo-compose viewBox="0 0 128 86" xmlns="http://www.w3.org/2000/svg"
+     focusable="false" aria-hidden="true">
+  <defs>
+    <mask id="hl-m-tipo" maskUnits="userSpaceOnUse" x="1" y="60.5" width="106.8" height="11.2" style="mask-type:alpha">
+      <image href="{% static 'core/images/fixalius_tipo.png' %}" x="1" y="60.5" width="106.8" height="11.2"/>
+    </mask>
+    <mask id="hl-m-izq" maskUnits="userSpaceOnUse" x="70.6" y="24" width="22.6" height="35.2" style="mask-type:alpha">
+      <image href="{% static 'core/images/fixalius_t_izquierdo.png' %}" x="70.6" y="24" width="22.6" height="35.2"/>
+    </mask>
+    <mask id="hl-m-der" maskUnits="userSpaceOnUse" x="93.2" y="24.9" width="33.7" height="59.5" style="mask-type:alpha">
+      <image href="{% static 'core/images/fixalius_t_derecho.png' %}" x="93.2" y="24.9" width="33.7" height="59.5"/>
+    </mask>
+    <mask id="hl-m-anillo" maskUnits="userSpaceOnUse" x="78" y="0.8" width="29.8" height="28.3" style="mask-type:alpha">
+      <image href="{% static 'core/images/fixalius_anillo.png' %}" x="78" y="0.8" width="29.8" height="28.3"/>
+    </mask>
+  </defs>
+
+  <g class="p wm" data-s="0" data-from="translate(-34px,20px) scale(.85)">
+    <rect x="1" y="60.5" width="106.8" height="11.2" fill="var(--logo-blue)" mask="url(#hl-m-tipo)"/>
+  </g>
+
+  <g class="p bl" data-s="450" data-from="translate(-40px,26px) rotate(-22deg) scale(.7)">
+    <rect x="70.6" y="24" width="22.6" height="35.2" fill="var(--logo-blue)" mask="url(#hl-m-izq)"/>
+  </g>
+
+  <g class="p br" data-s="700" data-from="translate(36px,30px) rotate(20deg) scale(.7)">
+    <rect x="93.2" y="24.9" width="33.7" height="59.5" fill="var(--logo-blue)" mask="url(#hl-m-der)"/>
+  </g>
+
+  <g class="p ring" data-s="1200" data-from="translate(-26px,-30px) rotate(-140deg) scale(.45)">
+    <rect x="78" y="0.8" width="29.8" height="28.3" fill="var(--logo-orange)" mask="url(#hl-m-anillo)"/>
+  </g>
+</svg>
