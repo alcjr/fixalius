@@ -24,8 +24,8 @@
   <meta property="og:title" content="{% trans 'Fixalius' %} — {% trans 'Inteligencia aplicada' %}">
   <meta property="og:description" content="{% trans 'Análisis, diseño y desarrollo de aplicaciones impulsadas por IA.' %}">
   <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-  <meta property="og:locale" content="{{ LANGUAGE_CODE }}">
-  {% for alt in alternates %}{% if alt.code != LANGUAGE_CODE %}<meta property="og:locale:alternate" content="{{ alt.code }}">
+  <meta property="og:locale" content="{% if LANGUAGE_CODE == 'es' %}es_ES{% elif LANGUAGE_CODE == 'en' %}en_GB{% else %}{{ LANGUAGE_CODE }}{% endif %}">
+  {% for alt in alternates %}{% if alt.code != LANGUAGE_CODE %}<meta property="og:locale:alternate" content="{% if alt.code == 'es' %}es_ES{% elif alt.code == 'en' %}en_GB{% else %}{{ alt.code }}{% endif %}">
   {% endif %}{% endfor %}
   <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'core/images/og-fixalius.png' %}">
   <meta property="og:image:alt" content="{% trans 'Fixalius — Inteligencia aplicada' %}">
@@ -57,7 +57,7 @@
   <a class="skip-link" href="#top">{% trans "Saltar al contenido" %}</a>
 
   <header class="site-header">
-    {% include 'core/_brand.html' with brand_href='#top' brand_label='Fixalius — Inicio' %}
+    {% include 'core/_brand.html' with brand_href='#top' brand_label=_("Fixalius — Inicio") %}
 
     <nav id="site-nav" aria-label="{% trans 'Navegación principal' %}">
       <a href="#approach">{% trans "Enfoque" %}</a>
@@ -92,6 +92,8 @@
                 <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
                 <path d="M30,0 v30 M0,15 h60" stroke="#c8102e" stroke-width="6"/>
               </svg>
+            {% else %}
+              {{ code|upper }}
             {% endif %}
           </button>
         {% endfor %}
@@ -262,7 +264,7 @@
         <small>
           {% url 'privacy' as privacy_url %}
           {% blocktrans trimmed with url=privacy_url|default:'#' %}
-          Al suscribirte, aceptas nuestra <a href="{{ url }}">política de privacidad</a>.
+          Al suscribirte, aceptas nuestra <a href="{{ url }}" data-modal-open="modal-privacy">política de privacidad</a>.
           {% endblocktrans %}
         </small>
         {# Sin JS el servidor redirige con ?newsletter=...; con JS el mensaje llega por fetch #}
@@ -289,28 +291,8 @@
     </div>
   </footer>
 
-  {# ---------- Modales legales ---------- #}
-  <dialog id="modal-privacy" class="modal" aria-labelledby="privacy-title">
-    <div class="modal-panel">
-      <button type="button" class="modal-close" aria-label="{% trans 'Cerrar' %}">
-        <span aria-hidden="true">×</span>
-      </button>
-      <div class="modal-scroll">
-        {% include 'core/_privacy_content.html' %}
-      </div>
-    </div>
-  </dialog>
-
-  <dialog id="modal-legal" class="modal" aria-labelledby="legal-title">
-    <div class="modal-panel">
-      <button type="button" class="modal-close" aria-label="{% trans 'Cerrar' %}">
-        <span aria-hidden="true">×</span>
-      </button>
-      <div class="modal-scroll">
-        {% include 'core/_legal_content.html' %}
-      </div>
-    </div>
-  </dialog>
+  {# Modales legales: se definen en core/_legal_modals.html #}
+  {% include 'core/_legal_modals.html' %}
 
   <script src="{% static 'core/js/fixalius.js' %}" defer></script>
 </body>

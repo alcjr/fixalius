@@ -10,7 +10,8 @@
   if (menuButton && nav) {
     const labelOpen  = menuButton.dataset.labelOpen  || '';
     const labelClose = menuButton.dataset.labelClose || '';
-    const isMobile   = () => window.matchMedia('(max-width: 760px)').matches;
+    // Debe coincidir con el @media del menú desplegable en fixalius.css
+    const isMobile   = () => window.matchMedia('(max-width: 1080px)').matches;
     const isOpen     = () => nav.classList.contains('nav-open');
 
     const setOpen = (open) => {
@@ -344,17 +345,40 @@
     const reduceLogo = window.matchMedia('(prefers-reduced-motion: reduce)');
     const logoToggle = document.querySelector('[data-logo-toggle]');
     const T = 10000, D = 1000, HOLD = 6200;   // ciclo, duración de cada fase y tiempo con el logo formado (ms)
-    const logoAnims = reduceLogo.matches ? [] : [...logoEl.querySelectorAll('.p')].map((el) => {
+    const PAUSE_AT = 3200;                    // instante con el logotipo formado y las órbitas atenuadas
+
+    // Piezas del logotipo (letras, hojas, anillo).
+    // data-s = retardo de entrada; data-e = retardo de salida (si falta, el mismo que data-s).
+    const pieceAnims = reduceLogo.matches ? [] : [...logoEl.querySelectorAll('.p')].map((el) => {
       const s = +el.dataset.s, from = el.dataset.from;
+      const e = el.dataset.e !== undefined ? +el.dataset.e : s;
       return el.animate([
         { transform: from,   opacity: 0, offset: 0,                   easing: 'linear' },
         { transform: from,   opacity: 0, offset: s / T,               easing: 'cubic-bezier(.2,.9,.3,1.12)' },
         { transform: 'none', opacity: 1, offset: (s + D) / T,         easing: 'linear' },
-        { transform: 'none', opacity: 1, offset: (HOLD + s) / T,      easing: 'cubic-bezier(.6,0,.9,.4)' },
-        { transform: from,   opacity: 0, offset: (HOLD + s + D) / T,  easing: 'linear' },
+        { transform: 'none', opacity: 1, offset: (HOLD + e) / T,      easing: 'cubic-bezier(.6,0,.9,.4)' },
+        { transform: from,   opacity: 0, offset: (HOLD + e + D) / T,  easing: 'linear' },
         { transform: from,   opacity: 0, offset: 1 },
       ], { duration: T, iterations: Infinity });
     });
+
+    // Órbitas: a pleno cuando el logotipo no está (hueco entre ciclos), atenuadas mientras está formado.
+    // Cada anillo se desfasa 260 ms respecto al anterior para que aparezcan en cascada, no de golpe.
+    const LOW = 0.5;   // opacidad de los anillos con el logotipo formado (el resplandor central se apaga del todo)
+    const orbitEls = reduceLogo.matches ? [] : [...logoEl.parentElement.querySelectorAll('.orbit-core, .orbit')];
+    const orbitAnims = orbitEls.map((el, i) => {
+      const a = i * 260;
+      const low = el.classList.contains('orbit-core') ? 0 : LOW;
+      return el.animate([
+        { opacity: 1,   scale: 1,    offset: 0,                         easing: 'ease-in-out' },  // el logo empieza a formarse
+        { opacity: low, scale: 1.05, offset: (2600 + a) / T,            easing: 'linear' },       // logo formado
+        { opacity: low, scale: 1.05, offset: (HOLD - 300 + a) / T,      easing: 'ease-in-out' },  // el logo está a punto de romperse
+        { opacity: 1,   scale: 1,    offset: (HOLD + 2300 + a) / T,     easing: 'linear' },       // aparecen mientras el logo se disipa
+        { opacity: 1,   scale: 1,    offset: 1 },                                                   // se mantienen durante el hueco
+      ], { duration: T, iterations: Infinity });
+    });
+
+    const logoAnims = pieceAnims.concat(orbitAnims);
 
     if (logoToggle) logoToggle.hidden = logoAnims.length === 0;
     if (logoAnims.length) {
@@ -366,7 +390,7 @@
       if (logoToggle) logoToggle.addEventListener('click', () => {
         logoPaused = !logoPaused;
         logoEl.closest('.hero')?.classList.toggle('is-paused', logoPaused);
-        if (logoPaused) logoAnims.forEach((a) => { a.currentTime = 3200; });   // se queda con el logo formado
+        if (logoPaused) logoAnims.forEach((a) => { a.currentTime = PAUSE_AT; });   // se queda con el logo formado
         logoToggle.textContent = logoPaused ? '▶' : '❚❚';
         logoToggle.setAttribute('aria-label',
           (logoPaused ? logoToggle.dataset.labelPlay : logoToggle.dataset.labelPause) || '');
