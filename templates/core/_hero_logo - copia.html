@@ -1,0 +1,73 @@
+{% load static %}
+{# Logotipo Fixalius en piezas. fixalius.js anima cada .p (data-s = retardo de entrada en ms, data-e = retardo de salida (opcional), data-from = posición dispersa). #}
+{# Coordenadas en unidades del viewBox 128 × 86, que reproduce la proporción del logotipo completo. #}
+{# Hojas y anillo: cada PNG (silueta de un solo color) se usa como MÁSCARA y se rellena con --logo-blue / --logo-orange. #}
+{# Tipo "fixalius": una pieza vectorial por letra, trazada a partir de fixalius-tipo_{f,i,x,a,l,u,s}.png (misma forma y mismo espaciado que el PNG original, pero nítida a cualquier tamaño). #}
+{# Órbitas: anillos .orbit detrás del logotipo; fixalius.js los hace aparecer cuando el logotipo se descompone. #}
+<div class="orbits" aria-hidden="true">
+  <i class="orbit-core"></i>
+  <i class="orbit o1"></i>
+  <i class="orbit o2"></i>
+  <i class="orbit o3"></i>
+  <i class="orbit o4"></i>
+  <i class="orbit o5"></i>
+</div>
+
+<svg class="logo-compose" data-logo-compose viewBox="0 0 128 86" xmlns="http://www.w3.org/2000/svg"
+     focusable="false" aria-hidden="true">
+  <defs>
+    <mask id="hl-m-izq" maskUnits="userSpaceOnUse" x="70.6" y="24" width="22.6" height="35.2" style="mask-type:alpha">
+      <image href="{% static 'core/images/fixalius_t_izquierdo.png' %}" x="70.6" y="24" width="22.6" height="35.2"/>
+    </mask>
+    <mask id="hl-m-der" maskUnits="userSpaceOnUse" x="93.2" y="24.9" width="33.7" height="59.5" style="mask-type:alpha">
+      <image href="{% static 'core/images/fixalius_t_derecho.png' %}" x="93.2" y="24.9" width="33.7" height="59.5"/>
+    </mask>
+    <mask id="hl-m-anillo" maskUnits="userSpaceOnUse" x="78" y="0.8" width="29.8" height="28.3" style="mask-type:alpha">
+      <image href="{% static 'core/images/fixalius_anillo.png' %}" x="78" y="0.8" width="29.8" height="28.3"/>
+    </mask>
+  </defs>
+
+  <g class="p p-word" data-s="0" data-e="840" data-from="translate(-30px,-24px) rotate(-38deg) scale(.5)">
+    <path class="lt" d="M13.06 64.14 L2.40 64.14 L1.79 63.69 L1.79 62.73 L2.08 61.91 L2.51 61.69 L13.06 61.69ZM2.69 71.38 L2.15 71.27 L1.76 70.37 L1.76 66.93 L1.89 66.10 L2.15 65.77 L13.06 65.77 L13.06 68.14 L5.63 68.14 L5.24 68.65 L5.24 70.44 L4.95 71.11 L4.37 71.38Z"/>
+  </g>
+
+  <g class="p p-word" data-s="120" data-e="720" data-from="translate(-12px,30px) rotate(24deg) scale(.4)">
+    <path class="lt" d="M19.56 63.99 L17.73 63.99 L16.76 63.78 L16.52 63.19 L16.74 62.08 L17.51 61.73 L19.56 61.73 L19.91 62.29 L19.91 63.66ZM19.42 71.19 L17.12 71.19 L16.57 70.69 L16.57 66.21 L16.90 65.49 L19.31 65.49 L19.91 65.85 L19.91 70.37 L19.77 70.94Z"/>
+  </g>
+
+  <g class="p p-word" data-s="240" data-e="600" data-from="translate(-20px,-32px) rotate(70deg) scale(.5)">
+    <path class="lt" d="M26.06 71.35 L23.40 71.35 L23.40 69.94 L24.10 69.80 L25.34 68.40 L26.81 67.19 L26.98 66.67 L26.76 65.81 L26.11 65.45 L24.01 63.32 L23.40 63.22 L23.40 61.69 L26.34 61.69 L27.53 62.37 L28.87 63.80 L29.86 64.26 L30.76 63.69 L32.19 62.26 L33.24 61.66 L37.18 61.66 L37.18 62.74 L36.72 62.74 L34.76 64.02 L34.34 64.59 L32.62 65.92 L32.23 66.64 L32.30 67.08 L35.75 70.26 L35.96 70.87 L35.81 71.19 L32.41 71.19 L31.51 70.50 L30.10 69.01 L29.72 68.88 L28.75 69.13 L27.35 70.63Z"/>
+  </g>
+
+  <g class="p p-word" data-s="360" data-e="480" data-from="translate(-6px,34px) rotate(-30deg) scale(.45)">
+    <path class="lt" d="M42.78 71.31 L40.67 71.31 L40.24 71.11 L40.15 70.87 L40.81 69.51 L41.38 68.94 L42.57 66.82 L43.08 66.39 L44.25 64.23 L44.83 63.74 L45.17 62.91 L46.05 61.91 L46.52 61.69 L48.71 61.69 L49.82 62.19 L54.50 69.87 L54.81 70.14 L55.28 70.15 L55.28 71.20 L52.37 71.20 L51.29 70.89 L49.93 68.50 L49.43 67.93 L48.24 65.59 L47.85 65.32 L46.91 65.81 L43.87 70.62Z"/>
+  </g>
+
+  <g class="p p-word" data-s="480" data-e="360" data-from="translate(10px,-34px) rotate(42deg) scale(.4)">
+    <path class="lt" d="M67.73 71.22 L59.26 71.22 L57.86 70.98 L57.86 61.98 L59.12 61.69 L60.70 61.69 L61.47 62.26 L61.58 62.80 L61.58 68.43 L61.67 68.83 L62.60 69.17 L67.59 69.17 L69.06 69.50 L69.06 70.83 L68.67 70.81Z"/>
+  </g>
+
+  <g class="p p-word" data-s="600" data-e="240" data-from="translate(22px,28px) rotate(-26deg) scale(.4)">
+    <path class="lt" d="M75.56 63.99 L73.73 63.99 L72.76 63.78 L72.52 63.19 L72.74 62.08 L73.51 61.73 L75.56 61.73 L75.91 62.29 L75.91 63.66ZM75.42 71.19 L73.12 71.19 L72.57 70.69 L72.57 66.21 L72.90 65.49 L75.31 65.49 L75.91 65.85 L75.91 70.37 L75.77 70.94Z"/>
+  </g>
+
+  <g class="p p-word" data-s="720" data-e="120" data-from="translate(30px,-26px) rotate(-55deg) scale(.5)">
+    <path class="lt" d="M86.26 68.15 L84.21 68.11 L82.42 68.11 L80.69 67.09 L79.83 66.05 L79.40 66.04 L79.40 61.72 L82.02 61.72 L82.45 61.85 L82.79 62.47 L82.79 64.27 L83.06 65.02 L83.82 65.64 L85.25 65.91 L86.90 65.91 L88.53 65.38 L89.03 64.31 L89.03 62.47 L89.49 61.93 L90.35 61.68 L91.75 61.68 L92.11 61.85 L92.39 62.91 L92.39 65.35 L92.00 66.17 L91.03 67.17 L89.27 68.15ZM91.10 71.20 L80.66 71.20 L79.40 70.94 L79.40 69.16 L91.86 69.16 L92.20 69.62 L92.20 70.66 L91.89 71.03Z"/>
+  </g>
+
+  <g class="p p-word" data-s="840" data-e="0" data-from="translate(38px,22px) rotate(34deg) scale(.5)">
+    <path class="lt" d="M104.64 71.20 L95.77 71.20 L95.77 69.11 L103.13 69.11 L104.03 68.94 L104.25 68.47 L104.11 67.82 L103.77 67.63 L98.75 67.63 L96.95 67.32 L96.24 66.75 L95.77 66.73 L95.77 62.88 L96.24 62.86 L96.80 62.33 L97.96 61.79 L99.57 61.78 L105.53 61.78 L106.53 62.33 L106.70 62.65 L106.70 63.52 L105.93 63.98 L99.79 63.98 L99.30 64.13 L99.11 64.45 L99.11 65.14 L99.54 65.46 L104.67 65.46 L106.44 65.78 L107.26 66.70 L107.83 66.70 L107.83 69.76 L107.22 69.76 L106.50 70.67Z"/>
+  </g>
+
+  <g class="p bl" data-s="450" data-from="translate(-40px,26px) rotate(-22deg) scale(.7)">
+    <rect x="70.6" y="24" width="22.6" height="35.2" fill="var(--logo-blue)" mask="url(#hl-m-izq)"/>
+  </g>
+
+  <g class="p br" data-s="700" data-from="translate(36px,30px) rotate(20deg) scale(.7)">
+    <rect x="93.2" y="24.9" width="33.7" height="59.5" fill="var(--logo-blue)" mask="url(#hl-m-der)"/>
+  </g>
+
+  <g class="p ring" data-s="1200" data-from="translate(-26px,-30px) rotate(-140deg) scale(.45)">
+    <rect x="78" y="0.8" width="29.8" height="28.3" fill="var(--logo-orange)" mask="url(#hl-m-anillo)"/>
+  </g>
+</svg>
