@@ -289,26 +289,8 @@
 
   </main>
 
-  <footer>
-    <div class="footer-brand">
-      <div class="logo" aria-hidden="true">
-        <svg class="wm" viewBox="26.5 759.5 1031 106"><use href="#g-fix"/><use href="#g-alius"/></svg>
-      </div>
-      {# Eslogan oficial (MIC v2.5 §02): sin traducir, en una línea, a 2X del logotipo #}
-      <p class="tagline">Cogito, ergo <b>FIXALIUS</b></p>
-    </div>
-    <span>© {% now "Y" %} Fixalius</span>
-    <div>
-      {# Ahora estos enlaces abren modales en lugar de navegar #}
-      <button type="button" class="link-button" data-modal-open="modal-privacy">
-        {% trans "Privacidad" %}
-      </button>
-      <button type="button" class="link-button" data-modal-open="modal-legal">
-        {% trans "Aviso legal" %}
-      </button>
-        <a href="#top" data-scroll-top>{% trans "Volver arriba" %} <span aria-hidden="true">↑</span></a>
-    </div>
-  </footer>
+  {# Pie común del sitio (el mismo que usa login.html) #}
+  {% include 'core/_site_footer.html' %}
 
   {# Modales legales: se definen en core/_legal_modals.html #}
   {% include 'core/_legal_modals.html' %}

@@ -10,7 +10,7 @@
   - a la izquierda, la MISMA marca que index.html (símbolo + wordmark, parcial core/_brand.html)
   - a la derecha, fecha + hora en el idioma activo
   - sin menú ni selector de banderas (el idioma se hereda de index.html vía sesión)
-  Los <defs> de marca (#g-mark, #g-fix, #g-alius) deben estar cargados en base.html.
+  Los <defs> de marca (#g-mark, #g-fix, #g-alius) los carga base.html (core/_wordmark.html), una sola vez.
   El pie es el parcial común del sitio en versión mínima: solo logotipo y "© año Fixalius".
 
   Requisitos de base.html: cargar core/css/fixalius.css (tokens, tipografías y escala).
@@ -19,7 +19,7 @@
 {% endcomment %}
 {% block header %}
 
-{% include 'core/_wordmark.html' %}
+{# El sprite de marca (#g-mark, #g-fix, #g-alius) lo carga base.html #}
 <header class="site-header site-header--minimal">
   {% trans 'Fixalius — Inicio' as brand_label_t %}
   {% include 'core/_brand.html' with brand_href='/' brand_label=brand_label_t %}
