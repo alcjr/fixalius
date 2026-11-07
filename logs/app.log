@@ -15,3 +15,372 @@ Traceback (most recent call last):
     raise TemplateDoesNotExist(template_name, chain=chain)
 django.template.exceptions.TemplateDoesNotExist: core/email/newsletter_confirm.txt
 2026-10-06 13:39:47,881 ERROR django.request Internal Server Error: /newsletter/subscribe/
+2026-10-31 14:18:24,740 ERROR django.request Internal Server Error: /accounts/login/
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 534, in __get__
+    rel_obj = self.related.get_cached_value(instance)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\mixins.py", line 21, in get_cached_value
+    return instance._state.fields_cache[self.cache_name]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'profile'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.UndefinedColumn: column authentication_profile.is_pre_registered does not exist
+LINE 1: ...rofile"."id", "authentication_profile"."user_id", "authentic...
+                                                             ^
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\utils\decorators.py", line 47, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\decorators\debug.py", line 142, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\utils\decorators.py", line 191, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\utils\decorators.py", line 189, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\decorators\cache.py", line 79, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\views.py", line 97, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\generic\edit.py", line 151, in post
+    return self.form_valid(form)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\views.py", line 116, in form_valid
+    auth_login(self.request, form.get_user())
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\__init__.py", line 198, in login
+    user_logged_in.send(sender=user.__class__, request=request, user=user)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\dispatch\dispatcher.py", line 249, in send
+    response = receiver(signal=self, sender=sender, **named)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\models.py", line 24, in update_last_login
+    user.save(update_fields=["last_login"])
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\base_user.py", line 62, in save
+    super().save(**kwargs)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\base.py", line 904, in save
+    self.save_base(
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\base.py", line 1011, in save_base
+    post_save.send(
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\dispatch\dispatcher.py", line 249, in send
+    response = receiver(signal=self, sender=sender, **named)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\apps\authentication\signals.py", line 18, in save_user_profile
+    if hasattr(instance, 'profile'):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 539, in __get__
+    instance._state.fetch_mode.fetch(self, instance)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fetch_modes.py", line 17, in fetch
+    fetcher.fetch_one(instance)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 564, in fetch_one
+    rel_obj = self.get_queryset(instance=instance).get(**filter_args)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 718, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 455, in __len__
+    self._fetch_all()
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 2287, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 131, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1643, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+django.db.utils.ProgrammingError: column authentication_profile.is_pre_registered does not exist
+LINE 1: ...rofile"."id", "authentication_profile"."user_id", "authentic...
+                                                             ^
+2026-11-02 12:29:04,094 ERROR django.request Internal Server Error: /accounts/login/
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 534, in __get__
+    rel_obj = self.related.get_cached_value(instance)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\mixins.py", line 21, in get_cached_value
+    return instance._state.fields_cache[self.cache_name]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'profile'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.UndefinedColumn: column authentication_profile.is_pre_registered does not exist
+LINE 1: ...rofile"."id", "authentication_profile"."user_id", "authentic...
+                                                             ^
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\utils\decorators.py", line 47, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\decorators\debug.py", line 142, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\utils\decorators.py", line 191, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\utils\decorators.py", line 189, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\decorators\cache.py", line 79, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\views.py", line 97, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\generic\edit.py", line 151, in post
+    return self.form_valid(form)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\views.py", line 116, in form_valid
+    auth_login(self.request, form.get_user())
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\__init__.py", line 198, in login
+    user_logged_in.send(sender=user.__class__, request=request, user=user)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\dispatch\dispatcher.py", line 249, in send
+    response = receiver(signal=self, sender=sender, **named)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\models.py", line 24, in update_last_login
+    user.save(update_fields=["last_login"])
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\base_user.py", line 62, in save
+    super().save(**kwargs)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\base.py", line 904, in save
+    self.save_base(
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\base.py", line 1011, in save_base
+    post_save.send(
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\dispatch\dispatcher.py", line 249, in send
+    response = receiver(signal=self, sender=sender, **named)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\apps\authentication\signals.py", line 18, in save_user_profile
+    if hasattr(instance, 'profile'):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 539, in __get__
+    instance._state.fetch_mode.fetch(self, instance)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fetch_modes.py", line 17, in fetch
+    fetcher.fetch_one(instance)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 564, in fetch_one
+    rel_obj = self.get_queryset(instance=instance).get(**filter_args)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 718, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 455, in __len__
+    self._fetch_all()
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 2287, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 131, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1643, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+django.db.utils.ProgrammingError: column authentication_profile.is_pre_registered does not exist
+LINE 1: ...rofile"."id", "authentication_profile"."user_id", "authentic...
+                                                             ^
+2026-11-02 14:12:31,560 ERROR django.request Internal Server Error: /accounts/login/
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 534, in __get__
+    rel_obj = self.related.get_cached_value(instance)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\mixins.py", line 21, in get_cached_value
+    return instance._state.fields_cache[self.cache_name]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'profile'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.UndefinedColumn: column authentication_profile.is_pre_registered does not exist
+LINE 1: ...rofile"."id", "authentication_profile"."user_id", "authentic...
+                                                             ^
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\utils\decorators.py", line 47, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\decorators\debug.py", line 142, in sensitive_post_parameters_wrapper
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\utils\decorators.py", line 191, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\utils\decorators.py", line 189, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\decorators\cache.py", line 79, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\views.py", line 97, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\views\generic\edit.py", line 151, in post
+    return self.form_valid(form)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\views.py", line 116, in form_valid
+    auth_login(self.request, form.get_user())
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\__init__.py", line 198, in login
+    user_logged_in.send(sender=user.__class__, request=request, user=user)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\dispatch\dispatcher.py", line 249, in send
+    response = receiver(signal=self, sender=sender, **named)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\models.py", line 24, in update_last_login
+    user.save(update_fields=["last_login"])
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\contrib\auth\base_user.py", line 62, in save
+    super().save(**kwargs)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\base.py", line 904, in save
+    self.save_base(
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\base.py", line 1011, in save_base
+    post_save.send(
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\dispatch\dispatcher.py", line 249, in send
+    response = receiver(signal=self, sender=sender, **named)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\apps\authentication\signals.py", line 18, in save_user_profile
+    if hasattr(instance, 'profile'):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 539, in __get__
+    instance._state.fetch_mode.fetch(self, instance)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fetch_modes.py", line 17, in fetch
+    fetcher.fetch_one(instance)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 564, in fetch_one
+    rel_obj = self.get_queryset(instance=instance).get(**filter_args)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 718, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 455, in __len__
+    self._fetch_all()
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 2287, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\query.py", line 131, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1643, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+django.db.utils.ProgrammingError: column authentication_profile.is_pre_registered does not exist
+LINE 1: ...rofile"."id", "authentication_profile"."user_id", "authentic...
+                                                             ^

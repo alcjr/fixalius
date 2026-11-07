@@ -344,14 +344,16 @@
   if (logoEl && logoEl.animate) {
     const reduceLogo = window.matchMedia('(prefers-reduced-motion: reduce)');
     const logoToggle = document.querySelector('[data-logo-toggle]');
-    const T = 10000, D = 1000, HOLD = 6200;   // ciclo, duración de cada fase y tiempo con el logo formado (ms)
+    const T = 12000, D = 1000, HOLD = 6200;   // ciclo, duración de cada fase y tiempo con el logo formado (ms). 12 s: deja ~3,6 s de hueco para el eslogan
     const PAUSE_AT = 3200;                    // instante con el logotipo formado y las órbitas atenuadas
 
     // Piezas del logotipo (letras, hojas, anillo).
     // data-s = retardo de entrada; data-e = retardo de salida (si falta, el mismo que data-s).
+    let lastGone = 0;   // instante en que desaparece la última pieza
     const pieceAnims = reduceLogo.matches ? [] : [...logoEl.querySelectorAll('.p')].map((el) => {
       const s = +el.dataset.s, from = el.dataset.from;
       const e = el.dataset.e !== undefined ? +el.dataset.e : s;
+      lastGone = Math.max(lastGone, HOLD + e + D);
       return el.animate([
         { transform: from,   opacity: 0, offset: 0,                   easing: 'linear' },
         { transform: from,   opacity: 0, offset: s / T,               easing: 'cubic-bezier(.2,.9,.3,1.12)' },
@@ -378,7 +380,21 @@
       ], { duration: T, iterations: Infinity });
     });
 
-    const logoAnims = pieceAnims.concat(orbitAnims);
+    // Eslogan: aparece cuando ya no queda ninguna pieza del logotipo y se va antes de que empiece a formarse de nuevo.
+    // Va en logoAnims, así que la pausa lo deja oculto (logotipo formado) y con movimiento reducido no existe.
+    const taglineEl = logoEl.parentElement.querySelector('[data-logo-tagline]');
+    const taglineAnims = (reduceLogo.matches || !taglineEl) ? [] : [
+      taglineEl.animate([
+        { opacity: 0, offset: 0 },
+        { opacity: 0, offset: (lastGone + 150) / T, easing: 'ease-out' },
+        { opacity: 1, offset: (lastGone + 850) / T },
+        { opacity: 1, offset: (T - 900) / T,        easing: 'ease-in' },
+        { opacity: 0, offset: (T - 200) / T },
+        { opacity: 0, offset: 1 },
+      ], { duration: T, iterations: Infinity }),
+    ];
+
+    const logoAnims = pieceAnims.concat(orbitAnims, taglineAnims);
 
     if (logoToggle) logoToggle.hidden = logoAnims.length === 0;
     if (logoAnims.length) {

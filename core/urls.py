@@ -12,11 +12,16 @@ urlpatterns = [
     # Landing pública
     path('', core_views.home, name='home'),
 
+    # SEO
+    path('robots.txt',  core_views.robots_txt,  name='robots_txt'),
+    path('sitemap.xml', core_views.sitemap_xml, name='sitemap_xml'),
+
     # Intranet (tras login)
     path('menu/', core_views.menu, name='menu'),
 
     # Administración Django
-    path('admin/', admin.site.urls),
+    # Ruta configurable: define ADMIN_URL = 'otra-ruta/' en settings (por defecto, 'admin/')
+    path(getattr(settings, 'ADMIN_URL', 'admin/'), admin.site.urls),
 
     # Autenticación (login, logout, password reset)
     path('accounts/', include('apps.authentication.urls', namespace='authentication')),
