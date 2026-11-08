@@ -210,14 +210,7 @@ p{text-wrap:pretty}
 footer .logo{color:#fff}
 footer .logo .wm{height:1rem}
 
-/* Eslogan (MIC v2.5 §02): una línea, «Cogito, ergo» Regular + FIXALIUS Bold (0,06 em), sin punto final.
-   Fondo azul marino: blanco + naranja. Mínimo 14 px. */
-.tagline{
-  margin:0;font-family:var(--font-tagline);font-size:.875rem;line-height:1.2;
-  font-weight:400;color:#fff;white-space:nowrap;text-wrap:nowrap;
-}
-.tagline b{font-weight:700;letter-spacing:.06em;color:var(--accent-on-dark)}
-/* Pie: logotipo y eslogan en fila, separados 2X (X = altura de mayúsculas del logotipo = 1rem) */
+/* Pie: bloque del logotipo (el eslogan ya no aparece en el pie) */
 .footer-brand{display:flex;flex-wrap:wrap;align-items:center;gap:2rem;margin-right:auto}
 footer .footer-brand .logo{margin-right:0}
 
@@ -361,15 +354,15 @@ main{
 
 /* Eslogan en el hueco que deja el logotipo al deshacerse (solo escritorio: en móvil las letras no se muestran).
    Invisible por defecto: lo muestra fixalius.js, así que sin JS o con movimiento reducido no aparece (sí en el pie).
-   Centrado donde estaba el wordmark (x ≈ 43 %, y ≈ 77 % del viewBox 128×86), fluido con el ancho del hero. */
+   Centrado en el centro de las órbitas, sobre el resplandor naranja (.orbit-core), fluido con el ancho del hero. */
 .hero-tagline{display:none}
 @media(min-width:761px){
   .hero-mark{container-type:inline-size}
   .hero-tagline{
-    display:block;position:absolute;z-index:1;left:42.8%;top:77.1%;
+    display:block;position:absolute;z-index:1;left:50%;top:50%;
     translate:-50% -50%;margin:0;opacity:0;
-    font-family:var(--font-tagline);font-weight:400;font-size:max(.875rem,4.4cqw);line-height:1;
-    white-space:nowrap;text-wrap:nowrap;color:var(--logo-blue);
+    font-family:var(--font-tagline);font-weight:700;font-size:max(1.5rem,9cqw);line-height:1;
+    white-space:nowrap;text-wrap:nowrap;color:var(--logo-orange);
   }
   .hero-tagline b{font-weight:700;letter-spacing:.06em}
 }

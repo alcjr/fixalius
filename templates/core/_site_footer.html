@@ -1,14 +1,14 @@
 {% load i18n %}
 {% comment %}
   Pie de página ÚNICO del sitio. Es el pie de index.html (patrón): barra con degradado,
-  wordmark + eslogan (MIC v2.5 §02), © año y enlaces legales. Lo usan index.html y login.html,
+  wordmark, © año y enlaces legales (el eslogan ya no aparece en el pie). Lo usan index.html y login.html,
   así que no pueden volver a desajustarse.
 
   Uso:
     {% include 'core/_site_footer.html' %}                    pie completo (index)
     {% include 'core/_site_footer.html' with minimal=True %}  misma barra, sin enlaces (login, páginas sin modales)
 
-  Requisitos: core/_wordmark.html cargado antes en el documento y fixalius.css (.footer-brand, .tagline).
+  Requisitos: core/_wordmark.html cargado antes en el documento y fixalius.css (.footer-brand).
   Los enlaces "Privacidad" / "Aviso legal" abren modales: la página debe incluir core/_legal_modals.html.
 {% endcomment %}
 <footer>
@@ -16,8 +16,6 @@
     <div class="logo" aria-hidden="true">
       <svg class="wm" viewBox="26.5 759.5 1031 106"><use href="#g-fix"/><use href="#g-alius"/></svg>
     </div>
-    {# Eslogan oficial (MIC v2.5 §02): sin traducir, en una línea, a 2X del logotipo #}
-    <p class="tagline">Cogito, ergo <b>FIXALIUS</b></p>
   </div>
   <span>© {% now "Y" %} Fixalius</span>
   {% if not minimal %}
