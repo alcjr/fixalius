@@ -288,8 +288,8 @@ main{
 }
 .hero-copy{position:relative;z-index:2;max-width:720px}
 .eyebrow,.section-kicker{font-size:.875rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
-/* Texto pequeño sobre fondo claro: azul claro corporativo (≈7,9:1). El naranja queda para titulares grandes y decoración */
-.eyebrow{color:var(--blue-2)}
+/* Eyebrow del hero ("Inteligencia aplicada" / "Applied intelligence"): naranja corporativo por decisión de marca */
+.eyebrow{color:var(--logo-orange)}
 .eyebrow span{color:rgba(0,45,109,.45);margin:0 8px}
 .section-kicker{color:var(--accent-text)}
 .section-kicker span{color:var(--muted);margin:0 8px}
