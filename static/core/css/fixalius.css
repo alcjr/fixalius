@@ -89,8 +89,8 @@
 
   
   /* Degradado de cabecera y pie: gris marengo → gris humo, de izquierda a derecha */
-  --marengo:#27292b;   /* gris marengo */
-  --humo:#8096aa;      /* gris humo (con texto blanco: contraste ≈ 5,4:1, AA) */
+  --marengo:#000d1a;   /* gris marengo */
+  --humo:#295074;      /* gris humo (con texto blanco: contraste ≈ 5,4:1, AA) */
   --gradient-marengo:linear-gradient(90deg,var(--marengo) 0%,var(--humo) 100%);
 
 
@@ -364,12 +364,18 @@ main{
 @media(min-width:761px){
   .hero-mark{container-type:inline-size}
   .hero-tagline{
-    display:block;position:absolute;z-index:1;left:50%;top:50%;
+    display:block;position:absolute;z-index:1;left:50%;
+    top:var(--tagline-y,50%);          /* lo fija el script para igualar la altura de "fixing" */
     translate:-50% -50%;margin:0;opacity:0;
-    font-family:var(--font-tagline);font-weight:700;font-size:max(1.5rem,9cqw);line-height:1;
-    white-space:nowrap;text-wrap:nowrap;color:var(--logo-orange);
+    /* Mismo tipo, tamaño y color que .hero h1 em */
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:var(--fs-h1);
+    letter-spacing:var(--track-h1);
+    line-height:.95;
+    color:var(--logo-orange);
+    white-space:nowrap;
   }
-  .hero-tagline b{font-weight:700;letter-spacing:.06em}
 }
 
 /* Textura de puntos que se desvanece hacia los bordes */
