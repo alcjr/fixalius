@@ -87,8 +87,13 @@
   --line:#DDE2E9;            /* Gris línea corporativo */
   --muted:#566173;           /* Gris azulado del MIC · AA sobre panel y blanco */
 
-  /* Degradado de cabecera y pie: solo colores corporativos (azul marino → azul claro) */
-  --gradient-marengo:linear-gradient(135deg,var(--logo-blue) 0%,var(--logo-blue-light) 100%);
+  
+  /* Degradado de cabecera y pie: gris marengo → gris humo, de izquierda a derecha */
+  --marengo:#2C3A4A;   /* gris marengo */
+  --humo:#5F6B7A;      /* gris humo (con texto blanco: contraste ≈ 5,4:1, AA) */
+  --gradient-marengo:linear-gradient(90deg,var(--marengo) 0%,var(--humo) 100%);
+
+
 
   /* Familias tipográficas */
   --font-display:"Space Grotesk","Space Grotesk Fallback","Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
