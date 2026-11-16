@@ -23,8 +23,10 @@ SECTORS = [
 def home(request):
     """Portada pública: única vista de la landing (name='home').
 
-    - Sectores: los activos de la BD; si no hay ninguno, la lista SECTORS de arriba.
-      (Para depender solo de la BD, quita el `or SECTORS`.)
+    - Sectores: se normalizan a una lista de nombres (str / lazy str), tanto si
+      vienen de la BD como del fallback SECTORS, para que el template no tenga
+      que distinguir entre instancias de modelo y cadenas.
+      AJUSTA el atributo `nombre` si el campo del modelo Sector se llama distinto.
     - Casos de éxito: los aporta el template tag {% get_success_cases %} de index.html,
       por eso no se pasan aquí.
     - Idiomas alternativos: se usan para og:locale:alternate y knowsLanguage. Los
@@ -36,19 +38,13 @@ def home(request):
         for code, _name in settings.LANGUAGES
     ]
 
+    sectors = [s.nombre for s in Sector.objects.filter(activo=True)] or SECTORS
+
     return render(request, "core/index.html", {
-        "sectors": list(Sector.objects.filter(activo=True)) or SECTORS,
+        "sectors": sectors,
         "alternates": alternates,
         "alternates_distinct": len({a["url"] for a in alternates}) == len(alternates),
     })
-
-
-def privacy(request):
-    return render(request, "core/privacy.html")
-
-
-def legal(request):
-    return render(request, "core/legal.html")
 
 
 @login_required
@@ -60,7 +56,11 @@ def menu(request):
 
 
 def robots_txt(request):
-    """robots.txt: la landing es pública; intranet, admin y cuentas, no."""
+    """robots.txt: la landing es pública; la intranet y las cuentas, no.
+
+    No se lista la ruta del admin (ADMIN_URL): publicarla en robots.txt
+    la revelaría. El admin ya exige login.
+    """
     lines = [
         "User-agent: *",
         "Disallow: /menu/",
@@ -71,7 +71,6 @@ def robots_txt(request):
         "Disallow: /visor/",
         "Disallow: /newsletter/",
         "Disallow: /documentos/",
-        "Disallow: /%s" % getattr(settings, 'ADMIN_URL', 'admin/'),
         "Sitemap: %s" % request.build_absolute_uri(reverse('sitemap_xml')),
     ]
     return HttpResponse("\n".join(lines) + "\n", content_type="text/plain; charset=utf-8")

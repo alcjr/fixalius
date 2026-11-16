@@ -1,2 +1,17 @@
 2026-11-07 16:07:47,022 INFO fixalius.audit visor.clear by_user=2
 2026-11-07 16:16:03,162 INFO fixalius.audit document.delete id=1 by_user=2
+2026-11-16 17:55:55,154 ERROR django.request Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\.venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\00_projects\fixalius\core\views.py", line 41, in home
+    sectors = [s.nombre for s in Sector.objects.filter(activo=True)] or SECTORS
+               ^^^^^^^^
+AttributeError: 'Sector' object has no attribute 'nombre'
