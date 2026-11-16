@@ -4,13 +4,15 @@ from django.utils.translation import gettext_lazy as _
 from decouple import config as decouple_config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_URL  = "/media/"
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 
+def _csv(value):
+    return [h.strip() for h in value.split(',') if h.strip()]
 
 
-# === SEGURIDAD (en producción, todas desde .env) ===
+# === SEGURIDAD (en producción, todas desde variables de entorno) ===
 SECRET_KEY = decouple_config(
     'SECRET_KEY',
     default='django-insecure-1!4jt_d4d*+d!0$-o#lnesupgbugn&bo8kid6layt%^_%3b7rw',
@@ -18,8 +20,13 @@ SECRET_KEY = decouple_config(
 DEBUG = decouple_config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = decouple_config(
-    'ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=lambda v: [h.strip() for h in v.split(',')]
+    'ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=_csv
 )
+
+# Render define RENDER_EXTERNAL_HOSTNAME automáticamente (p. ej. mi-app.onrender.com)
+RENDER_EXTERNAL_HOSTNAME = decouple_config('RENDER_EXTERNAL_HOSTNAME', default='')
+if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -35,22 +42,32 @@ INSTALLED_APPS = [
     'apps.sources',
 ]
 
-# --- CSRF --------------------------------------------------------------
-CSRF_COOKIE_SECURE    = False          # True SOLO en HTTPS
-CSRF_COOKIE_HTTPONLY  = False          # True rompe document.cookie en JS
-CSRF_COOKIE_SAMESITE  = "Lax"          # "Strict" puede romper logout cross-tab
-CSRF_COOKIE_NAME      = "csrftoken"
-CSRF_COOKIE_PATH      = "/"
-CSRF_COOKIE_DOMAIN    = None
+# --- CSRF / COOKIES ----------------------------------------------------
+# Seguras automáticamente cuando DEBUG=False (producción sobre HTTPS)
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = False           # True rompe document.cookie en JS
+CSRF_COOKIE_SAMESITE = "Lax"           # "Strict" puede romper logout cross-tab
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_COOKIE_PATH = "/"
+CSRF_COOKIE_DOMAIN = None
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
+CSRF_TRUSTED_ORIGINS = decouple_config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='http://localhost:8000,http://127.0.0.1:8000',
+    cast=_csv,
+)
+if RENDER_EXTERNAL_HOSTNAME:
+    _render_origin = f"https://{RENDER_EXTERNAL_HOSTNAME}"
+    if _render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_render_origin)
 
+# Render termina TLS en su proxy y reenvía por HTTP; Django debe fiarse de la cabecera
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # estáticos en producción
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -78,16 +95,6 @@ TEMPLATES = [
     },
 ]
 
-# === AUTENTICACIÓN ===
-AUTHENTICATION_BACKENDS = [
-    'apps.authentication.backends.EmailOrUsernameBackend',
-]
-
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/menu/'          # ← antes /dashboard/
-LOGOUT_REDIRECT_URL = '/'              # ← antes /accounts/login/
-
-
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # === BASE DE DATOS ===
@@ -109,6 +116,10 @@ DATABASES = {
 AUTHENTICATION_BACKENDS = [
     'apps.authentication.backends.EmailOrUsernameBackend',
 ]
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/menu/'          # ← antes /dashboard/
+LOGOUT_REDIRECT_URL = '/'              # ← antes /accounts/login/
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -149,10 +160,6 @@ DEFAULT_FROM_EMAIL = decouple_config('DEFAULT_FROM_EMAIL', default='no-reply@fix
 SERVER_EMAIL = decouple_config('SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 
 # === LOGS ===
-LOG_DIR = BASE_DIR / "logs"
-LOG_DIR.mkdir(exist_ok=True)
-
-# === LOGS ===
 # Un único archivo (logs/app.log). Las líneas de auditoría se identifican
 # por el nombre del logger: "fixalius.audit".
 LOG_DIR = BASE_DIR / "logs"
@@ -176,6 +183,6 @@ LOGGING = {
     "loggers": {
         "apps": {"handlers": ["console", "app_file"], "level": "INFO"},
         "fixalius.audit": {"handlers": ["console", "app_file"], "level": "INFO", "propagate": False},
-        "django.request": {"handlers": ["app_file"], "level": "ERROR", "propagate": True},
+        "django.request": {"handlers": ["console", "app_file"], "level": "ERROR", "propagate": True},
     },
 }
