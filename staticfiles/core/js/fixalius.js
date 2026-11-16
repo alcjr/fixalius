@@ -419,4 +419,21 @@
       document.addEventListener('visibilitychange', logoSync);
     }
   }
+  (function(){
+  var mark=document.querySelector('.hero-mark');
+  var em=document.querySelector('.hero h1 em');
+  if(!mark||!em) return;
+  var mq=window.matchMedia('(max-width:760px)');
+  function align(){
+    if(mq.matches){mark.style.removeProperty('--tagline-y');return;}
+    var m=mark.getBoundingClientRect(), e=em.getBoundingClientRect();
+    mark.style.setProperty('--tagline-y',(e.top+e.height/2-m.top)+'px');
+  }
+  align();
+  window.addEventListener('resize',align);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(align);
+  if(window.ResizeObserver) new ResizeObserver(align).observe(em.closest('.hero-copy')||em);
+
+})();
+
 })();
