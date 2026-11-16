@@ -13,20 +13,33 @@ def _csv(value):
 
 
 # === SEGURIDAD (en producción, todas desde variables de entorno) ===
-SECRET_KEY = decouple_config(
-    'SECRET_KEY',
-    default='django-insecure-1!4jt_d4d*+d!0$-o#lnesupgbugn&bo8kid6layt%^_%3b7rw',
-)
-DEBUG = decouple_config('DEBUG', default=True, cast=bool)
+# DEBUG es False por defecto: si falta la variable en producción, la app NO
+# arranca en modo debug. En local, define DEBUG=True en tu .env.
+DEBUG = decouple_config('DEBUG', default=False, cast=bool)
+
+# SECRET_KEY sin valor por defecto en producción: si falta, falla al arrancar.
+# En desarrollo (DEBUG=True) se admite una clave de usar y tirar.
+if DEBUG:
+    SECRET_KEY = decouple_config('SECRET_KEY', default='dev-only-insecure-key-change-me')
+else:
+    SECRET_KEY = decouple_config('SECRET_KEY')  # sin default -> UndefinedValueError
 
 ALLOWED_HOSTS = decouple_config(
     'ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=_csv
 )
 
+# Ruta del admin configurable (la leen core/urls.py y core/views.py)
+ADMIN_URL = decouple_config('ADMIN_URL', default='admin/')
+
 # Render define RENDER_EXTERNAL_HOSTNAME automáticamente (p. ej. mi-app.onrender.com)
 RENDER_EXTERNAL_HOSTNAME = decouple_config('RENDER_EXTERNAL_HOSTNAME', default='')
 if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# ¿Estamos detrás de un proxy que termina TLS? (Render lo es.)
+BEHIND_PROXY = decouple_config(
+    'BEHIND_PROXY', default=bool(RENDER_EXTERNAL_HOSTNAME), cast=bool
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -48,9 +61,6 @@ CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_HTTPONLY = False           # True rompe document.cookie en JS
 CSRF_COOKIE_SAMESITE = "Lax"           # "Strict" puede romper logout cross-tab
-CSRF_COOKIE_NAME = "csrftoken"
-CSRF_COOKIE_PATH = "/"
-CSRF_COOKIE_DOMAIN = None
 
 CSRF_TRUSTED_ORIGINS = decouple_config(
     'CSRF_TRUSTED_ORIGINS',
@@ -62,8 +72,24 @@ if RENDER_EXTERNAL_HOSTNAME:
     if _render_origin not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(_render_origin)
 
-# Render termina TLS en su proxy y reenvía por HTTP; Django debe fiarse de la cabecera
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# Solo nos fiamos de X-Forwarded-Proto si de verdad hay un proxy delante
+# (si no, un cliente podría falsificar la cabecera).
+if BEHIND_PROXY:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# --- Endurecimiento HTTPS (solo en producción) --------------------------
+if not DEBUG:
+    SECURE_SSL_REDIRECT = decouple_config('SECURE_SSL_REDIRECT', default=True, cast=bool)
+    SECURE_HSTS_SECONDS = decouple_config('SECURE_HSTS_SECONDS', default=3600, cast=int)
+    # Sube SECURE_HSTS_SECONDS a 31536000 (1 año) cuando confirmes que todo
+    # funciona bajo HTTPS; después valora INCLUDE_SUBDOMAINS y PRELOAD.
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = decouple_config(
+        'SECURE_HSTS_INCLUDE_SUBDOMAINS', default=False, cast=bool
+    )
+    SECURE_HSTS_PRELOAD = False
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'same-origin'
+    X_FRAME_OPTIONS = 'DENY'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -112,14 +138,16 @@ DATABASES = {
 }
 
 # === AUTENTICACIÓN ===
-# Login con nombre de usuario O correo electrónico
+# Login con nombre de usuario O correo electrónico.
+# IMPORTANTE: EmailOrUsernameBackend debe heredar de ModelBackend (o implementar
+# has_perm / has_module_perms / get_user) para que admin y permisos funcionen.
 AUTHENTICATION_BACKENDS = [
     'apps.authentication.backends.EmailOrUsernameBackend',
 ]
 
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/menu/'          # ← antes /dashboard/
-LOGOUT_REDIRECT_URL = '/'              # ← antes /accounts/login/
+LOGIN_REDIRECT_URL = '/menu/'
+LOGOUT_REDIRECT_URL = '/'
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -139,10 +167,25 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 TIME_ZONE = 'UTC'
 USE_TZ = True
 
-# === ESTÁTICOS ===
+# === ESTÁTICOS Y FICHEROS ===
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STORAGES = {
+    # Media: en Render el disco es efímero. Para producción real, sustituye
+    # este backend por S3/R2 (django-storages) o monta un disco persistente
+    # en MEDIA_ROOT.
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    # Estáticos con compresión y nombres con hash (caché agresiva).
+    "staticfiles": {
+        "BACKEND": (
+            "django.contrib.staticfiles.storage.StaticFilesStorage"
+            if DEBUG
+            else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        )
+    },
+}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
