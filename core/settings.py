@@ -1,4 +1,5 @@
 from pathlib import Path
+from urllib.parse import urlparse, unquote
 
 from django.utils.translation import gettext_lazy as _
 from decouple import config as decouple_config
@@ -124,18 +125,53 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # === BASE DE DATOS ===
-DATABASES = {
-    'default': {
+# Dos modos, el mismo código en local y en Render:
+#   1) DATABASE_URL definida (Render, o local apuntando a la BD de Render):
+#      postgresql://usuario:clave@host:5432/nombre
+#      -> en el Web Service de Render usa la "Internal Database URL".
+#      -> desde tu PC usa la "External Database URL" (el host interno de
+#         Render solo resuelve dentro de su red).
+#   2) Sin DATABASE_URL: se usan DB_NAME / DB_USER / DB_PASSWORD / DB_HOST /
+#      DB_PORT (tu PostgreSQL local, como hasta ahora).
+def _database_from_url(url):
+    parsed = urlparse(url)
+    return {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': parsed.path.lstrip('/'),
+        'USER': unquote(parsed.username or ''),
+        'PASSWORD': unquote(parsed.password or ''),
+        'HOST': parsed.hostname or '',
+        'PORT': str(parsed.port or 5432),
+    }
+
+
+DATABASE_URL = decouple_config('DATABASE_URL', default='')
+
+if DATABASE_URL:
+    _db = _database_from_url(DATABASE_URL)
+else:
+    _db = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': decouple_config('DB_NAME', default='fixalius_db'),
         'USER': decouple_config('DB_USER', default='fixalius_db'),
         'PASSWORD': decouple_config('DB_PASSWORD', default=''),
         'HOST': decouple_config('DB_HOST', default='localhost'),
         'PORT': decouple_config('DB_PORT', default='5432'),
-        'CONN_MAX_AGE': 60,
-        'ATOMIC_REQUESTS': True,
     }
-}
+
+_db['CONN_MAX_AGE'] = 60
+_db['ATOMIC_REQUESTS'] = True
+
+# La URL externa de Render exige SSL; la interna y localhost no lo necesitan.
+# Se puede forzar con DB_SSLMODE (require, disable, ...).
+_sslmode = decouple_config(
+    'DB_SSLMODE',
+    default='require' if _db['HOST'].endswith('.render.com') else '',
+)
+if _sslmode:
+    _db['OPTIONS'] = {'sslmode': _sslmode}
+
+DATABASES = {'default': _db}
 
 # === AUTENTICACIÓN ===
 # Login con nombre de usuario O correo electrónico.
