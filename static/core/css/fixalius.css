@@ -176,6 +176,8 @@ p{text-wrap:pretty}
   padding:28px clamp(24px,5vw,72px);
   color:#fff;
   background:var(--gradient-marengo);
+  border-top:1px solid var(--logo-orange);      /* exterior, fina */
+  border-bottom:2px solid var(--logo-orange);   /* interior, hacia el contenido */
 }
 
 /* Marca en cabecera: símbolo + wordmark alineados en horizontal */
@@ -567,6 +569,8 @@ footer{
   color:rgba(255,255,255,.78);
   padding:27px clamp(24px,5vw,72px);
   display:flex;align-items:center;gap:25px;font-size:var(--fs-xs);
+  border-top:2px solid var(--logo-orange);      /* interior, hacia el contenido */
+  border-bottom:1px solid var(--logo-orange);   /* exterior, fina */
 }
 footer .logo{margin-right:auto;font-size:20px}
 footer>div:last-child{display:flex;gap:20px}
@@ -580,7 +584,7 @@ footer a:hover{color:#fff}
   nav:not(.sidebar-nav){
     display:none;
     position:absolute;
-    top:calc(100% + 8px);
+    top:calc(100% + 10px);   /* 10px: compensa el borde inferior de 2px de la cabecera */
     left:auto;
     right:clamp(16px,5vw,72px);
     width:min(380px,calc(100% - 32px));
