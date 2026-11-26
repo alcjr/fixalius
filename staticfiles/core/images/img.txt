@@ -1,5 +1,0 @@
-fixalius-mark.png        (imagen #2, la de alta resolución con colores vibrantes)
-fixalius-wordmark.png    (imagen #3)
-favicon.ico              → magick fixalius-mark.png -define icon:auto-resize=256,128,64,48,32,16 favicon.ico
-fixalius-256.png         → magick fixalius-mark.png -resize 256x256 fixalius-256.png
-og-fixalius.png       
