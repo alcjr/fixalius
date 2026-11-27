@@ -5,9 +5,9 @@
     <div class="flex items-center justify-between h-full px-6">
         <!-- Logo y nombre -->
         <div class="flex items-center gap-3">
-            <img src="{% static 'core/images/logo-icon.png' %}" alt="{% trans 'Logo FINGEST' %}" class="w-8 h-8 object-contain">
-            <img src="{% static 'core/images/logo-text_b.png' %}" alt="{% trans 'FINGEST' %}" class="h-6 w-auto object-contain hidden sm:block">
-            <span class="hidden md:inline-block text-slate-400 text-sm font-normal ml-1">{% trans "Gestión de comunidades de vecinos" %}</span>
+            <img src="{% static 'core/images/fixalius-mark.png' %}" alt="{% trans 'Logo Fixalius' %}" class="w-8 h-8 object-contain">
+            <img src="{% static 'core/images/fixalius-wordmark.png' %}" alt="{% trans 'Fixalius' %}" class="h-6 w-auto object-contain hidden sm:block">
+            <span class="hidden md:inline-block text-slate-400 text-sm font-normal ml-1">{% trans "Inteligencia aplicada" %}</span>
         </div>
 
         <!-- Right side: timestamp + user info -->
@@ -37,6 +37,7 @@
             </form>
             <!-- Botón dark mode ELIMINADO -->
             {% if request.user.is_authenticated %}
+                {% trans "¿Cerrar sesión?" as logout_confirm %}
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 bg-accent/90 rounded-full flex items-center justify-center font-semibold text-white">
                         {{ request.user.username|first|upper }}
@@ -48,7 +49,7 @@
                 </div>
                 <form method="post" action="{% url 'authentication:logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/10 transition-colors" onclick="return confirm('{% trans "¿Cerrar sesión?" %}')">
+                    <button type="submit" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/10 transition-colors" onclick="return confirm('{{ logout_confirm|escapejs }}')">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>{% trans "Salir" %}</span>
                     </button>
@@ -57,10 +58,6 @@
         </div>
     </div>
 </header>
-
-<style>
-/* Los estilos del header-btn ya no son necesarios porque el botón fue eliminado */
-</style>
 
 <script>
 // Solo timestamp - Dark mode eliminado (ahora está en comunidad.js)
@@ -102,4 +99,4 @@ function fingestBustCacheOnLangSwitch(form) {
     return true;
 }
 window.fingestBustCacheOnLangSwitch = fingestBustCacheOnLangSwitch;
-</script>
+</script>
