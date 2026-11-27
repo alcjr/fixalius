@@ -30,7 +30,6 @@
   <meta property="og:locale" content="{% if LANGUAGE_CODE == 'es' %}es_ES{% elif LANGUAGE_CODE == 'en' %}en_GB{% else %}{{ LANGUAGE_CODE }}{% endif %}">
   {% for alt in alternates %}{% if alt.code != LANGUAGE_CODE %}<meta property="og:locale:alternate" content="{% if alt.code == 'es' %}es_ES{% elif alt.code == 'en' %}en_GB{% else %}{{ alt.code }}{% endif %}">
   {% endif %}{% endfor %}
-  <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'core/images/og-fixalius.png' %}">
   <meta property="og:image:alt" content="{% trans 'Fixalius — Inteligencia aplicada' %}">
 
   <meta name="twitter:card" content="summary_large_image">
